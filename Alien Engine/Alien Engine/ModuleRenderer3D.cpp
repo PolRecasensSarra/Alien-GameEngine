@@ -10,6 +10,7 @@
 #include "ModuleCamera3D.h"
 #include "MathGeoLib/include/Math/float4x4.h"
 #include "MathGeoLib/include/MathGeoLib.h"
+#include "PanelScene.h"
 
 #pragma comment (lib, "glu32.lib")    /* link OpenGL Utility lib     */
 #pragma comment (lib, "opengl32.lib") /* link Microsoft OpenGL lib   */
@@ -243,6 +244,8 @@ void ModuleRenderer3D::CreateRenderTexture()
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, App->window->width, App->window->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
+
+		PrintIcon({0,0,0}, App->resources->icons.box->id);
 		glGenRenderbuffers(1, &scene_depthrenderbuffer);
 		glBindRenderbuffer(GL_RENDERBUFFER, scene_depthrenderbuffer);
 		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, App->window->width, App->window->height);
@@ -370,4 +373,39 @@ bool ModuleRenderer3D::IsInsideFrustum(const ComponentCamera* camera, const AABB
 	}
 
 	return true;
+}
+
+void ModuleRenderer3D::PrintIcon(const float3& position, const uint& texture_id)
+{
+	GLdouble proj_matrix;
+	GLdouble view_matrix;
+	float3 position_2d{ float3::zero };
+
+	glGetDoublev(GL_MODELVIEW_MATRIX, &view_matrix);
+	glGetDoublev(GL_PROJECTION_MATRIX, &proj_matrix);
+
+	gluProject(position.x, position.y, position.z, &view_matrix, &proj_matrix, nullptr, (GLdouble*)&position_2d.x, (GLdouble*)&position_2d.y, (GLdouble*)&position_2d.z);
+
+	position_2d.z *= -1;
+
+	glMatrixMode(GL_PROJECTION);
+
+	glLoadIdentity();
+
+	glOrtho(App->ui->panel_scene->posX, App->ui->panel_scene->width, App->ui->panel_scene->posY, App->ui->panel_scene->height, 0, 1);
+
+	glMatrixMode(GL_MODELVIEW);
+
+	glLoadIdentity();
+
+	glBindTexture(GL_TEXTURE_2D, texture_id);
+	glEnable(GL_TEXTURE_2D);
+	glBegin(GL_QUADS);
+	glTexCoord2i(0, 0); glVertex2i(100, 100);
+	glTexCoord2i(0, 1); glVertex2i(100, 500);
+	glTexCoord2i(1, 1); glVertex2i(500, 500);
+	glTexCoord2i(1, 0); glVertex2i(500, 100);
+	glEnd();
+	glDisable(GL_TEXTURE_2D);
+	glBindTexture(GL_TEXTURE_2D, 0);
 }

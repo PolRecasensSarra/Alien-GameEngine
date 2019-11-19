@@ -33,6 +33,9 @@ public:
 	bool SetCameraToDraw(const ComponentCamera* camera);
 
 	bool IsInsideFrustum(const ComponentCamera* camera, const AABB& aabb);
+
+	void PrintIcon(const float3& position, const uint& texture_id);
+
 public:
 
 	// buffers to draw scene
