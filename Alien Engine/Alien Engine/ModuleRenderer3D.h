@@ -34,7 +34,7 @@ public:
 
 	bool IsInsideFrustum(const ComponentCamera* camera, const AABB& aabb);
 
-	void PrintIcon(const float3& position, const uint& texture_id);
+	void PrintIcon(float3 position, uint texture_id);
 
 public:
 

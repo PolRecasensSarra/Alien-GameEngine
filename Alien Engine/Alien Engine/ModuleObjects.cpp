@@ -12,6 +12,7 @@
 #include "ReturnZ.h"
 #include "Time.h"
 #include "ModuleRenderer3D.h"
+#include "ResourceTexture.h"
 
 ModuleObjects::ModuleObjects(bool start_enabled):Module(start_enabled)
 {
@@ -136,6 +137,7 @@ update_status ModuleObjects::PostUpdate(float dt)
 			}
 		}
 
+		App->renderer3D->PrintIcon({ 0,0,0 }, App->resources->icons.folder->id);
 
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 	}
