@@ -288,7 +288,9 @@ void ResourceMesh::ConvertToGameObject(std::vector<GameObject*>* objects_created
 
 	obj->SetName(name.data());
 
-	obj->AddComponent(new ComponentTransform(obj, pos, rot, scale));
+	ComponentTransform* transform = new ComponentTransform(obj, pos, rot, scale);
+
+	obj->AddComponent(transform);
 
 	if (num_vertex != 0) {
 		ComponentMesh* mesh = new ComponentMesh(obj);
@@ -306,6 +308,19 @@ void ResourceMesh::ConvertToGameObject(std::vector<GameObject*>* objects_created
 		material->color = material_color;
 
 		obj->AddComponent(material);
+	}
+
+	if (has_camera) {
+		ComponentCamera* camera = new ComponentCamera(obj);
+
+		camera->frustum.pos = cam_pos;
+		camera->frustum.up = cam_up;
+		camera->near_plane = near_plane;
+		camera->far_plane = far_plane;
+		camera->horizontal_fov = horitzontal_fov;
+		camera->AspectRatio(16, 9, true);
+
+		obj->AddComponent(camera);
 	}
 }
 

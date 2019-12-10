@@ -94,6 +94,9 @@ void ModuleImporter::InitScene(const char* path, const aiScene* scene)
 	model = new ResourceModel();
 	model->name = App->file_system->GetBaseFileName(path);
 	model->path = std::string(path);
+	
+	
+	TakeMainTransforms(scene, scene->mRootNode);
 
 	// start recursive function to all nodes
 	LoadSceneNode(scene->mRootNode, scene, nullptr, 1);
@@ -108,12 +111,36 @@ void ModuleImporter::InitScene(const char* path, const aiScene* scene)
 	model = nullptr;
 }
 
+void ModuleImporter::TakeMainTransforms(const aiScene* scene, const aiNode* node)
+{
+	// TODO save meta
+	std::string node_name = node->mName.C_Str();
+	if (node_name.find("_$AssimpFbx$_") != std::string::npos || node_name.find("RootNode") != std::string::npos) {
+		aiVector3D translation, scaling;
+		aiQuaternion rotation;
+		// local pos, rot & scale
+		aiMatrix4x4 mat;
+		mat.Decompose(scaling, rotation, translation);
+
+		float3 pos(translation.x, translation.y, translation.z);
+		float3 scale(scaling.x, scaling.y, scaling.z);
+		Quat rot(rotation.x, rotation.y, rotation.z, rotation.w);
+
+		float4x4 matf;
+		matf = matf.FromTRS(pos, rot, scale);
+		model->main_trans = model->main_trans * matf;
+		for (uint i = 0; i < node->mNumChildren; ++i) {
+			TakeMainTransforms(scene, node->mChildren[i]);
+		}
+	}
+}
+
 
 void ModuleImporter::LoadSceneNode(const aiNode* node, const aiScene* scene, ResourceMesh* parent, uint family_number)
 {
 	LOG("Loading node with name %s", node->mName.C_Str());
 	ResourceMesh* next_parent = nullptr;
-
+	
 	std::string node_name = node->mName.C_Str();
 	if (node_name.find("_$AssimpFbx$_") == std::string::npos && node_name.find("RootNode") == std::string::npos) {
 		if (node->mNumMeshes == 1) {
@@ -151,6 +178,50 @@ void ModuleImporter::LoadSceneNode(const aiNode* node, const aiScene* scene, Res
 			if (parent != nullptr)
 				next_parent->parent_name = parent->name;
 		}
+
+		// look for cameras
+		if (scene->HasCameras()) {
+			for (uint i = 0; i < scene->mNumCameras; ++i) {
+				if (App->StringCmp(next_parent->name.data(), scene->mCameras[i]->mName.C_Str())) {
+					aiCamera* cam = scene->mCameras[i];
+					next_parent->has_camera = true;
+					next_parent->near_plane = cam->mClipPlaneNear;
+					next_parent->far_plane = cam->mClipPlaneFar;
+					next_parent->horitzontal_fov = cam->mHorizontalFOV;
+					next_parent->look_at.x = cam->mLookAt.x;
+					next_parent->look_at.y = cam->mLookAt.y;
+					next_parent->look_at.z = cam->mLookAt.z;
+					next_parent->cam_up.x = cam->mUp.x;
+					next_parent->cam_up.y = cam->mUp.y;
+					next_parent->cam_up.z = cam->mUp.z;
+					next_parent->cam_pos.x = cam->mPosition.x;
+					next_parent->cam_pos.y = cam->mPosition.y;
+					next_parent->cam_pos.z = cam->mPosition.z;
+					if (node->mNumMeshes == 0) {
+						// get local transformations
+						aiVector3D translation, scaling;
+						aiQuaternion rotation;
+						// local pos, rot & scale
+						aiMatrix4x4 mat;
+						cam->GetCameraMatrix(mat);
+						mat.Decompose(scaling, rotation, translation);
+
+						// set the scale in value of 1 but keeping the dimensions
+						//float max_ = max(scaling.x, scaling.y);
+						//max_ = max(max_, scaling.z);
+
+						float3 pos(translation.x, translation.y, translation.z);
+						//float3 scale(scaling.x / max_, scaling.y / max_, scaling.z / max_);
+						float3 scale(scaling.x, scaling.y, scaling.z);
+						Quat rot(rotation.x, rotation.y, rotation.z, rotation.w);
+
+						next_parent->pos = next_parent->cam_pos;
+						next_parent->scale = scale;
+						next_parent->rot = rot;
+					}
+				}
+			}
+		}
 	}
 	for (uint i = 0; i < node->mNumChildren; ++i) {
 		LOG("Loading children of node %s", node->mName.C_Str());
@@ -166,7 +237,7 @@ ResourceMesh* ModuleImporter::LoadNodeMesh(const aiScene * scene, const aiNode* 
 	ResourceMesh* ret = new ResourceMesh();
 	if (parent != nullptr)
 		ret->parent_name = parent->name;
-
+	
 	// get vertex
 	ret->vertex = new float[ai_mesh->mNumVertices * 3];
 	memcpy(ret->vertex, ai_mesh->mVertices, sizeof(float) * ai_mesh->mNumVertices * 3);

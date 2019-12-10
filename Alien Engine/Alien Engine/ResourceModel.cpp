@@ -5,6 +5,7 @@
 #include "Application.h"
 #include <algorithm>
 #include "ReturnZ.h"
+#include "ComponentTransform.h"
 
 ResourceModel::ResourceModel() : Resource()
 {
@@ -225,7 +226,23 @@ void ResourceModel::ConvertToGameObjects()
 		// create the parent
 		GameObject* parent = App->objects->CreateEmptyGameObject(nullptr, false);
 		parent->SetName(name.data());
-		
+		ComponentTransform* transform = (ComponentTransform*)parent->components.back();
+		float3 position, scale;
+		Quat rotation;
+		main_trans.Decompose(position, rotation, scale);
+
+		transform->local_scale = scale;
+		transform->LookScale();
+
+		transform->local_position = position;
+		transform->local_rotation = rotation;
+		transform->euler_rotation = transform->local_rotation.ToEulerXYZ();
+		transform->euler_rotation.x = RadToDeg(transform->euler_rotation.x);
+		transform->euler_rotation.y = RadToDeg(transform->euler_rotation.y);
+		transform->euler_rotation.z = RadToDeg(transform->euler_rotation.z);
+
+		transform->RecalculateTransform();
+
 		// vector to find the parents
 		std::vector<GameObject*> objects_created;
 		objects_created.push_back(parent);

@@ -2,6 +2,7 @@
 
 #include "Resource_.h"
 #include <vector>
+#include "MathGeoLib/include/Math/float4x4.h"
 
 class ResourceMesh;
 
@@ -32,4 +33,7 @@ public:
 
 	std::vector<ResourceMesh*> meshes_attached;
 
+private:
+
+	float4x4 main_trans = float4x4::identity;
 };

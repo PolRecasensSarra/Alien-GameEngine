@@ -5,6 +5,7 @@
 
 class __declspec(dllexport) ComponentTransform : public Component {
 	friend class CompZ;
+	friend class ResourceModel;
 public:
 
 	ComponentTransform(GameObject* attach);

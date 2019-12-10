@@ -65,4 +65,12 @@ private:
 
 	Color material_color;
 
+	bool has_camera = false;
+	float horitzontal_fov = 0.0f;
+	float far_plane = 0.0f;
+	float near_plane = 0.0f;
+	float3 look_at = { 0,0,0 };
+	float3 cam_pos = { 0,0,0 };
+	float3 cam_up = { 0,0,0 };
+
 };
