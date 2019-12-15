@@ -80,7 +80,12 @@ public:
 	/*--------------------BOOL-----------------------*/
 	static void InspectorBool(bool* ptr, const char* ptr_name);
 
+	static void StartEnum();
+	static void EndEnum();
+
 private:
+
+	bool enuming = false;
 
 	u64 resourceID = 0;
 	// TODO: change to touple and next option is for personaliing ImGui inspector, like drag int text int bla bla

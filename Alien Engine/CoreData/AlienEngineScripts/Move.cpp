@@ -69,7 +69,10 @@ void Move::Update()
 	//		int j = 0;
 	//	}
 	//}
-
+	for (auto e : Enum<TestENum>()) {
+		int i = e;
+		int j = 0;
+	}
 }
 
 void Move::OnDrawGizmos()

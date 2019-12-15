@@ -6,6 +6,17 @@
 
 ALIEN_INIT_HEADER
 
+
+enum TestENum {
+	red,
+	blue,
+	orange,
+	yellow,
+
+	First = red,
+	//Last = yellow
+};
+
 class ALIEN_ENGINE_API Move : public Alien {
 
 public:
