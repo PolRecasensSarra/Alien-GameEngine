@@ -81,7 +81,7 @@ public:
 	static void InspectorBool(bool* ptr, const char* ptr_name);
 	/*--------------------ENUM-----------------------*/
 	template <typename en>
-	static void InspectorEnum(void* ptr, const char* ptr_name);
+	static void InspectorEnum(void* ptr, const char* ptr_name, const int& first, const int& last);
 
 private:
 
@@ -95,55 +95,37 @@ private:
 	void* data_ptr = nullptr;
 };
 
-template< typename T >
-class Enum
+template<typename T>
+class Iterator
 {
 public:
-	class Iterator
+	Iterator(int value) :
+		m_value(value)
+	{ }
+
+	T operator*(void) const
 	{
-	public:
-		Iterator(int value) :
-			m_value(value)
-		{ }
+		return (T)m_value;
+	}
 
-		T operator*(void) const
-		{
-			return (T)m_value;
-		}
+	void operator++(void)
+	{
+		++m_value;
+	}
 
-		void operator++(void)
-		{
-			++m_value;
-		}
+	bool operator!=(Iterator rhs)
+	{
+		return m_value != rhs.m_value;
+	}
 
-		bool operator!=(Iterator rhs)
-		{
-			return m_value != rhs.m_value;
-		}
-
-	private:
-		int m_value;
-	};
-
+	int m_value;
 };
 
-template< typename T >
-typename Enum<T>::Iterator begin(Enum<T>)
-{
-	return typename Enum<T>::Iterator((int)T::First);
-}
-
-template< typename T >
-typename Enum<T>::Iterator end(Enum<T>)
-{
-	return typename Enum<T>::Iterator(((int)T::Last) + 1);
-}
-
 template<typename en>
-inline void ComponentScript::InspectorEnum(void* ptr, const char* ptr_name)
+inline void ComponentScript::InspectorEnum(void* ptr, const char* ptr_name, const int& first, const int& last)
 {
-	for (auto e : Enum<en>()) {
-		int i = e;
+	for (uint i = first; i < last; ++i) {
+		en var = (en)i;
 		int j = 0;
 	}
 }
