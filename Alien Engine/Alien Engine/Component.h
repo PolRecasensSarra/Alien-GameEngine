@@ -11,6 +11,10 @@ enum class ComponentType {
 	MATERIAL,
 	LIGHT,
 	CAMERA,
+	IMAGE,
+	BUTTON,
+	CHECKBOX,
+	INPUTBOX,
 
 	UNKNOWN
 };
@@ -42,6 +46,9 @@ public:
 	void ResetIDs();
 
 	const ComponentType& GetType() const;
+
+	virtual void DoLogicClicked(std::string& functionName) {}
+	virtual void DoLogicHovered() {}
 
 public:
 

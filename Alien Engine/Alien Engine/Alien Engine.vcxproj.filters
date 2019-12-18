@@ -58,6 +58,9 @@
     <Filter Include="Tools\Guizmos">
       <UniqueIdentifier>{72e23ff2-eba1-4b08-ad4f-1a745f5ff149}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Components\UI_Components">
+      <UniqueIdentifier>{6763885e-bdf0-455a-960b-6a5eb095ca34}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ModuleSceneIntro.h">
@@ -489,6 +492,12 @@
     <ClInclude Include="ResourcePrefab.h">
       <Filter>Resources</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentImage.h">
+      <Filter>Components\UI_Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentButton.h">
+      <Filter>Components\UI_Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -772,6 +781,12 @@
     </ClCompile>
     <ClCompile Include="ResourcePrefab.cpp">
       <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentImage.cpp">
+      <Filter>Components\UI_Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentButton.cpp">
+      <Filter>Components\UI_Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
