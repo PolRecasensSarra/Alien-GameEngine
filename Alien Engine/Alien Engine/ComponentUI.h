@@ -12,6 +12,7 @@ public:
 
 	virtual void DoLogicClicked() {}
 	virtual void DoLogicHovered() {}
+	virtual void DoLogicPressed() {}
 
 public:
 	bool dragable = false;

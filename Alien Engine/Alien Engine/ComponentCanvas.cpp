@@ -23,7 +23,7 @@ void ComponentCanvas::DebugDraw()
 
 
 	glBegin(GL_LINE_LOOP);
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	glColor4f(1.0f, 0.0f, 1.0f, 1.0f);
 
 	float3 pos = transform->GetGlobalPosition();
 
