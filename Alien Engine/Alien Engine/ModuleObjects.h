@@ -108,6 +108,9 @@ public:
 
 	void SwapReturnZ(bool get_save, bool delete_current);
 
+
+	void OnDrawUI();
+
 private:
 
 	void DeleteReturns();
@@ -193,6 +196,7 @@ private:
 	// root
 	GameObject* base_game_object = nullptr;
 	GameObject* game_object_selected = nullptr;
+	GameObject* canvas = nullptr;
 	std::vector< std::tuple<GameObject*, GameObject*, bool>> to_reparent;
 
 	std::stack<ReturnZ*> save_return_actions;

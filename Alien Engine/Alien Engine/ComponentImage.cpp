@@ -4,11 +4,11 @@
 #include "ReturnZ.h"
 
 
-ComponentImage::ComponentImage(GameObject* attach, float2 position, SDL_Rect* section):Component(attach)
+ComponentImage::ComponentImage(GameObject* attach, float2 position):Component(attach)
 {
 	type = ComponentType::IMAGE;
 	this->position = position;
-	this->section = section;
+
 
 }
 

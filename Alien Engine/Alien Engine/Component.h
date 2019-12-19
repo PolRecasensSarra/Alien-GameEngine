@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 class GameObject;
 
 typedef unsigned int uint;
@@ -13,8 +15,12 @@ enum class ComponentType {
 	CAMERA,
 	IMAGE,
 	BUTTON,
+	LABEL,
 	CHECKBOX,
 	INPUTBOX,
+	TRANSFORM2D,
+	CANVAS,
+	UI,
 
 	UNKNOWN
 };
@@ -47,8 +53,6 @@ public:
 
 	const ComponentType& GetType() const;
 
-	virtual void DoLogicClicked(std::string& functionName) {}
-	virtual void DoLogicHovered() {}
 
 public:
 

@@ -56,6 +56,7 @@ bool ModuleRenderer3D::Init()
 		//Initialize Projection Matrix
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
+		
 
 		//Check for error
 		GLenum error = glGetError();

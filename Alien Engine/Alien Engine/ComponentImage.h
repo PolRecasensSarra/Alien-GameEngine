@@ -9,11 +9,11 @@ class ComponentImage : public Component {
 
 public:
 
-	ComponentImage(GameObject* attach, float2 position, SDL_Rect* section);
+	ComponentImage(GameObject* attach, float2 position);
 	~ComponentImage();
 	void Draw(const float& dt);
 
 private:
 	float2 position;
-	SDL_Rect* section = nullptr;
+	
 };

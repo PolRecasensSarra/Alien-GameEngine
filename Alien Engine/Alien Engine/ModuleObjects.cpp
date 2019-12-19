@@ -9,6 +9,7 @@
 #include "ComponentMaterial.h"
 #include "ComponentMesh.h"
 #include "ComponentLight.h"
+#include "ComponentCanvas.h"
 #include "ReturnZ.h"
 #include "Time.h"
 #include "ModuleRenderer3D.h"
@@ -41,6 +42,11 @@ bool ModuleObjects::Start()
 	light_test->SetName("Light");
 	light_test->AddComponent(new ComponentTransform(light_test, { 0,15,2.5f }, { 0,0,0,0 }, { 1,1,1 }));
 	light_test->AddComponent(new ComponentLight(light_test));
+
+	canvas = new GameObject(base_game_object);
+	canvas->SetName("Canvas");
+	canvas->AddComponent(new ComponentCanvas(canvas));
+	canvas->AddComponent(new ComponentTransform(canvas, { 0.0f,2.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
 
 	current_scene.name_without_extension = "Untitled*";
 	current_scene.full_path = "Untitled*";
@@ -76,7 +82,7 @@ update_status ModuleObjects::PreUpdate(float dt)
 
 update_status ModuleObjects::Update(float dt)
 {
-
+	base_game_object->Update();
 	return UPDATE_CONTINUE;
 }
 
@@ -104,6 +110,8 @@ update_status ModuleObjects::PostUpdate(float dt)
 
 		if (render_octree)
 			octree.Draw();
+
+		OnDrawUI();
 
 		if (base_game_object->HasChildren()) {
 			std::map<float, GameObject*> to_draw;
@@ -681,6 +689,11 @@ void ModuleObjects::SwapReturnZ(bool get_save, bool delete_current)
 			fordward_actions.pop();
 		}
 	}
+}
+
+void ModuleObjects::OnDrawUI()
+{
+	base_game_object->PostUpdate();
 }
 
 void ModuleObjects::DeleteReturns()
