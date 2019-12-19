@@ -2,7 +2,7 @@
 
 #include "Component.h"
 #include "imgui/imgui.h"
-#include "MathGeoLib/include/MathGeoLib.h"
+
 
 class ComponentImage;
 
@@ -24,7 +24,7 @@ public:
 
 private:
 
-	float2 size;
+	float2 size_button;
 
 	bool function = false;
 

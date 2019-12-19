@@ -11,6 +11,7 @@
 #include "ComponentLight.h"
 #include "ComponentCanvas.h"
 #include "ComponentButton.h"
+#include "ComponentUI.h"
 #include "ReturnZ.h"
 #include "Time.h"
 #include "ModuleRenderer3D.h"
@@ -53,6 +54,7 @@ bool ModuleObjects::Start()
 	button->SetName("testButton");
 	button->AddComponent(new ComponentButton(button, { 30,10 }));
 	button->AddComponent(new ComponentTransform(button, { 10.0f,0.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	button->AddComponent(new ComponentUI(button));
 
 
 	current_scene.name_without_extension = "Untitled*";

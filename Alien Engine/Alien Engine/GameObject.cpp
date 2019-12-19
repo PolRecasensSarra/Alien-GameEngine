@@ -281,6 +281,20 @@ Component* GameObject::GetComponent(const ComponentType& type)
 	return nullptr;
 }
 
+float2 GameObject::GetSizeUI()
+{
+	std::vector<Component*>::iterator item = components.begin();
+	for (; item != components.end(); ++item) {
+		if (*item != nullptr) 
+		{
+			return (*item)->GetSize();
+			//check if this works okay
+			break;
+		}
+	}
+	return float2::zero;
+}
+
 Component* GameObject::GetComponentWithID(const u64& compID)
 {
 	std::vector<Component*>::iterator item = components.begin();

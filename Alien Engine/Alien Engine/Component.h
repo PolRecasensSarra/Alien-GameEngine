@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include "MathGeoLib/include/MathGeoLib.h"
 
 class GameObject;
 
@@ -52,6 +53,7 @@ public:
 	void ResetIDs();
 
 	const ComponentType& GetType() const;
+	float2 GetSize();
 
 
 public:
@@ -68,6 +70,7 @@ protected:
 
 	ComponentType type = ComponentType::UNKNOWN;
 	bool enabled = true;
+	float2 size;
 	
 
 };

@@ -38,6 +38,7 @@ public:
 	void AddComponent(Component* component);
 	bool HasComponent(ComponentType component);
 	Component* GetComponent(const ComponentType& type);
+	float2 GetSizeUI();
 	Component* GetComponentWithID(const u64& ID);
 
 	template <class Comp>

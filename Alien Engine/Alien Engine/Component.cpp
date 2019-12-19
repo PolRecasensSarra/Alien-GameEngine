@@ -39,6 +39,11 @@ const ComponentType& Component::GetType() const
 	return type;
 }
 
+float2 Component::GetSize()
+{
+	return size;
+}
+
 void Component::RightClickMenu(const char* collapsing_header_name)
 {
 	if (ImGui::BeginPopupContextItem(collapsing_header_name)) {

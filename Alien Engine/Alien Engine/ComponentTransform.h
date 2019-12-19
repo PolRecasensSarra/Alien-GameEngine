@@ -56,7 +56,7 @@ public:
 
 	// to know if flip poly or not
 	bool is_scale_negative = false;
-private:
+
 
 	// position
 	float3 local_position = { 0,0,0 };
@@ -64,8 +64,12 @@ private:
 	float3 local_scale = { 0,0,0 };
 	// rotation
 	Quat local_rotation = { 0,0,0,0 };
-	
+
 	float3 euler_rotation = { 0,0,0 };
+
+private:
+
+	
 
 	bool popup_static = false;
 };

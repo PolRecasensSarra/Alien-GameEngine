@@ -9,6 +9,7 @@ ComponentButton::ComponentButton(GameObject* attach, float2 size) :Component(att
 	type = ComponentType::BUTTON;
 	;
 	this->size = size;
+	this->size_button = size;
 
 	if (size.x == 0) 
 	{
