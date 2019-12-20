@@ -6,6 +6,10 @@
 #include "PanelGame.h"
 #include "ReturnZ.h"
 #include "ResourceTexture.h"
+#include "FileNode.h"
+#include "imgui/imgui_internal.h"
+
+
 ComponentButton::ComponentButton(GameObject* attach) : Component(attach)
 {
 	type = ComponentType::BUTTON;
@@ -58,6 +62,8 @@ void ComponentButton::PostUpdate()
 void ComponentButton::Draw()
 {
 	//TODO::// if texture exists, do bind
+
+	BindTex();
 
 	ComponentTransform* transform = (ComponentTransform*)game_object_attached->GetComponent(ComponentType::TRANSFORM);
 	if (transform != nullptr) {
@@ -229,6 +235,17 @@ void ComponentButton::LoadComponent(JSONArraypack* to_load)
 
 bool ComponentButton::DrawInspector()
 {
+	ImVec2 min_space = ImGui::GetWindowContentRegionMin();
+	ImVec2 max_space = ImGui::GetWindowContentRegionMax();
+
+	min_space.x += ImGui::GetWindowPos().x;
+	min_space.y += ImGui::GetWindowPos().y;
+	max_space.x += ImGui::GetWindowPos().x;
+	max_space.y += ImGui::GetWindowPos().y;
+
+	// drop project files
+
+
 	if (ImGui::CollapsingHeader("Button", &not_destroy, ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::ColorEdit4("Normal Color", (float*)& normal_color);
@@ -240,16 +257,55 @@ bool ComponentButton::DrawInspector()
 
 		ImGui::Text("Size");
 
-	/*	if ()
-		{
-			LOG("siz")
-		}*/
+
 
 		if (ImGui::DragFloat("X", &size.x, 0.5F, 0, 0, "%.3f", 1, game_object_attached->is_static))
 			size_button = size;
 		if (ImGui::DragFloat("Y", &size.y, 0.5F, 0, 0, "%.3f", 1, game_object_attached->is_static))
 			size_button = size;
 
+		
+		if (ImGui::Button("targergraphic"))
+		{
+		}
+			if (ImGui::BeginDragDropTarget())
+			{
+				const ImGuiPayload* payload = ImGui::GetDragDropPayload();
+					//(DROP_ID_PROJECT_NODE, ImGuiDragDropFlags_SourceNoDisableHover| ImGuiDragDropFlags_AcceptBeforeDelivery);
+				if (payload != nullptr && payload->IsDataType(DROP_ID_PROJECT_NODE)) {
+					FileNode* node = *(FileNode * *)payload->Data;
+
+
+					// drop texture
+					if (node != nullptr && node->type == FileDropType::TEXTURE && App->objects->GetSelectedObject() != nullptr)
+					{
+						std::string path = App->file_system->GetPathWithoutExtension(node->path + node->name);
+						path += "_meta.alien";
+
+						u64 ID = App->resources->GetIDFromAlienPath(path.data());
+
+						ResourceTexture* texture_dropped = (ResourceTexture*)App->resources->GetResourceWithID(ID);
+
+						if (texture_dropped != nullptr) {
+
+							
+							tex = texture_dropped; //id incorrect
+							/*if (App->objects->GetSelectedObject()->HasComponent(ComponentType::MATERIAL))
+								ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, App->objects->GetSelectedObject()->GetComponent(ComponentType::MATERIAL));
+							App->importer->ApplyTextureToSelectedObject(texture_dropped);*/
+							
+							
+						}
+
+					}
+
+				}
+				ImGui::GetDragDropPayload();
+
+				ImGui::EndDragDropTarget();
+
+			}
+		
 
 	}
 	ImGui::Spacing();
@@ -264,10 +320,10 @@ void ComponentButton::BindTex()
 	//ComponentImage* img = game_object_attached->GetComponent<ComponentImage>();
 
 
-	if (tex != nullptr && tex->id > 0)
+	if (tex != nullptr /*&& tex->GetID() > 0*/)
 	{
 		glEnable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, tex->id);
+		glBindTexture(GL_TEXTURE_2D, tex->id); //?????
 
 	}
 }
