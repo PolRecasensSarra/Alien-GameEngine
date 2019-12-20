@@ -59,8 +59,6 @@ void ComponentButton::Draw()
 {
 	//TODO::// if texture exists, do bind
 
-
-
 	ComponentTransform* transform = (ComponentTransform*)game_object_attached->GetComponent(ComponentType::TRANSFORM);
 	if (transform != nullptr) {
 
@@ -109,8 +107,8 @@ void ComponentButton::UpdateStates()
 	top = y;
 	bottom = y + height;
 
-	LOG("%f", origin.x);
-	LOG("%f", origin.y);
+	/*LOG("%f", origin.x);
+	LOG("%f", origin.y);*/
 
 
 	if (origin.x >= left && origin.y >= top && origin.x <= right && origin.y <= bottom)

@@ -49,7 +49,6 @@ bool ModuleObjects::Start()
 	canvas->SetName("Canvas");
 	canvas->AddComponent(new ComponentTransform(canvas, { 0.0f,2.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
 	canvas->AddComponent(new ComponentCanvas(canvas));
-	
 
 	button = new GameObject(canvas);
 	button->SetName("testButton");
@@ -178,7 +177,7 @@ update_status ModuleObjects::PostUpdate(float dt)
 		if (allow_grid)
 			App->renderer3D->RenderGrid();
 
-		OnDrawUI();
+	
 
 		if (base_game_object->HasChildren()) {
 			std::map<float, GameObject*> to_draw;
@@ -200,6 +199,8 @@ update_status ModuleObjects::PostUpdate(float dt)
 			}
 		}
 	
+		OnDrawUI();
+
 
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 	}
