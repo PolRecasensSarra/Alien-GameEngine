@@ -88,7 +88,7 @@ void ComponentButton::UpdateStates()
 {
 	float3 pos = float3::zero;
 	
-	float2 origin = float2((App->input->GetMousePosition().x - App->ui->panel_game->posX), (App->input->GetMousePosition().y - App->ui->panel_game->posY));
+	float2 origin = float2((App->input->GetMousePosition().x - App->ui->panel_game->posX), (App->input->GetMousePosition().y - (App->ui->panel_game->posY+19)));
 
 	ComponentTransform* transform = (ComponentTransform*)game_object_attached->GetComponent(ComponentType::TRANSFORM);
 	if (transform != nullptr)
@@ -106,8 +106,8 @@ void ComponentButton::UpdateStates()
 	top = y;
 	bottom = y + height;
 
-	/*LOG("%f", origin.x);
-	LOG("%f", origin.y);*/
+	LOG("%f", origin.x);
+	LOG("%f", origin.y);
 
 
 	if (origin.x >= left && origin.y >= top && origin.x <= right && origin.y <= bottom)
