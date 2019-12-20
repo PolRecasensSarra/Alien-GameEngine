@@ -32,7 +32,8 @@ ComponentButton::~ComponentButton()
 
 void ComponentButton::Update()
 {
-	UpdateStates();
+	if (Time::state == Time::GameState::PLAY)
+		UpdateStates();
 
 	if (function)
 	{
