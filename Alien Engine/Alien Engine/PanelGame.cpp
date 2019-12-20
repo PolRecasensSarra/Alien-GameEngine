@@ -56,6 +56,9 @@ void PanelGame::PanelLogic()
 	ImGui::SetCursorPosX((ImGui::GetWindowWidth() - width) * 0.5f);
 	ImGui::SetCursorPosY((ImGui::GetWindowHeight() - height) * 0.5f);
 
+	posX = ImGui::GetWindowPos().x + ImGui::GetCursorPosX();
+	posY = ImGui::GetWindowPos().y + ImGui::GetCursorPosY();
+
 	if (App->renderer3D->actual_game_camera != nullptr)
 	{
 		ImGui::Image((ImTextureID)App->renderer3D->game_tex->id, { width,height }, { 0,1 }, { 1,0 });

@@ -5,6 +5,7 @@
 
 
 class ComponentImage;
+enum class InteractiveStates;
 
 class ComponentButton : public Component {
 	friend class CompZ;
@@ -16,10 +17,12 @@ public:
 	void Update();
 	void PostUpdate();
 	void Draw();
+	void UpdateStates();
 	void DoLogicClicked();
 	void DoLogicHovered();
 	void DoLogicPressed();
 	void DoLogicExit();
+	
 
 	bool DrawInspector();
 
@@ -27,7 +30,7 @@ public:
 private:
 
 	float2 size_button;
-
+	bool dragable = false;
 	bool function = false;
 
 	ImVec4 actual_color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -35,5 +38,6 @@ private:
 	ImVec4 hover_color = ImVec4(0.8f, 0.8f, 0.8f, 1.0f);
 	ImVec4 pressed_color = ImVec4(0.5f, 0.5f, 0.5f, 1.0f);
 
+	InteractiveStates state = InteractiveStates::NO_STATE;
 	ComponentImage* image = nullptr;
 };

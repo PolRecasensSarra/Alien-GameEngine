@@ -2,6 +2,8 @@
 #include "ComponentTransform.h"
 #include "GameObject.h"
 #include "Application.h"
+#include "ModuleUI.h"
+#include "PanelGame.h"
 #include "ReturnZ.h"
 
 ComponentButton::ComponentButton(GameObject* attach, float2 size) :Component(attach)
@@ -24,6 +26,8 @@ ComponentButton::~ComponentButton()
 
 void ComponentButton::Update()
 {
+	UpdateStates();
+
 	if (function)
 	{
 		//call the fade function mega hardcoded
@@ -72,6 +76,88 @@ void ComponentButton::Draw()
 	//do magic
 }
 
+void ComponentButton::UpdateStates()
+{
+	float3 pos = float3::zero;
+	
+	float2 origin = float2((App->input->GetMousePosition().x - App->ui->panel_game->posX), (App->input->GetMousePosition().y - App->ui->panel_game->posY));
+
+	ComponentTransform* transform = (ComponentTransform*)game_object_attached->GetComponent(ComponentType::TRANSFORM);
+	if (transform != nullptr)
+		pos = transform->GetGlobalPosition();
+
+
+	float width = size_button.x;
+	float height = size_button.y;
+	float x = pos.x;
+	float y = pos.y;
+
+	float right, left, top, bottom;
+	left = x;
+	right = x + width;
+	top = y;
+	bottom = y + height;
+
+	LOG("%f", origin.x);
+	LOG("%f", origin.y);
+
+
+	if (origin.x >= left && origin.y >= top && origin.x <= right && origin.y <= bottom)
+	{
+
+		if (state == InteractiveStates::NO_STATE)
+		{
+			state = InteractiveStates::ENTER;
+			//Enter();
+		}
+		if (state == InteractiveStates::ENTER)
+		{
+			state = InteractiveStates::HOVER;
+		}
+
+		if (state == InteractiveStates::HOVER)
+		{
+			if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
+			{
+				DoLogicPressed();
+			}
+			else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
+			{
+				DoLogicPressed();
+				if (dragable)
+				{
+					//Move(); //I don't know if this is okai so maybe we delete this
+				}
+			}
+			else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP)
+			{
+				if (!dragable)
+				{
+					DoLogicClicked();
+				}
+			}
+			else
+			{
+				DoLogicHovered();
+			}
+		}
+	}
+	else
+	{
+		if (state == InteractiveStates::HOVER)
+		{
+			state = InteractiveStates::EXIT;
+			DoLogicExit();
+			//Exit();
+		}
+		else
+		{
+			state = InteractiveStates::NO_STATE;
+			//Idle();
+		}
+	}
+}
+
 void ComponentButton::DoLogicClicked()
 {
 	function = true;
@@ -94,6 +180,8 @@ void ComponentButton::DoLogicExit()
 {
 	actual_color = normal_color;
 }
+
+
 
 bool ComponentButton::DrawInspector()
 {

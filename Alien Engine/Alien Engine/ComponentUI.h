@@ -4,13 +4,6 @@
 
 class ComponentCanvas;
 
-enum InteractiveStates
-{
-	NO_STATE,
-	ENTER,
-	HOVER,
-	EXIT
-};
 
 class ComponentUI :public Component 
 {
@@ -29,7 +22,7 @@ public:
 	void Move();
 
 public:
-	InteractiveStates state = NO_STATE;
+	//InteractiveStates state = NO_STATE;
 	bool dragable = false;
 	ComponentCanvas* incanvas = nullptr;
 

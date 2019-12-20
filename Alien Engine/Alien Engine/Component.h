@@ -26,6 +26,14 @@ enum class ComponentType {
 	UNKNOWN
 };
 
+enum class InteractiveStates
+{
+	NO_STATE,
+	ENTER,
+	HOVER,
+	EXIT
+};
+
 class Component {
 
 public:
