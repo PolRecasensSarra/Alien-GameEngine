@@ -47,13 +47,14 @@ bool ModuleObjects::Start()
 
 	canvas = new GameObject(base_game_object);
 	canvas->SetName("Canvas");
-	canvas->AddComponent(new ComponentCanvas(canvas));
 	canvas->AddComponent(new ComponentTransform(canvas, { 0.0f,2.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	canvas->AddComponent(new ComponentCanvas(canvas));
+	
 
 	button = new GameObject(canvas);
 	button->SetName("testButton");
-	button->AddComponent(new ComponentButton(button, { 30,10 }));
 	button->AddComponent(new ComponentTransform(button, { 10.0f,0.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	button->AddComponent(new ComponentButton(button, { 30,10 }));
 	button->AddComponent(new ComponentUI(button));
 
 

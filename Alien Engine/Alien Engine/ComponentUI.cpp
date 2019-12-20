@@ -24,7 +24,6 @@ void ComponentUI::UpdateStates()
 {
 	float3 pos = float3::zero;
 	float2 size = game_object_attached->GetSizeUI();
-
 	ComponentTransform* transform = (ComponentTransform*)game_object_attached->GetComponent(ComponentType::TRANSFORM);
 	if (transform != nullptr)
 		pos = transform->GetGlobalPosition();
@@ -45,8 +44,8 @@ void ComponentUI::UpdateStates()
 	float mouse_x = App->input->GetMouseX();
 	float mouse_y = App->input->GetMouseY();
 
-	LOG("%f",mouse_x);
-	LOG("%f", mouse_y);
+	/*LOG("%f",mouse_x);
+	LOG("%f", mouse_y);*/
 
 	
 	if (mouse_x >= left && mouse_y >= top && mouse_x <= right && mouse_y <= bottom)

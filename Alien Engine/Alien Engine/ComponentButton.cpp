@@ -7,7 +7,7 @@
 ComponentButton::ComponentButton(GameObject* attach, float2 size) :Component(attach)
 {
 	type = ComponentType::BUTTON;
-	;
+	
 	this->size = size;
 	this->size_button = size;
 
@@ -44,13 +44,15 @@ void ComponentButton::PostUpdate()
 
 void ComponentButton::Draw()
 {
+	//TODO::// if texture exists, do bind
+
 	ComponentTransform* transform = (ComponentTransform*)game_object_attached->GetComponent(ComponentType::TRANSFORM);
 	if (transform != nullptr) {
 
-		glBegin(GL_LINE_LOOP);
+		glBegin(GL_QUADS);
 		glLineWidth(8.0f);
-		glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-
+		glColor4f(normal_color.x, normal_color.y, normal_color.z, normal_color.w);
+		
 		float3 pos = transform->GetGlobalPosition();
 
 		float3 v1 = float3(pos.x, pos.y, pos.z);
@@ -63,9 +65,9 @@ void ComponentButton::Draw()
 		glVertex3f(v3.x, v3.y, v3.z);
 		glVertex3f(v4.x, v4.y, v4.z);
 		
-
 		glEnd();
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		
 	}
 	//do magic
 }
@@ -85,9 +87,21 @@ void ComponentButton::DoLogicPressed()
 	//change color
 }
 
-void ComponentButton::ShowInspector()
+bool ComponentButton::DrawInspector()
 {
-	//inspector magic
+	if (ImGui::CollapsingHeader("Button", &not_destroy, ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ImGui::ColorEdit4("Normal Color", (float*)& normal_color);
+		ImGui::Spacing();
+		ImGui::ColorEdit4("Hover Color", (float*)& hover_color);
+		ImGui::Spacing();
+		ImGui::ColorEdit4("Pressed Color", (float*)& pressed_color);
+	}
+	ImGui::Spacing();
+	ImGui::Separator();
+
+	return true;
 }
+
 
 

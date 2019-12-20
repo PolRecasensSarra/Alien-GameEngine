@@ -19,7 +19,8 @@ public:
 	void DoLogicClicked();
 	void DoLogicHovered();
 	void DoLogicPressed();
-	void ShowInspector();
+
+	bool DrawInspector();
 
 
 private:
@@ -29,8 +30,8 @@ private:
 	bool function = false;
 
 	ImVec4 normal_color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
-	ImVec4 highlighted_color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
-	ImVec4 pressed_color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+	ImVec4 hover_color = ImVec4(0.8f, 0.8f, 0.8f, 1.0f);
+	ImVec4 pressed_color = ImVec4(0.5f, 0.5f, 0.5f, 1.0f);
 
 	ComponentImage* image = nullptr;
 };
