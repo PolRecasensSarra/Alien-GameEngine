@@ -705,7 +705,10 @@ void ModuleObjects::SwapReturnZ(bool get_save, bool delete_current)
 
 void ModuleObjects::OnDrawUI()
 {
-	base_game_object->PostUpdateUIScene();
+	if (!Time::IsInGameState())
+		base_game_object->PostUpdateUIScene();
+	else
+		base_game_object->PostUpdateUIGame();
 }
 
 void ModuleObjects::DeleteReturns()

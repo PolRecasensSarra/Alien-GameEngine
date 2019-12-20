@@ -29,6 +29,7 @@ public:
 	void Update();
 	void PostUpdate();
 	void PostUpdateUIScene();
+	void PostUpdateUIGame();
 
 	// here we call Component Mesh, Material & light
 	void DrawScene();

@@ -140,6 +140,27 @@ void GameObject::PostUpdateUIScene()
 	}
 }
 
+void GameObject::PostUpdateUIGame()
+{
+	if (!components.empty()) {
+		std::vector<Component*>::iterator item = components.begin();
+		for (; item != components.end(); ++item) {
+			if (*item != nullptr && (*item)->IsEnabled() && ((*item)->GetType() == ComponentType::BUTTON || (*item)->GetType() == ComponentType::CHECKBOX || (*item)->GetType() == ComponentType::INPUTBOX)) {
+				(*item)->PostUpdate();
+			}
+		}
+	}
+
+	if (!children.empty()) {
+		std::vector<GameObject*>::iterator child = children.begin();
+		for (; child != children.end(); ++child) {
+			if (*child != nullptr && (*child)->IsEnabled()) {
+				(*child)->PostUpdateUIGame();
+			}
+		}
+	}
+}
+
 void GameObject::DrawScene()
 {
 	ComponentTransform* transform = (ComponentTransform*)GetComponent(ComponentType::TRANSFORM);

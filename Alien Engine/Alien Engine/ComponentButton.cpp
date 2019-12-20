@@ -32,12 +32,14 @@ ComponentButton::~ComponentButton()
 
 void ComponentButton::Update()
 {
-	if (Time::state == Time::GameState::PLAY)
+	if (Time::IsInGameState())
 		UpdateStates();
 
 	if (function)
 	{
 		//call the fade function mega hardcoded
+		
+		function = false;
 	}
 	else
 	{
