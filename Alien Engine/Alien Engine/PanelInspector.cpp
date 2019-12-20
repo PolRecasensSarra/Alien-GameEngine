@@ -6,6 +6,7 @@
 #include "ComponentMesh.h"
 #include "ComponentMaterial.h"
 #include "ComponentLight.h"
+#include "ComponentButton.h"
 #include "ReturnZ.h"
 
 PanelInspector::PanelInspector(const std::string& panel_name, const SDL_Scancode& key1_down, const SDL_Scancode& key2_repeat, const SDL_Scancode& key3_repeat_extra)
@@ -88,7 +89,7 @@ void PanelInspector::ButtonAddComponent()
 {
 	ImGui::Spacing();
 
-	ImGui::Combo("##choose component", &component, "Select Component\0Mesh\0Material\0Light\0Camera\0");
+	ImGui::Combo("##choose component", &component, "Select Component\0Mesh\0Material\0Light\0Camera\0Button\0");
 
 	ImGui::SameLine();
 
@@ -160,8 +161,17 @@ void PanelInspector::ButtonAddComponent()
 				LOG("The selected object already has this component!");
 
 			break;
-		}
 
+		case 5:
+			if (!App->objects->GetSelectedObject()->HasComponent(ComponentType::BUTTON))
+			{
+				comp = new ComponentButton(App->objects->GetSelectedObject());
+				App->objects->GetSelectedObject()->AddComponent(comp);
+
+			}
+			break;
+		}
+	
 		if (comp != nullptr) {
 			ReturnZ::AddNewAction(ReturnZ::ReturnActions::ADD_COMPONENT, comp);
 		}

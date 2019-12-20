@@ -5,7 +5,7 @@
 #include "ModuleUI.h"
 #include "PanelGame.h"
 #include "ReturnZ.h"
-
+#include "ResourceTexture.h"
 ComponentButton::ComponentButton(GameObject* attach) : Component(attach)
 {
 	type = ComponentType::BUTTON;
@@ -55,6 +55,8 @@ void ComponentButton::PostUpdate()
 void ComponentButton::Draw()
 {
 	//TODO::// if texture exists, do bind
+
+
 
 	ComponentTransform* transform = (ComponentTransform*)game_object_attached->GetComponent(ComponentType::TRANSFORM);
 	if (transform != nullptr) {
@@ -194,6 +196,12 @@ void ComponentButton::SaveComponent(JSONArraypack* to_save)
 	to_save->SetFloat2("SizeButton", size_button);
 	to_save->SetFloat2("Size", size);
 	to_save->SetColor("Color", { actual_color.x,actual_color.y,actual_color.z ,actual_color.w});
+	to_save->SetBoolean("HasTexture", (tex != nullptr) ? true : false);
+
+	if (tex != nullptr)
+		to_save->SetString("TextureID", std::to_string(tex->GetID()));
+
+	to_save->SetBoolean("Enabled", enabled);
 }
 
 void ComponentButton::LoadComponent(JSONArraypack* to_load)
@@ -202,11 +210,18 @@ void ComponentButton::LoadComponent(JSONArraypack* to_load)
 	size_button = to_load->GetFloat2("SizeButton");
 	size = to_load->GetFloat2("Size");
 	Color c = to_load->GetColor("Color");
+	actual_color = { c.r, c.g,c.b, c.a };
+	enabled = to_load->GetBoolean("Enabled");
 
-	actual_color.x = c.r;
-	actual_color.y = c.g;
-	actual_color.z = c.b;
-	actual_color.w = c.a;
+	if (to_load->GetBoolean("HasTexture")) {
+		u64 ID = std::stoull(to_load->GetString("TextureID"));
+		tex = (ResourceTexture*)App->resources->GetResourceWithID(ID);
+		if (tex != nullptr)
+			tex->IncreaseReferences();
+	}
+
+
+
 }
 
 
@@ -220,11 +235,40 @@ bool ComponentButton::DrawInspector()
 		ImGui::ColorEdit4("Hover Color", (float*)& hover_color);
 		ImGui::Spacing();
 		ImGui::ColorEdit4("Pressed Color", (float*)& pressed_color);
+
+
+		ImGui::Text("Size");
+
+	/*	if ()
+		{
+			LOG("siz")
+		}*/
+
+		if (ImGui::DragFloat("X", &size.x, 0.5F, 0, 0, "%.3f", 1, game_object_attached->is_static))
+			size_button = size;
+		if (ImGui::DragFloat("Y", &size.y, 0.5F, 0, 0, "%.3f", 1, game_object_attached->is_static))
+			size_button = size;
+
+
 	}
 	ImGui::Spacing();
 	ImGui::Separator();
 
+
 	return true;
+}
+
+void ComponentButton::BindTex()
+{
+	//ComponentImage* img = game_object_attached->GetComponent<ComponentImage>();
+
+
+	if (tex != nullptr && tex->id > 0)
+	{
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, tex->id);
+
+	}
 }
 
 

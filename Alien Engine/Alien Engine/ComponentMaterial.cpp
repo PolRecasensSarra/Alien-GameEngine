@@ -16,6 +16,7 @@ ComponentMaterial::~ComponentMaterial()
 {
 	if (texture != nullptr)
 		texture->DecreaseReferences();
+
 }
 
 void ComponentMaterial::BindTexture()

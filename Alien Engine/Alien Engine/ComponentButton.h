@@ -2,6 +2,7 @@
 
 #include "Component.h"
 #include "imgui/imgui.h"
+#include "ModuleImporter.h"
 
 
 class ComponentImage;
@@ -29,7 +30,7 @@ public:
 
 	bool DrawInspector();
 
-
+	void BindTex();
 private:
 
 	float2 size_button;
@@ -43,4 +44,6 @@ private:
 
 	InteractiveStates state = InteractiveStates::NO_STATE;
 	ComponentImage* image = nullptr;
+
+	ResourceTexture* tex = nullptr;
 };
