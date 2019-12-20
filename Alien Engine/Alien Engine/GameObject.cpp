@@ -285,7 +285,7 @@ float2 GameObject::GetSizeUI()
 {
 	std::vector<Component*>::iterator item = components.begin();
 	for (; item != components.end(); ++item) {
-		if (*item != nullptr) 
+		if (*item != nullptr && (*item)->GetType() == ComponentType::BUTTON) 
 		{
 			return (*item)->GetSize();
 			//check if this works okay

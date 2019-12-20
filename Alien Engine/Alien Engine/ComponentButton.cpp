@@ -51,7 +51,7 @@ void ComponentButton::Draw()
 
 		glBegin(GL_QUADS);
 		glLineWidth(8.0f);
-		glColor4f(normal_color.x, normal_color.y, normal_color.z, normal_color.w);
+		glColor4f(actual_color.x, actual_color.y, actual_color.z, actual_color.w);
 		
 		float3 pos = transform->GetGlobalPosition();
 
@@ -79,12 +79,20 @@ void ComponentButton::DoLogicClicked()
 
 void ComponentButton::DoLogicHovered()
 {
+
+	actual_color = hover_color;
 	//change colors
 }
 
 void ComponentButton::DoLogicPressed()
 {
+	actual_color = pressed_color;
 	//change color
+}
+
+void ComponentButton::DoLogicExit()
+{
+	actual_color = normal_color;
 }
 
 bool ComponentButton::DrawInspector()

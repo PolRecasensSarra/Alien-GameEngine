@@ -23,6 +23,7 @@ public:
 	virtual void DoLogicClicked() {}
 	virtual void DoLogicHovered() {}
 	virtual void DoLogicPressed() {}
+	virtual void DoLogicExit() {}
 
 	void UpdateStates();
 	void Move();

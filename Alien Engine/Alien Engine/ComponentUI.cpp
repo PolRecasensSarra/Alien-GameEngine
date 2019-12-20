@@ -1,6 +1,7 @@
 #include "ComponentUI.h"
 #include "GameObject.h"
 #include "ComponentTransform.h"
+#include "ComponentButton.h"
 #include "Application.h"
 #include "ModuleInput.h"
 
@@ -24,6 +25,7 @@ void ComponentUI::UpdateStates()
 {
 	float3 pos = float3::zero;
 	float2 size = game_object_attached->GetSizeUI();
+
 	ComponentTransform* transform = (ComponentTransform*)game_object_attached->GetComponent(ComponentType::TRANSFORM);
 	if (transform != nullptr)
 		pos = transform->GetGlobalPosition();
@@ -65,11 +67,11 @@ void ComponentUI::UpdateStates()
 		{
 			if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
 			{
-				DoLogicPressed();
+				game_object_attached->GetComponent<ComponentButton>()->DoLogicPressed();
 			}
 			else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
 			{
-				DoLogicPressed();
+				game_object_attached->GetComponent<ComponentButton>()->DoLogicPressed();
 				if (dragable)
 				{
 					Move(); //I don't know if this is okai so maybe we delete this
@@ -79,12 +81,12 @@ void ComponentUI::UpdateStates()
 			{
 				if (!dragable)
 				{
-					DoLogicClicked();
+					game_object_attached->GetComponent<ComponentButton>()->DoLogicClicked();
 				}
 			}
 			else
 			{
-				DoLogicHovered();
+				game_object_attached->GetComponent<ComponentButton>()->DoLogicHovered();
 			}
 		}
 	}
@@ -93,6 +95,7 @@ void ComponentUI::UpdateStates()
 		if (state == HOVER)
 		{
 			state = EXIT;
+			game_object_attached->GetComponent<ComponentButton>()->DoLogicExit();
 			//Exit();
 		}
 		else
