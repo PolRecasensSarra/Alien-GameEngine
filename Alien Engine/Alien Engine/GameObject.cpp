@@ -9,6 +9,8 @@
 #include "RandomHelper.h"
 #include "ModuleObjects.h"
 #include "ComponentCamera.h"
+#include "ComponentButton.h"
+#include "ComponentCanvas.h"
 #include "ReturnZ.h"
 
 GameObject::GameObject(GameObject* parent)
@@ -769,6 +771,19 @@ void GameObject::LoadObject(JSONArraypack* to_load, GameObject* parent)
 				ComponentCamera* camera = new ComponentCamera(this);
 				camera->LoadComponent(components_to_load);
 				AddComponent(camera);
+				break; }
+
+			case (int)ComponentType::BUTTON: {
+
+				ComponentButton* button = new ComponentButton(this);
+				button->LoadComponent(components_to_load);
+				AddComponent(button);
+				break;}
+			case (int)ComponentType::CANVAS: {
+
+				ComponentCanvas* canvas = new ComponentCanvas(this);
+				canvas->LoadComponent(components_to_load);
+				AddComponent(canvas);
 				break; }
 			default:
 				LOG("Unknown component type while loading");

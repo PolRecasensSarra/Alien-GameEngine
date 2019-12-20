@@ -12,6 +12,7 @@ class ComponentButton : public Component {
 
 public:
 
+	ComponentButton(GameObject* attach);
 	ComponentButton(GameObject* attach, float2 size);
 	~ComponentButton();
 	void Update();

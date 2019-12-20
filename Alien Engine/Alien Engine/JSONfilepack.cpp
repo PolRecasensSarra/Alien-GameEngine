@@ -378,6 +378,32 @@ Color JSONArraypack::GetColor(const std::string& name)
 	return color;
 }
 
+void JSONArraypack::SetFloat2(const std::string& name, const float2& numbers)
+{
+	JSON_Array* arr = json_object_dotget_array(json_value_get_object(value), name.data());
+	if (arr == nullptr) {
+		JSON_Value* new_val = json_value_init_array();
+		arr = json_value_get_array(new_val);
+		json_object_dotset_value(json_value_get_object(value), name.data(), new_val);
+	}
+	else {
+		json_array_clear(arr);
+	}
+	json_array_append_number(arr, numbers.x);
+	json_array_append_number(arr, numbers.y);
+}
+
+float2 JSONArraypack::GetFloat2(const std::string& name)
+{
+	JSON_Array* arr = json_object_dotget_array(json_value_get_object(value), name.data());
+
+	float2 numbers;
+	numbers.x = json_array_get_number(arr, 0);
+	numbers.y = json_array_get_number(arr, 1);
+
+	return numbers;
+}
+
 void JSONArraypack::SetFloat3(const std::string& name, const float3& numbers)
 {
 	JSON_Array* arr = json_object_dotget_array(json_value_get_object(value), name.data());

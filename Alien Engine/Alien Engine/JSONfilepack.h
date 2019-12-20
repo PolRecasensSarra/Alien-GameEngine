@@ -84,6 +84,11 @@ public:
 	void SetColor(const std::string& name, const Color& color);
 	Color GetColor(const std::string& name);
 
+	
+
+	void SetFloat2(const std::string& name, const float2& numbers);
+	float2 GetFloat2(const std::string& name);
+
 	void SetFloat3(const std::string& name, const float3& numbers);
 	float3 GetFloat3(const std::string& name);
 

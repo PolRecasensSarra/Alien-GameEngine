@@ -6,6 +6,12 @@
 #include "PanelGame.h"
 #include "ReturnZ.h"
 
+ComponentButton::ComponentButton(GameObject* attach) : Component(attach)
+{
+	type = ComponentType::BUTTON;
+
+}
+
 ComponentButton::ComponentButton(GameObject* attach, float2 size) :Component(attach)
 {
 	type = ComponentType::BUTTON;
@@ -185,11 +191,22 @@ void ComponentButton::SaveComponent(JSONArraypack* to_save)
 {
 	to_save->SetNumber("Type", (int)type);
 	to_save->SetString("ID", std::to_string(ID));
+	to_save->SetFloat2("SizeButton", size_button);
+	to_save->SetFloat2("Size", size);
+	to_save->SetColor("Color", { actual_color.x,actual_color.y,actual_color.z ,actual_color.w});
 }
 
 void ComponentButton::LoadComponent(JSONArraypack* to_load)
 {
 	ID = std::stoull(to_load->GetString("ID"));
+	size_button = to_load->GetFloat2("SizeButton");
+	size = to_load->GetFloat2("Size");
+	Color c = to_load->GetColor("Color");
+
+	actual_color.x = c.r;
+	actual_color.y = c.g;
+	actual_color.z = c.b;
+	actual_color.w = c.a;
 }
 
 
