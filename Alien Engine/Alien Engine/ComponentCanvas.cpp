@@ -39,3 +39,14 @@ void ComponentCanvas::DebugDraw()
 
 	glEnd();
 }
+
+void ComponentCanvas::SaveComponent(JSONArraypack* to_save)
+{
+	to_save->SetNumber("Type", (int)type);
+	to_save->SetString("ID", std::to_string(ID));
+}
+
+void ComponentCanvas::LoadComponent(JSONArraypack* to_load)
+{
+	ID = std::stoull(to_load->GetString("ID"));
+}

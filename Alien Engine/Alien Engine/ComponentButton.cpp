@@ -98,8 +98,8 @@ void ComponentButton::UpdateStates()
 	top = y;
 	bottom = y + height;
 
-	LOG("%f", origin.x);
-	LOG("%f", origin.y);
+	/*LOG("%f", origin.x);
+	LOG("%f", origin.y);*/
 
 
 	if (origin.x >= left && origin.y >= top && origin.x <= right && origin.y <= bottom)
@@ -179,6 +179,17 @@ void ComponentButton::DoLogicPressed()
 void ComponentButton::DoLogicExit()
 {
 	actual_color = normal_color;
+}
+
+void ComponentButton::SaveComponent(JSONArraypack* to_save)
+{
+	to_save->SetNumber("Type", (int)type);
+	to_save->SetString("ID", std::to_string(ID));
+}
+
+void ComponentButton::LoadComponent(JSONArraypack* to_load)
+{
+	ID = std::stoull(to_load->GetString("ID"));
 }
 
 

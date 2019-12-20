@@ -55,7 +55,7 @@ bool ModuleObjects::Start()
 	button->SetName("testButton");
 	button->AddComponent(new ComponentTransform(button, { 10.0f,0.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
 	button->AddComponent(new ComponentButton(button, { 30,10 }));
-	button->AddComponent(new ComponentUI(button)); //segurament el treiem
+	//button->AddComponent(new ComponentUI(button)); //segurament el treiem
 
 
 	current_scene.name_without_extension = "Untitled*";
@@ -177,6 +177,8 @@ update_status ModuleObjects::PostUpdate(float dt)
 
 		if (allow_grid)
 			App->renderer3D->RenderGrid();
+
+		OnDrawUI();
 
 		if (base_game_object->HasChildren()) {
 			std::map<float, GameObject*> to_draw;
@@ -703,7 +705,7 @@ void ModuleObjects::SwapReturnZ(bool get_save, bool delete_current)
 
 void ModuleObjects::OnDrawUI()
 {
-	base_game_object->PostUpdate();
+	base_game_object->PostUpdateUIScene();
 }
 
 void ModuleObjects::DeleteReturns()

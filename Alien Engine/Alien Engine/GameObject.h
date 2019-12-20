@@ -28,6 +28,7 @@ public:
 	void PreUpdate();
 	void Update();
 	void PostUpdate();
+	void PostUpdateUIScene();
 
 	// here we call Component Mesh, Material & light
 	void DrawScene();

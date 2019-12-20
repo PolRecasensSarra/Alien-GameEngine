@@ -13,4 +13,7 @@ public:
 
 	void PostUpdate();
 	void DebugDraw();
+
+	void SaveComponent(JSONArraypack* to_save);
+	void LoadComponent(JSONArraypack* to_load);
 };
