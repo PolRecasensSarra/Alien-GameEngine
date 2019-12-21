@@ -61,6 +61,11 @@ bool ModuleObjects::Start()
 	image->AddComponent(new  ComponentTransform(image, { -10.0f,0.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 })); 
 	image->AddComponent(new ComponentImage(image, { 10,40 }));
 
+	GameObject* camera_hardcoded = new GameObject(base_game_object);
+	camera_hardcoded->SetName("Camera Hardcoded");
+	camera_hardcoded->AddComponent(new  ComponentTransform(camera_hardcoded, { -10.0f,15.0f,25.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	camera_hardcoded->AddComponent(new ComponentCamera(camera_hardcoded));
+
 
 	current_scene.name_without_extension = "Untitled*";
 	current_scene.full_path = "Untitled*";

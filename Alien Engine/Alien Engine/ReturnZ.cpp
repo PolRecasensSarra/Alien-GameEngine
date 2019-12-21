@@ -6,6 +6,7 @@
 #include "ComponentMaterial.h"
 #include "ComponentLight.h"
 #include "ComponentButton.h"
+#include "ComponentImage.h"
 #include "ResourceTexture.h"
 #include "Octree.h"
 
@@ -201,6 +202,10 @@ void ReturnZ::DoAction(ReturnZ* action, bool is_fordward)
 			ComponentButton* button = (ComponentButton*)App->objects->GetGameObjectByID(comp->comp->objectID)->GetComponentWithID(comp->comp->compID);
 			CompZ::SetComponent(button, comp->comp);
 			break; }
+		case ComponentType::IMAGE: {
+			ComponentImage* image = (ComponentImage*)App->objects->GetGameObjectByID(comp->comp->objectID)->GetComponentWithID(comp->comp->compID);
+			CompZ::SetComponent(image, comp->comp);
+			break; }
 		}
 		break; }
 	case ReturnActions::DELETE_COMPONENT: {
@@ -316,6 +321,11 @@ void ReturnZ::SetDeleteObject(GameObject* obj, ActionDeleteObject* to_fill)
 					CompZ::SetCompZ((*item), (CompZ**)&buttonZ);
 					comp = buttonZ;
 					break; }
+				case ComponentType::IMAGE: {
+					CompImageZ* imageZ = nullptr;
+					CompZ::SetCompZ((*item), (CompZ**)&imageZ);
+					comp = imageZ;
+					break; }
 				default:
 					LOG("A component hasn't been saved");
 					break;
@@ -406,6 +416,12 @@ void ReturnZ::CreateObject(ActionDeleteObject* obj)
 					CompButtonZ* buttonZ = (CompButtonZ*)(*item);
 					CompZ::SetComponent(button, buttonZ);
 					new_obj->AddComponent(button);
+					break; }
+				case ComponentType::IMAGE: {
+					ComponentImage* image = new ComponentImage(new_obj);
+					CompImageZ* imageZ = (CompImageZ*)(*item);
+					CompZ::SetComponent(image, imageZ);
+					new_obj->AddComponent(image);
 					break; }
 				default:
 					break;
@@ -516,6 +532,15 @@ void CompZ::SetCompZ(Component* component, CompZ** compZ)
 		buttonZ->objectID = button->game_object_attached->ID;
 		buttonZ->size = button->size;
 		break; }
+	case ComponentType::IMAGE: {
+		ComponentImage* image = (ComponentImage*)component;
+		CompImageZ* imageZ = new CompImageZ();
+		*compZ = imageZ;
+		if(image->texture != nullptr)
+			imageZ->resourceID = image->texture->GetID();
+		imageZ->objectID = image->game_object_attached->ID;
+		imageZ->size = image->size;
+		break; }
 	}
 	(*compZ)->type = component->GetType();
 	(*compZ)->objectID = component->game_object_attached->ID;
@@ -624,6 +649,17 @@ void CompZ::SetComponent(Component* component, CompZ* compZ)
 		}
 		button->size = buttonZ->size;
 		break; }
+	case ComponentType::IMAGE: {
+		ComponentImage* image = (ComponentImage*)component;
+		CompImageZ* imageZ = (CompImageZ*)compZ;
+		if (imageZ->resourceID == 0) {
+			image->texture = nullptr;
+		}
+		else {
+			image->texture = ((ResourceTexture*)App->resources->GetResourceWithID(imageZ->resourceID));
+		}
+		image->size = imageZ->size;
+		break; }
 	}
 	component->SetEnable(compZ->enabled);
 	component->ID = compZ->compID;
@@ -662,6 +698,11 @@ void CompZ::AttachCompZToGameObject(CompZ* compZ)
 		ComponentButton* button = new ComponentButton(obj);
 		CompZ::SetComponent(button, compZ);
 		obj->AddComponent(button);
+		break; }
+	case ComponentType::IMAGE: {
+		ComponentImage* image = new ComponentImage(obj);
+		CompZ::SetComponent(image, compZ);
+		obj->AddComponent(image);
 		break; }
 	}
 }

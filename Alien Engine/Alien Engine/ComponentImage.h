@@ -9,7 +9,7 @@ class ComponentImage : public Component {
 
 public:
 
-	ComponentImage(GameObject* attach, float2 size);
+	ComponentImage(GameObject* attach, float2 size = { 0.0f,0.0f });
 	~ComponentImage();
 
 	void BindImg();
@@ -23,18 +23,22 @@ public:
 	//
 	void PostUpdate();
 	void Draw();
+
+	void SaveComponent(JSONArraypack* to_save);
+	void LoadComponent(JSONArraypack* to_load);
+
+	bool DrawInspector();
+
+public:
 	float3 vertex[4];
 	float2 uv[4];
 	uint index[6]{
 		0,1,2,
 		2,3,0
 	};
-
-	bool DrawInspector();
 	uint indexId = 0;
 	uint vertexId = 0;
 	uint textureId = 0;
-
 
 	float2 sizeIMG;
 private:

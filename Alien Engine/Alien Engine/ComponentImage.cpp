@@ -177,6 +177,35 @@ void ComponentImage::Draw()
 	}
 }
 
+void ComponentImage::SaveComponent(JSONArraypack* to_save)
+{
+	to_save->SetNumber("Type", (int)type);
+	to_save->SetString("ID", std::to_string(ID));
+	to_save->SetFloat2("SizeButton", sizeIMG);
+	to_save->SetFloat2("Size", size);
+	to_save->SetBoolean("HasTexture", (texture != nullptr) ? true : false);
+
+	if (texture != nullptr)
+		to_save->SetString("TextureID", std::to_string(texture->GetID()));
+
+	to_save->SetBoolean("Enabled", enabled);
+}
+
+void ComponentImage::LoadComponent(JSONArraypack* to_load)
+{
+	ID = std::stoull(to_load->GetString("ID"));
+	sizeIMG = to_load->GetFloat2("SizeButton");
+	size = to_load->GetFloat2("Size");
+	enabled = to_load->GetBoolean("Enabled");
+
+	if (to_load->GetBoolean("HasTexture")) {
+		u64 ID = std::stoull(to_load->GetString("TextureID"));
+		texture = (ResourceTexture*)App->resources->GetResourceWithID(ID);
+		if (texture != nullptr)
+			texture->IncreaseReferences();
+	}
+}
+
 bool ComponentImage::DrawInspector()
 {
 	ImVec2 min_space = ImGui::GetWindowContentRegionMin();

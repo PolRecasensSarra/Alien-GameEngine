@@ -11,6 +11,7 @@
 #include "ComponentCamera.h"
 #include "ComponentButton.h"
 #include "ComponentCanvas.h"
+#include "ComponentImage.h"
 #include "ReturnZ.h"
 
 GameObject::GameObject(GameObject* parent)
@@ -805,6 +806,11 @@ void GameObject::LoadObject(JSONArraypack* to_load, GameObject* parent)
 				ComponentCanvas* canvas = new ComponentCanvas(this);
 				canvas->LoadComponent(components_to_load);
 				AddComponent(canvas);
+				break; }
+			case (int)ComponentType::IMAGE: {
+				ComponentImage* image = new ComponentImage(this);
+				image->LoadComponent(components_to_load);
+				AddComponent(image);
 				break; }
 			default:
 				LOG("Unknown component type while loading");
