@@ -118,6 +118,8 @@ void ComponentImage::Draw()
 
 	    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
+		glEnable(GL_TEXTURE_2D);
+
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 		glEnableClientState(GL_VERTEX_ARRAY);
@@ -143,34 +145,36 @@ void ComponentImage::Draw()
 		glDisableClientState(GL_VERTEX_ARRAY);
 
 		glBindTexture(GL_TEXTURE_2D, 0);
-		//glDisable(GL_ALPHA_TEST);
+		glDisable(GL_ALPHA_TEST);
 
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 	}
 
 	//------------------------------------------------------------
+	else
+	{
+		glBegin(GL_QUADS);
+		glLineWidth(8.0f);
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-	glBegin(GL_QUADS);
-	glLineWidth(8.0f);
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-
-	float3 pos = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalPosition();
-
-
-	float3 v1 = float3(pos.x, pos.y, pos.z);
-	float3 v2 = float3(pos.x + size.x, pos.y, pos.z);
-	float3 v3 = float3(pos.x + size.x, pos.y + size.y, pos.z);
-	float3 v4 = float3(pos.x, pos.y + size.y, pos.z);
-
-	glVertex3f(v1.x, v1.y, v1.z);
-	glVertex3f(v2.x, v2.y, v2.z);
-	glVertex3f(v3.x, v3.y, v3.z);
-	glVertex3f(v4.x, v4.y, v4.z);
+		float3 pos = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalPosition();
 
 
-	glEnd();
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		float3 v1 = float3(pos.x, pos.y, pos.z);
+		float3 v2 = float3(pos.x + size.x, pos.y, pos.z);
+		float3 v3 = float3(pos.x + size.x, pos.y + size.y, pos.z);
+		float3 v4 = float3(pos.x, pos.y + size.y, pos.z);
+
+		glVertex3f(v1.x, v1.y, v1.z);
+		glVertex3f(v2.x, v2.y, v2.z);
+		glVertex3f(v3.x, v3.y, v3.z);
+		glVertex3f(v4.x, v4.y, v4.z);
+
+
+		glEnd();
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	}
 }
 
 bool ComponentImage::DrawInspector()
