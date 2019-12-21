@@ -248,6 +248,7 @@ bool ComponentButton::DrawInspector()
 	if (ImGui::CollapsingHeader("Button", &not_destroy, ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::ColorEdit4("Normal Color", (float*)& normal_color);
+		actual_color = normal_color;
 		ImGui::Spacing();
 		ImGui::ColorEdit4("Hover Color", (float*)& hover_color);
 		ImGui::Spacing();
@@ -263,10 +264,13 @@ bool ComponentButton::DrawInspector()
 		if (ImGui::DragFloat("Y", &size.y, 0.5F, 0, 0, "%.3f", 1, game_object_attached->is_static))
 			size_button = size;
 
+		if (tex != nullptr)
+			ImGui::Image((ImTextureID)tex->id, ImVec2(100, 100), ImVec2(0, 1), ImVec2(1, 0));
+		else
+			if (ImGui::Button("targergraphic", ImVec2(100,100)))
+			{
+			}
 		
-		if (ImGui::Button("targergraphic"))
-		{
-		}
 			if (ImGui::BeginDragDropTarget())
 			{
 				const ImGuiPayload* payload = ImGui::GetDragDropPayload();
