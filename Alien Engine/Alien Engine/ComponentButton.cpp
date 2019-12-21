@@ -293,7 +293,7 @@ bool ComponentButton::DrawInspector()
 							/*if (App->objects->GetSelectedObject()->HasComponent(ComponentType::MATERIAL))
 								ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, App->objects->GetSelectedObject()->GetComponent(ComponentType::MATERIAL));
 							App->importer->ApplyTextureToSelectedObject(texture_dropped);*/
-							
+							tex->IncreaseReferences();
 							
 						}
 
@@ -319,10 +319,10 @@ void ComponentButton::BindTex()
 {
 	//ComponentImage* img = game_object_attached->GetComponent<ComponentImage>();
 
-
-	if (tex != nullptr /*&& tex->GetID() > 0*/)
+	if (tex != nullptr && tex->id > 0)
 	{
 		glEnable(GL_TEXTURE_2D);
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		glBindTexture(GL_TEXTURE_2D, tex->id); //?????
 
 	}
