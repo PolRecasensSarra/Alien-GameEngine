@@ -5,6 +5,7 @@
 #include "ResourceMesh.h"
 #include "ComponentMaterial.h"
 #include "ComponentLight.h"
+#include "ComponentButton.h"
 #include "ResourceTexture.h"
 #include "Octree.h"
 
@@ -196,6 +197,10 @@ void ReturnZ::DoAction(ReturnZ* action, bool is_fordward)
 			ComponentLight* light = (ComponentLight*)App->objects->GetGameObjectByID(comp->comp->objectID)->GetComponentWithID(comp->comp->compID);
 			CompZ::SetComponent(light, comp->comp);
 			break; }
+		case ComponentType::BUTTON: {
+			ComponentButton* button = (ComponentButton*)App->objects->GetGameObjectByID(comp->comp->objectID)->GetComponentWithID(comp->comp->compID);
+			CompZ::SetComponent(button, comp->comp);
+			break; }
 		}
 		break; }
 	case ReturnActions::DELETE_COMPONENT: {
@@ -306,6 +311,11 @@ void ReturnZ::SetDeleteObject(GameObject* obj, ActionDeleteObject* to_fill)
 					CompZ::SetCompZ((*item), (CompZ**)&cameraZ);
 					comp = cameraZ;
 					break; }
+				case ComponentType::BUTTON: {
+					CompButtonZ* buttonZ = nullptr;
+					CompZ::SetCompZ((*item), (CompZ**)&buttonZ);
+					comp = buttonZ;
+					break; }
 				default:
 					LOG("A component hasn't been saved");
 					break;
@@ -390,6 +400,12 @@ void ReturnZ::CreateObject(ActionDeleteObject* obj)
 					CompCameraZ* cameraZ = (CompCameraZ*)(*item);
 					CompZ::SetComponent(camera, cameraZ);
 					new_obj->AddComponent(camera);
+					break; }
+				case ComponentType::BUTTON: {
+					ComponentButton* button = new ComponentButton(new_obj);
+					CompButtonZ* buttonZ = (CompButtonZ*)(*item);
+					CompZ::SetComponent(button, buttonZ);
+					new_obj->AddComponent(button);
 					break; }
 				default:
 					break;
@@ -491,6 +507,15 @@ void CompZ::SetCompZ(Component* component, CompZ** compZ)
 		cameraZ->objectID = camera->game_object_attached->ID;
 		cameraZ->near_plane = camera->near_plane;
 		break; }
+	case ComponentType::BUTTON: {
+		ComponentButton* button = (ComponentButton*)component;
+		CompButtonZ* buttonZ = new CompButtonZ();
+		*compZ = buttonZ;
+		if (button->tex != nullptr)
+			buttonZ->resourceID = button->tex->GetID();
+		buttonZ->objectID = button->game_object_attached->ID;
+		buttonZ->size = button->size;
+		break; }
 	}
 	(*compZ)->type = component->GetType();
 	(*compZ)->objectID = component->game_object_attached->ID;
@@ -588,6 +613,17 @@ void CompZ::SetComponent(Component* component, CompZ* compZ)
 		camera->frustum.nearPlaneDistance = camera->near_plane;
 		camera->frustum.farPlaneDistance = camera->far_plane;
 		break; }
+	case ComponentType::BUTTON: {
+		ComponentButton* button = (ComponentButton*)component;
+		CompButtonZ* buttonZ = (CompButtonZ*)compZ;
+		if (buttonZ->resourceID == 0) {
+			button->tex = nullptr;
+		}
+		else {
+			button->tex = ((ResourceTexture*)App->resources->GetResourceWithID(buttonZ->resourceID));
+		}
+		button->size = buttonZ->size;
+		break; }
 	}
 	component->SetEnable(compZ->enabled);
 	component->ID = compZ->compID;
@@ -621,6 +657,11 @@ void CompZ::AttachCompZToGameObject(CompZ* compZ)
 		ComponentCamera* camera = new ComponentCamera(obj);
 		CompZ::SetComponent(camera, compZ);
 		obj->AddComponent(camera);
+		break; }
+	case ComponentType::BUTTON: {
+		ComponentButton* button = new ComponentButton(obj);
+		CompZ::SetComponent(button, compZ);
+		obj->AddComponent(button);
 		break; }
 	}
 }

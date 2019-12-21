@@ -62,7 +62,6 @@ void ComponentButton::PostUpdate()
 void ComponentButton::Draw()
 {
 	//TODO::// if texture exists, do bind
-
 	BindTex();
 
 	ComponentTransform* transform = (ComponentTransform*)game_object_attached->GetComponent(ComponentType::TRANSFORM);
@@ -324,7 +323,6 @@ void ComponentButton::BindTex()
 		glEnable(GL_TEXTURE_2D);
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 		glBindTexture(GL_TEXTURE_2D, tex->id); //?????
-
 	}
 }
 

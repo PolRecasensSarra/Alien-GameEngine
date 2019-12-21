@@ -170,3 +170,9 @@ public:
 	float near_plane = 0.f;
 	int is_fov_horizontal = 0;
 };
+
+class CompButtonZ :public CompZ {
+public:
+	u64 resourceID = 0;
+	float2 size = { 20.0f,10.0f };
+};
