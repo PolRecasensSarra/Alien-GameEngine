@@ -54,20 +54,17 @@ void ComponentImage::SetComponent(Component* component)
 
 void ComponentImage::CreatImgPlane()
 {
+	float3 pos = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalPosition();
+	vertex[0] = float3(pos.x, pos.y, pos.z);
+	uv[0] = float2(0, 0);
 
-	float width = sizeIMG.x;
-	float height = sizeIMG.y;
+	vertex[1] = float3(pos.x + size.x, pos.y, pos.z);
+	uv[1] = float2(1, 0);
 
-	vertex[0] = float3(width / 2, -height / 2, 0);
-	uv[0] = float2(1, 0);
+	vertex[2] = float3(pos.x + size.x, pos.y + size.y, pos.z);
+	uv[2] = float2(1, 1);
 
-	vertex[1] = float3(width / 2, height / 2, 0);
-	uv[1] = float2(1, 1);
-
-	vertex[2] = float3(-width / 2, -height / 2, 0);
-	uv[2] = float2(0, 0);
-
-	vertex[3] = float3(-width / 2, height / 2, 0);
+	vertex[3] = float3(pos.x, pos.y + size.y, pos.z);
 	uv[3] = float2(0, 1);
 
 	glGenBuffers(1, (GLuint*)& vertexId);
@@ -83,20 +80,18 @@ void ComponentImage::CreatImgPlane()
 
 	glGenBuffers(1, (GLuint*)& indexId);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(float) * 6, index, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * 6, index, GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 void ComponentImage::UpdateImgPlane()
 {
 
-	
-
-
-	vertex[0] = float3(sizeIMG.x / 2, -sizeIMG.y / 2, 0);
-	vertex[1] = float3(sizeIMG.x / 2, sizeIMG.y / 2, 0);
-	vertex[2] = float3(-sizeIMG.x / 2, -sizeIMG.y / 2, 0);
-	vertex[3] = float3(-sizeIMG.x / 2, sizeIMG.y / 2, 0);
+	float3 pos = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalPosition();
+	vertex[0] = float3(pos.x, pos.y, pos.z);
+	vertex[1] = float3(pos.x + size.x, pos.y, pos.z);
+	vertex[2] = float3(pos.x + size.x, pos.y + size.y, pos.z);
+	vertex[3] = float3(pos.x, pos.y + size.y, pos.z);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertexId); //aixo potser no o si 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, vertex, GL_STATIC_DRAW);
@@ -121,7 +116,7 @@ void ComponentImage::Draw()
 		glEnable(GL_ALPHA_TEST);
 		glAlphaFunc(GL_GREATER, 0.0f);
 
-		//glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
@@ -139,7 +134,7 @@ void ComponentImage::Draw()
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
 
-		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -148,7 +143,7 @@ void ComponentImage::Draw()
 		glDisableClientState(GL_VERTEX_ARRAY);
 
 		glBindTexture(GL_TEXTURE_2D, 0);
-		glDisable(GL_ALPHA_TEST);
+		//glDisable(GL_ALPHA_TEST);
 
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
