@@ -30,8 +30,22 @@ public:
 
 	bool DrawInspector();
 
+	void CreatButtonPlane();
+	void UpdateButtonPlane();
+
 	void BindTex();
 private:
+
+	float3 vertex[4];
+	float2 uv[4];
+	uint index[6]{
+		0,1,2,
+		2,3,0
+	};
+	uint indexId = 0;
+	uint vertexId = 0;
+	uint textureId = 0;
+	bool createButtonIMG = false;
 
 	float2 size_button;
 	bool dragable = false;

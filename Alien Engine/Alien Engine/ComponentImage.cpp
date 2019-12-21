@@ -240,7 +240,7 @@ bool ComponentImage::DrawInspector()
 							createIMG = true;
 						}
 					}
-
+					createIMG = false;
 				}
 
 			}

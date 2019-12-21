@@ -61,31 +61,35 @@ void ComponentButton::PostUpdate()
 
 void ComponentButton::Draw()
 {
+	UpdateButtonPlane();
 	//TODO::// if texture exists, do bind
 	BindTex();
 
-	ComponentTransform* transform = (ComponentTransform*)game_object_attached->GetComponent(ComponentType::TRANSFORM);
-	if (transform != nullptr) {
+	if (!tex)
+	{
+		ComponentTransform* transform = (ComponentTransform*)game_object_attached->GetComponent(ComponentType::TRANSFORM);
+		if (transform != nullptr) {
 
-		glBegin(GL_QUADS);
-		glLineWidth(8.0f);
-		glColor4f(actual_color.x, actual_color.y, actual_color.z, actual_color.w);
-		
-		float3 pos = transform->GetGlobalPosition();
+			glBegin(GL_QUADS);
+			glLineWidth(8.0f);
+			glColor4f(actual_color.x, actual_color.y, actual_color.z, actual_color.w);
 
-		float3 v1 = float3(pos.x, pos.y, pos.z);
-		float3 v2 = float3(pos.x + size.x, pos.y, pos.z);
-		float3 v3 = float3(pos.x + size.x, pos.y + size.y, pos.z);
-		float3 v4 = float3(pos.x, pos.y + size.y, pos.z);
+			float3 pos = transform->GetGlobalPosition();
 
-		glVertex3f(v1.x, v1.y, v1.z);
-		glVertex3f(v2.x, v2.y, v2.z);
-		glVertex3f(v3.x, v3.y, v3.z);
-		glVertex3f(v4.x, v4.y, v4.z);
-		
-		glEnd();
-		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-		
+			float3 v1 = float3(pos.x, pos.y, pos.z);
+			float3 v2 = float3(pos.x + size.x, pos.y, pos.z);
+			float3 v3 = float3(pos.x + size.x, pos.y + size.y, pos.z);
+			float3 v4 = float3(pos.x, pos.y + size.y, pos.z);
+
+			glVertex3f(v1.x, v1.y, v1.z);
+			glVertex3f(v2.x, v2.y, v2.z);
+			glVertex3f(v3.x, v3.y, v3.z);
+			glVertex3f(v4.x, v4.y, v4.z);
+
+			glEnd();
+			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+		}
 	}
 	//do magic
 }
@@ -297,9 +301,13 @@ bool ComponentButton::DrawInspector()
 								ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, App->objects->GetSelectedObject()->GetComponent(ComponentType::MATERIAL));
 							App->importer->ApplyTextureToSelectedObject(texture_dropped);*/
 							tex->IncreaseReferences();
-							
+							if (!createButtonIMG)
+							{
+								CreatButtonPlane();
+								createButtonIMG = true;
+							}
 						}
-
+						createButtonIMG = false;
 					}
 
 				}
@@ -318,15 +326,93 @@ bool ComponentButton::DrawInspector()
 	return true;
 }
 
+void ComponentButton::CreatButtonPlane()
+{
+	float3 pos = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalPosition();
+	vertex[0] = float3(pos.x, pos.y, pos.z);
+	uv[0] = float2(0, 0);
+
+	vertex[1] = float3(pos.x + size.x, pos.y, pos.z);
+	uv[1] = float2(1, 0);
+
+	vertex[2] = float3(pos.x + size.x, pos.y + size.y, pos.z);
+	uv[2] = float2(1, 1);
+
+	vertex[3] = float3(pos.x, pos.y + size.y, pos.z);
+	uv[3] = float2(0, 1);
+
+	glGenBuffers(1, (GLuint*)&vertexId);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexId);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, vertex, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
+	//	glGenBuffers(1, (GLuint*)& texture->id);
+	glBindBuffer(GL_ARRAY_BUFFER, tex->id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 8, uv, GL_STATIC_DRAW);
+
+
+	glGenBuffers(1, (GLuint*)&indexId);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * 6, index, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+void ComponentButton::UpdateButtonPlane()
+{
+	float3 pos = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalPosition();
+	vertex[0] = float3(pos.x, pos.y, pos.z);
+	vertex[1] = float3(pos.x + size.x, pos.y, pos.z);
+	vertex[2] = float3(pos.x + size.x, pos.y + size.y, pos.z);
+	vertex[3] = float3(pos.x, pos.y + size.y, pos.z);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vertexId); //aixo potser no o si 
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, vertex, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
 void ComponentButton::BindTex()
 {
-	//ComponentImage* img = game_object_attached->GetComponent<ComponentImage>();
-
-	if (tex != nullptr && tex->id > 0)
+	if (tex)
 	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0f);
+
+		glColor4f(actual_color.x, actual_color.y, actual_color.z, actual_color.w);
+
 		glEnable(GL_TEXTURE_2D);
+
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+		glEnableClientState(GL_VERTEX_ARRAY);
+
+		glBindTexture(GL_TEXTURE_2D, tex->id);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexId);
+		glVertexPointer(3, GL_FLOAT, 0, NULL);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glBindTexture(GL_TEXTURE_2D, tex->id); //?????
+		glBindBuffer(GL_ARRAY_BUFFER, tex->id);
+		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
+
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glDisableClientState(GL_VERTEX_ARRAY);
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glDisable(GL_ALPHA_TEST);
+
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
 	}
 }
 
