@@ -11,6 +11,7 @@
 #include "ComponentLight.h"
 #include "ComponentCanvas.h"
 #include "ComponentButton.h"
+#include "ComponentImage.h"
 #include "ComponentUI.h"
 #include "ReturnZ.h"
 #include "Time.h"
@@ -54,7 +55,11 @@ bool ModuleObjects::Start()
 	button->SetName("testButton");
 	button->AddComponent(new ComponentTransform(button, { 10.0f,0.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
 	button->AddComponent(new ComponentButton(button, { 30,10 }));
-	//button->AddComponent(new ComponentUI(button)); //segurament el treiem
+
+	image = new GameObject(canvas);
+	image->SetName("TEST IMAGE");
+	image->AddComponent(new  ComponentTransform(image, { -10.0f,0.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 })); 
+	image->AddComponent(new ComponentImage(image, { 10,40 }));
 
 
 	current_scene.name_without_extension = "Untitled*";

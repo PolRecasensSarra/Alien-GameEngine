@@ -198,6 +198,7 @@ private:
 	GameObject* game_object_selected = nullptr;
 	GameObject* canvas = nullptr;
 	GameObject* button = nullptr;
+	GameObject* image  = nullptr;
 	std::vector< std::tuple<GameObject*, GameObject*, bool>> to_reparent;
 
 	std::stack<ReturnZ*> save_return_actions;
