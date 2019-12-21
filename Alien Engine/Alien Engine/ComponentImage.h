@@ -11,8 +11,6 @@ public:
 
 	ComponentImage(GameObject* attach, float2 size);
 	~ComponentImage();
-	void Draw(const float& dt);
-
 
 	void BindImg();
 

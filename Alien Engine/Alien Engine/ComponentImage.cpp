@@ -21,11 +21,6 @@ ComponentImage::~ComponentImage()
 		texture->DecreaseReferences();
 }
 
-void ComponentImage::Draw(const float& dt)
-{
-	//draw the UI
-}
-
 void ComponentImage::BindImg()
 {
 	if (texture != nullptr && texture->id > 0)
@@ -95,13 +90,13 @@ void ComponentImage::CreatImgPlane()
 void ComponentImage::UpdateImgPlane()
 {
 
-	float width = sizeIMG.x;
-	float height = sizeIMG.y;
+	
 
-	vertex[0] = float3(width / 2, -height / 2, 0);
-	vertex[1] = float3(width / 2, height / 2, 0);
-	vertex[2] = float3(-width / 2, -height / 2, 0);
-	vertex[3] = float3(-width / 2, height / 2, 0);
+
+	vertex[0] = float3(sizeIMG.x / 2, -sizeIMG.y / 2, 0);
+	vertex[1] = float3(sizeIMG.x / 2, sizeIMG.y / 2, 0);
+	vertex[2] = float3(-sizeIMG.x / 2, -sizeIMG.y / 2, 0);
+	vertex[3] = float3(-sizeIMG.x / 2, sizeIMG.y / 2, 0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertexId); //aixo potser no o si 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, vertex, GL_STATIC_DRAW);
@@ -110,25 +105,63 @@ void ComponentImage::UpdateImgPlane()
 
 void ComponentImage::PostUpdate()
 {
-	//if(texture)
-		Draw();
+
+	Draw();
 }
 
 void ComponentImage::Draw()
 {
-	//glPushMatrix();
-	//UpdateImgPlane();
+	UpdateImgPlane();
 	
-	/*float4x4 matrix = container->rectTransform->globalMatrix;
-	glMultMatrixf((GLfloat*)matrix.Transposed().ptr());*/
+//-------------------------------------------------------------------------------------------
+	if (texture)
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0f);
 
+		//glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+		glEnableClientState(GL_VERTEX_ARRAY);
+
+		glBindTexture(GL_TEXTURE_2D, texture->id);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexId);
+		glVertexPointer(3, GL_FLOAT, 0, NULL);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		glBindBuffer(GL_ARRAY_BUFFER, texture->id);
+		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
+
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, NULL);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glDisableClientState(GL_VERTEX_ARRAY);
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glDisable(GL_ALPHA_TEST);
+
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+	}
+
+	//------------------------------------------------------------
 
 	glBegin(GL_QUADS);
 	glLineWidth(8.0f);
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 	float3 pos = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalPosition();
-	
+
 
 	float3 v1 = float3(pos.x, pos.y, pos.z);
 	float3 v2 = float3(pos.x + size.x, pos.y, pos.z);
@@ -143,39 +176,6 @@ void ComponentImage::Draw()
 
 	glEnd();
 	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	//
-
-	//glColor4f(0.8f, 0.8f, 0.8f, 1.0f);
-
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-	//glEnableClientState(GL_VERTEX_ARRAY);
-
-	//glBindTexture(GL_TEXTURE_2D, texture->id);
-
-	//glBindBuffer(GL_ARRAY_BUFFER, vertexId);
-	//glVertexPointer(3, GL_FLOAT, 0, NULL);
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	//glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-	//glBindBuffer(GL_ARRAY_BUFFER, texture->id);
-	//glTexCoordPointer(2, GL_FLOAT, 0, NULL);
-
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
-
-	//glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, NULL);
-
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	//glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-	//glDisableClientState(GL_VERTEX_ARRAY);
-
-	//glBindTexture(GL_TEXTURE_2D, 0);
-	//glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	
-	
-	//glPopMatrix();
 }
 
 bool ComponentImage::DrawInspector()
