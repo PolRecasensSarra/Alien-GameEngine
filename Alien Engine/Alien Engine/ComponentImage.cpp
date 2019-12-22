@@ -58,16 +58,16 @@ void ComponentImage::CreatImgPlane()
 	float3 size_mult = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalScale();
 
 	vertex[0] = float3(pos.x, pos.y, pos.z);
-	uv[0] = float2(0, 0);
+	uv[0] = float2(1, 1);
 
 	vertex[1] = float3(pos.x + (size.x * size_mult.x), pos.y, pos.z);
-	uv[1] = float2(1, 0);
+	uv[1] = float2(0, 1);
 
 	vertex[2] = float3(pos.x + (size.x * size_mult.x), pos.y + (size.y * size_mult.y), pos.z);
-	uv[2] = float2(1, 1);
+	uv[2] = float2(0, 0);
 
 	vertex[3] = float3(pos.x, pos.y + (size.y * size_mult.y), pos.z);
-	uv[3] = float2(0, 1);
+	uv[3] = float2(1, 0);
 
 	glGenBuffers(1, (GLuint*)& vertexId);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexId);
@@ -237,7 +237,7 @@ bool ComponentImage::DrawInspector()
 			sizeIMG = size;
 
 		if (texture != nullptr)
-			ImGui::Image((ImTextureID)texture->id, ImVec2(100, 100), ImVec2(0, 1), ImVec2(1, 0));
+			ImGui::Image((ImTextureID)texture->id, ImVec2(100, 100));
 		else
 			if (ImGui::Button("targergraphic", ImVec2(100, 100)))
 			{
