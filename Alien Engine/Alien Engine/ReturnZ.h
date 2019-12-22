@@ -188,3 +188,9 @@ public:
 	u64 resourceID = 0;
 	float2 size = { 30.0f,10.0f };
 };
+
+class CompCheckboxZ :public CompZ {
+public:
+	u64 resourceID = 0;
+	float2 size = { 30.0f,10.0f };
+};

@@ -42,8 +42,10 @@ public:
 
 	float2 sizeIMG;
 	float3 margin;
+
+	ResourceTexture* texture = nullptr;
 private:
 	float2 position;
-	ResourceTexture* texture = nullptr;
+	
 	bool createIMG = false;
 };

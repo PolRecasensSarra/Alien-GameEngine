@@ -8,6 +8,7 @@
 #include "ComponentButton.h"
 #include "ComponentImage.h"
 #include "ComponentCanvas.h"
+#include "ComponentCheckbox.h"
 #include "ResourceTexture.h"
 #include "Octree.h"
 
@@ -211,6 +212,10 @@ void ReturnZ::DoAction(ReturnZ* action, bool is_fordward)
 			ComponentCanvas* canvas = (ComponentCanvas*)App->objects->GetGameObjectByID(comp->comp->objectID)->GetComponentWithID(comp->comp->compID);
 			CompZ::SetComponent(canvas, comp->comp);
 			break; }
+		case ComponentType::CHECKBOX: {
+			ComponentCheckbox* checkbox = (ComponentCheckbox*)App->objects->GetGameObjectByID(comp->comp->objectID)->GetComponentWithID(comp->comp->compID);
+			CompZ::SetComponent(checkbox, comp->comp);
+			break; }
 		}
 		break; }
 	case ReturnActions::DELETE_COMPONENT: {
@@ -337,6 +342,11 @@ void ReturnZ::SetDeleteObject(GameObject* obj, ActionDeleteObject* to_fill)
 					CompZ::SetCompZ((*item), (CompZ**)& canvasZ);
 					comp = canvasZ;
 					break; }
+				case ComponentType::CHECKBOX: {
+					CompCheckboxZ* checkboxZ = nullptr;
+					CompZ::SetCompZ((*item), (CompZ**)&checkboxZ);
+					comp = checkboxZ;
+					break; }
 				default:
 					LOG("A component hasn't been saved");
 					break;
@@ -435,6 +445,12 @@ void ReturnZ::CreateObject(ActionDeleteObject* obj)
 					new_obj->AddComponent(image);
 					break; }
 				case ComponentType::CANVAS: {
+					ComponentCanvas* canvas = new ComponentCanvas(new_obj);
+					CompCanvasZ* canvasZ = (CompCanvasZ*)(*item);
+					CompZ::SetComponent(canvas, canvasZ);
+					new_obj->AddComponent(canvas);
+					break; }
+				case ComponentType::CHECKBOX: {
 					ComponentCanvas* canvas = new ComponentCanvas(new_obj);
 					CompCanvasZ* canvasZ = (CompCanvasZ*)(*item);
 					CompZ::SetComponent(canvas, canvasZ);

@@ -8,6 +8,7 @@
 #include "ReturnZ.h"
 #include "ResourceTexture.h"
 #include "FileNode.h"
+#include "ModuleResources.h"
 #include "imgui/imgui_internal.h"
 #include <math.h>
 
@@ -18,19 +19,13 @@ ComponentCheckbox::ComponentCheckbox(GameObject* attach, float2 size) :Component
 
 	this->size = size;
 	this->size_checkbox = size;
-	this->size_check = size_check;
+	
 
 	if (size.x == 0)
 	{
 		this->size.x = 20;
 		this->size.y = 10;
 	}
-	if (this->size_check.x == 0)
-	{
-		this->size_check.x = 5;
-		this->size_check.y = 5;
-	}
-
 	
 
 	float2 size_image = { (size.y * 0.5f), (size.y * 0.5f) };
@@ -38,7 +33,8 @@ ComponentCheckbox::ComponentCheckbox(GameObject* attach, float2 size) :Component
 	float x = size_image.x * 0.85f;
 
 	game_object_attached->AddComponent(new ComponentImage(game_object_attached, size_image, { x,y,0.0f }));
-	check_image = game_object_attached->GetComponent<ComponentImage>();
+	game_object_attached->GetComponent<ComponentImage>()->texture = App->resources->icons.jpg_file;
+	game_object_attached->GetComponent<ComponentImage>()->CreatImgPlane();
 
 }
 
@@ -209,12 +205,14 @@ void ComponentCheckbox::UpdateStates()
 void ComponentCheckbox::DoLogicClicked()
 {
 	function = true;
-	if (actual_check_color.x==normal_check_color.x && actual_check_color.y == normal_check_color.y && actual_check_color.z == normal_check_color.z && actual_check_color.w == normal_check_color.w) 
+	if (actual_check_color.x == normal_check_color.x && actual_check_color.y == normal_check_color.y && actual_check_color.z == normal_check_color.z && actual_check_color.w == normal_check_color.w)
 	{
 		actual_check_color = pressed_check_color;
+		game_object_attached->GetComponent<ComponentImage>()->texture = App->resources->icons.prefab_icon;
 	}
 	else
 	{
+		game_object_attached->GetComponent<ComponentImage>()->texture = App->resources->icons.jpg_file;
 		actual_check_color = normal_check_color;
 	}
 }
@@ -331,9 +329,7 @@ bool ComponentCheckbox::DrawInspector()
 						LOG("enter one time checkbox");
 						ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, this);
 						tex = texture_dropped; //id incorrect
-						/*if (App->objects->GetSelectedObject()->HasComponent(ComponentType::MATERIAL))
-							ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, App->objects->GetSelectedObject()->GetComponent(ComponentType::MATERIAL));
-						App->importer->ApplyTextureToSelectedObject(texture_dropped);*/
+						
 						tex->IncreaseReferences();
 						
 						CreatCheckboxPlane();
