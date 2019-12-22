@@ -62,9 +62,9 @@ void ComponentButton::PostUpdate()
 void ComponentButton::Draw()
 {
 	UpdateButtonPlane();
-	//TODO::// if texture exists, do bind
-	BindTex();
 
+	BindTex();
+	
 	if (!tex)
 	{
 		ComponentTransform* transform = (ComponentTransform*)game_object_attached->GetComponent(ComponentType::TRANSFORM);
@@ -75,11 +75,12 @@ void ComponentButton::Draw()
 			glColor4f(actual_color.x, actual_color.y, actual_color.z, actual_color.w);
 
 			float3 pos = transform->GetGlobalPosition();
+			float3 size_mult = transform->GetGlobalScale();
 
 			float3 v1 = float3(pos.x, pos.y, pos.z);
-			float3 v2 = float3(pos.x + size.x, pos.y, pos.z);
-			float3 v3 = float3(pos.x + size.x, pos.y + size.y, pos.z);
-			float3 v4 = float3(pos.x, pos.y + size.y, pos.z);
+			float3 v2 = float3(pos.x + (size.x * size_mult.x), pos.y, pos.z);
+			float3 v3 = float3(pos.x + (size.x * size_mult.x), pos.y + (size.y * size_mult.y), pos.z);
+			float3 v4 = float3(pos.x, pos.y + (size.y * size_mult.y), pos.z);
 
 			glVertex3f(v1.x, v1.y, v1.z);
 			glVertex3f(v2.x, v2.y, v2.z);
@@ -333,16 +334,18 @@ bool ComponentButton::DrawInspector()
 void ComponentButton::CreatButtonPlane()
 {
 	float3 pos = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalPosition();
+	float3 size_mult = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalScale();
+
 	vertex[0] = float3(pos.x, pos.y, pos.z);
 	uv[0] = float2(0, 0);
 
-	vertex[1] = float3(pos.x + size.x, pos.y, pos.z);
+	vertex[1] = float3(pos.x + (size.x * size_mult.x), pos.y, pos.z);
 	uv[1] = float2(1, 0);
 
-	vertex[2] = float3(pos.x + size.x, pos.y + size.y, pos.z);
+	vertex[2] = float3(pos.x + (size.x * size_mult.x), pos.y + (size.y * size_mult.y), pos.z);
 	uv[2] = float2(1, 1);
 
-	vertex[3] = float3(pos.x, pos.y + size.y, pos.z);
+	vertex[3] = float3(pos.x, pos.y + (size.y * size_mult.y), pos.z);
 	uv[3] = float2(0, 1);
 
 	glGenBuffers(1, (GLuint*)&vertexId);
@@ -365,10 +368,12 @@ void ComponentButton::CreatButtonPlane()
 void ComponentButton::UpdateButtonPlane()
 {
 	float3 pos = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalPosition();
+	float3 size_mult = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalScale();
+
 	vertex[0] = float3(pos.x, pos.y, pos.z);
-	vertex[1] = float3(pos.x + size.x, pos.y, pos.z);
-	vertex[2] = float3(pos.x + size.x, pos.y + size.y, pos.z);
-	vertex[3] = float3(pos.x, pos.y + size.y, pos.z);
+	vertex[1] = float3(pos.x + (size.x * size_mult.x), pos.y, pos.z);
+	vertex[2] = float3(pos.x + (size.x * size_mult.x), pos.y + (size.y * size_mult.y), pos.z);
+	vertex[3] = float3(pos.x, pos.y + (size.y * size_mult.y), pos.z);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertexId); //aixo potser no o si 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, vertex, GL_STATIC_DRAW);
