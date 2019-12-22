@@ -38,6 +38,8 @@ struct Icons {
 	ResourceTexture* box = nullptr;
 	ResourceTexture* prefab = nullptr;
 	ResourceTexture* prefab_lock = nullptr;
+	ResourceTexture* checkbox_empty = nullptr;
+	ResourceTexture* checkbox_selected = nullptr;
 };
 
 

@@ -33,7 +33,7 @@ ComponentCheckbox::ComponentCheckbox(GameObject* attach, float2 size) :Component
 	float x = size_image.x * 0.85f;
 
 	game_object_attached->AddComponent(new ComponentImage(game_object_attached, size_image, { x,y,0.0f }));
-	game_object_attached->GetComponent<ComponentImage>()->texture = App->resources->icons.jpg_file;
+	game_object_attached->GetComponent<ComponentImage>()->texture = App->resources->icons.checkbox_empty;
 	game_object_attached->GetComponent<ComponentImage>()->CreatImgPlane();
 
 }
@@ -208,11 +208,13 @@ void ComponentCheckbox::DoLogicClicked()
 	if (actual_check_color.x == normal_check_color.x && actual_check_color.y == normal_check_color.y && actual_check_color.z == normal_check_color.z && actual_check_color.w == normal_check_color.w)
 	{
 		actual_check_color = pressed_check_color;
-		game_object_attached->GetComponent<ComponentImage>()->texture = App->resources->icons.prefab_icon;
+		game_object_attached->GetComponent<ComponentImage>()->texture = App->resources->icons.checkbox_selected;
+		game_object_attached->GetComponent<ComponentImage>()->CreatImgPlane();
 	}
 	else
 	{
-		game_object_attached->GetComponent<ComponentImage>()->texture = App->resources->icons.jpg_file;
+		game_object_attached->GetComponent<ComponentImage>()->texture = App->resources->icons.checkbox_empty;
+		game_object_attached->GetComponent<ComponentImage>()->CreatImgPlane();
 		actual_check_color = normal_check_color;
 	}
 }
