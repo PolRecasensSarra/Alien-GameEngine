@@ -6,6 +6,7 @@
 ComponentCanvas::ComponentCanvas(GameObject* attached) :Component(attached)
 {
 	type = ComponentType::CANVAS;
+	size = { 40,40 }; // temp -> will be changed in inspector
 }
 
 ComponentCanvas::~ComponentCanvas()
@@ -28,9 +29,9 @@ void ComponentCanvas::DebugDraw()
 	float3 pos = transform->GetGlobalPosition();
 
 	float3 v1 = float3(pos.x, pos.y, pos.z);
-	float3 v2 = float3(pos.x + 40, pos.y, pos.z);
-	float3 v3 = float3(pos.x, pos.y + 40, pos.z);
-	float3 v4 = float3(pos.x + 40, pos.y + 40, pos.z);
+	float3 v2 = float3(pos.x + size.x, pos.y, pos.z);
+	float3 v3 = float3(pos.x, pos.y + size.y, pos.z);
+	float3 v4 = float3(pos.x + size.x, pos.y + size.y, pos.z);
 
 	glVertex3f(v1.x, v1.y, v1.z);
 	glVertex3f(v2.x, v2.y, v2.z);
