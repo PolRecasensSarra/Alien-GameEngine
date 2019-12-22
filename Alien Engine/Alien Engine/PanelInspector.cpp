@@ -89,7 +89,7 @@ void PanelInspector::ButtonAddComponent()
 {
 	ImGui::Spacing();
 
-	ImGui::Combo("##choose component", &component, "Select Component\0Mesh\0Material\0Light\0Camera\0Button\0");
+	ImGui::Combo("##choose component", &component, "Select Component\0Mesh\0Material\0Light\0Camera\0");
 
 	ImGui::SameLine();
 
@@ -162,14 +162,6 @@ void PanelInspector::ButtonAddComponent()
 
 			break;
 
-		case 5:
-			if (!App->objects->GetSelectedObject()->HasComponent(ComponentType::BUTTON))
-			{
-				comp = new ComponentButton(App->objects->GetSelectedObject());
-				App->objects->GetSelectedObject()->AddComponent(comp);
-
-			}
-			break;
 		}
 	
 		if (comp != nullptr) {

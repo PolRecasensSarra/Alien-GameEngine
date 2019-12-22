@@ -2,15 +2,22 @@
 #include "ComponentTransform.h"
 #include "Application.h"
 #include "ModuleInput.h"
+#include "ModuleUI.h"
+#include "PanelGame.h"
 
 ComponentCanvas::ComponentCanvas(GameObject* attached) :Component(attached)
 {
 	type = ComponentType::CANVAS;
-	size = { 40,40 }; // temp -> will be changed in inspector
+	size = {100, 100}; // temp -> will be changed in inspector
 }
 
 ComponentCanvas::~ComponentCanvas()
 {
+}
+
+void ComponentCanvas::Update()
+{
+	size = {App->ui->panel_game->width, App->ui->panel_game->height};
 }
 
 void ComponentCanvas::PostUpdate()

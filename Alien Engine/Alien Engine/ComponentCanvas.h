@@ -11,6 +11,7 @@ public:
 	ComponentCanvas(GameObject* attached);
 	~ComponentCanvas();
 
+	void Update();
 	void PostUpdate();
 	void DebugDraw();
 

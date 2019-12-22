@@ -58,8 +58,8 @@ bool ModuleObjects::Start()
 
 	image = new GameObject(canvas);
 	image->SetName("TEST IMAGE");
-	image->AddComponent(new  ComponentTransform(image, { -10.0f,0.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 })); 
-	image->AddComponent(new ComponentImage(image, { 10,40 }));
+	image->AddComponent(new  ComponentTransform(image, { 0.0f,15.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 })); 
+	image->AddComponent(new ComponentImage(image, { 30,20 }));
 
 	GameObject* camera_hardcoded = new GameObject(base_game_object);
 	camera_hardcoded->SetName("Camera Hardcoded");
