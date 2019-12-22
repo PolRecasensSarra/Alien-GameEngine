@@ -27,11 +27,13 @@ void ComponentCanvas::DebugDraw()
 	glColor4f(1.0f, 0.0f, 1.0f, 1.0f);
 
 	float3 pos = transform->GetGlobalPosition();
+	float3 size_mult = transform->GetGlobalScale();
 
 	float3 v1 = float3(pos.x, pos.y, pos.z);
-	float3 v2 = float3(pos.x + size.x, pos.y, pos.z);
-	float3 v3 = float3(pos.x, pos.y + size.y, pos.z);
-	float3 v4 = float3(pos.x + size.x, pos.y + size.y, pos.z);
+	float3 v2 = float3(pos.x + (size.x * size_mult.x), pos.y, pos.z);
+	float3 v3 = float3(pos.x, pos.y + (size.y * size_mult.y), pos.z);
+	float3 v4 = float3(pos.x + (size.x * size_mult.x), pos.y + (size.y * size_mult.y), pos.z);
+	
 
 	glVertex3f(v1.x, v1.y, v1.z);
 	glVertex3f(v2.x, v2.y, v2.z);
