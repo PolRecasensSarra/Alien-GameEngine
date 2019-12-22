@@ -22,7 +22,7 @@ public:
 	void DoLogicHovered();
 	void DoLogicPressed();
 	void DoLogicExit();
-	void DoLogicExitCheck();
+	
 
 	void SaveComponent(JSONArraypack* to_save);
 	void LoadComponent(JSONArraypack* to_load);

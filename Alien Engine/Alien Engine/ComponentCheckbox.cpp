@@ -141,7 +141,7 @@ void ComponentCheckbox::UpdateStates()
 
 	if (origin.x >= left && origin.y >= top && origin.x <= right && origin.y <= bottom)
 	{
-		bool same_frame = false;
+
 		if (state == InteractiveStates::NO_STATE)
 		{
 			state = InteractiveStates::ENTER;
@@ -157,38 +157,14 @@ void ComponentCheckbox::UpdateStates()
 			if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
 			{
 				DoLogicPressed();
-				state = InteractiveStates::PRESSED;
-				same_frame = true;
-				
 			}
 			else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
 			{
 				DoLogicPressed();
-				
-			}
-			else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP)
-			{
-				if (!dragable)
+				if (dragable)
 				{
-					DoLogicClicked();
+					//Move(); //I don't know if this is okai so maybe we delete this
 				}
-			}
-			else
-			{
-				DoLogicHovered();
-			}
-		}
-		if (!same_frame && state == InteractiveStates::PRESSED)
-		{
-			if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
-			{
-				DoLogicExitCheck();
-				state = InteractiveStates::HOVER;
-			}
-			else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
-			{
-				DoLogicPressed();
-				
 			}
 			else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP)
 			{
@@ -211,10 +187,6 @@ void ComponentCheckbox::UpdateStates()
 			DoLogicExit();
 			//Exit();
 		}
-		if (state == InteractiveStates::PRESSED)
-		{
-			state = InteractiveStates::PRESSED;
-		}
 		else
 		{
 			state = InteractiveStates::NO_STATE;
@@ -226,6 +198,14 @@ void ComponentCheckbox::UpdateStates()
 void ComponentCheckbox::DoLogicClicked()
 {
 	function = true;
+	if (actual_check_color.x==normal_check_color.x && actual_check_color.y == normal_check_color.y && actual_check_color.z == normal_check_color.z && actual_check_color.w == normal_check_color.w) 
+	{
+		actual_check_color = pressed_check_color;
+	}
+	else
+	{
+		actual_check_color = normal_check_color;
+	}
 }
 
 void ComponentCheckbox::DoLogicHovered()
@@ -236,7 +216,6 @@ void ComponentCheckbox::DoLogicHovered()
 void ComponentCheckbox::DoLogicPressed()
 {
 	actual_color = pressed_color;
-	actual_check_color = pressed_check_color;
 }
 
 void ComponentCheckbox::DoLogicExit()
@@ -244,10 +223,6 @@ void ComponentCheckbox::DoLogicExit()
 	actual_color = normal_color;
 }
 
-void ComponentCheckbox::DoLogicExitCheck()
-{
-	actual_check_color = normal_check_color;
-}
 
 void ComponentCheckbox::SaveComponent(JSONArraypack* to_save)
 {
