@@ -7,6 +7,7 @@
 #include "ComponentLight.h"
 #include "ComponentButton.h"
 #include "ComponentImage.h"
+#include "ComponentCanvas.h"
 #include "ResourceTexture.h"
 #include "Octree.h"
 
@@ -206,6 +207,10 @@ void ReturnZ::DoAction(ReturnZ* action, bool is_fordward)
 			ComponentImage* image = (ComponentImage*)App->objects->GetGameObjectByID(comp->comp->objectID)->GetComponentWithID(comp->comp->compID);
 			CompZ::SetComponent(image, comp->comp);
 			break; }
+		case ComponentType::CANVAS: {
+			ComponentCanvas* canvas = (ComponentCanvas*)App->objects->GetGameObjectByID(comp->comp->objectID)->GetComponentWithID(comp->comp->compID);
+			CompZ::SetComponent(canvas, comp->comp);
+			break; }
 		}
 		break; }
 	case ReturnActions::DELETE_COMPONENT: {
@@ -326,6 +331,12 @@ void ReturnZ::SetDeleteObject(GameObject* obj, ActionDeleteObject* to_fill)
 					CompZ::SetCompZ((*item), (CompZ**)&imageZ);
 					comp = imageZ;
 					break; }
+
+				case ComponentType::CANVAS: {
+					CompCanvasZ* canvasZ = nullptr;
+					CompZ::SetCompZ((*item), (CompZ**)& canvasZ);
+					comp = canvasZ;
+					break; }
 				default:
 					LOG("A component hasn't been saved");
 					break;
@@ -423,6 +434,13 @@ void ReturnZ::CreateObject(ActionDeleteObject* obj)
 					CompZ::SetComponent(image, imageZ);
 					new_obj->AddComponent(image);
 					break; }
+				case ComponentType::CANVAS: {
+					ComponentCanvas* canvas = new ComponentCanvas(new_obj);
+					CompCanvasZ* canvasZ = (CompCanvasZ*)(*item);
+					CompZ::SetComponent(canvas, canvasZ);
+					new_obj->AddComponent(canvas);
+					break; }
+
 				default:
 					break;
 				}
@@ -541,7 +559,16 @@ void CompZ::SetCompZ(Component* component, CompZ** compZ)
 		imageZ->objectID = image->game_object_attached->ID;
 		imageZ->size = image->size;
 		break; }
+	case ComponentType::CANVAS: {
+		ComponentCanvas* canvas = (ComponentCanvas*)component;
+		CompCanvasZ* canvasZ = new CompCanvasZ();
+		*compZ = canvasZ;
+		canvasZ->objectID = canvas->game_object_attached->ID;
+		canvasZ->size = canvas->size;
+		break; }
 	}
+
+
 	(*compZ)->type = component->GetType();
 	(*compZ)->objectID = component->game_object_attached->ID;
 	(*compZ)->compID = component->ID;
@@ -660,6 +687,11 @@ void CompZ::SetComponent(Component* component, CompZ* compZ)
 		}
 		image->size = imageZ->size;
 		break; }
+	case ComponentType::CANVAS: {
+		ComponentCanvas* canvas = (ComponentCanvas*)component;
+		CompImageZ* canvasZ = (CompImageZ*)compZ;
+		canvas->size = canvasZ->size;
+		break; }
 	}
 	component->SetEnable(compZ->enabled);
 	component->ID = compZ->compID;
@@ -703,6 +735,12 @@ void CompZ::AttachCompZToGameObject(CompZ* compZ)
 		ComponentImage* image = new ComponentImage(obj);
 		CompZ::SetComponent(image, compZ);
 		obj->AddComponent(image);
+		break; }
+
+	case ComponentType::CANVAS: {
+		ComponentCanvas* canvas = new ComponentCanvas(obj);
+		CompZ::SetComponent(canvas, compZ);
+		obj->AddComponent(canvas);
 		break; }
 	}
 }
