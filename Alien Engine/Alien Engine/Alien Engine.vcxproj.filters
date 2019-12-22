@@ -498,9 +498,6 @@
     <ClInclude Include="ComponentButton.h">
       <Filter>Components\UI_Components</Filter>
     </ClInclude>
-    <ClInclude Include="ComponentUI.h">
-      <Filter>Components\UI_Components</Filter>
-    </ClInclude>
     <ClInclude Include="ComponentCanvas.h">
       <Filter>Components\UI_Components</Filter>
     </ClInclude>
@@ -508,6 +505,9 @@
       <Filter>Components\UI_Components</Filter>
     </ClInclude>
     <ClInclude Include="ComponentLabel.h">
+      <Filter>Components\UI_Components</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentCheckbox.h">
       <Filter>Components\UI_Components</Filter>
     </ClInclude>
   </ItemGroup>
@@ -800,9 +800,6 @@
     <ClCompile Include="ComponentButton.cpp">
       <Filter>Components\UI_Components</Filter>
     </ClCompile>
-    <ClCompile Include="ComponentUI.cpp">
-      <Filter>Components\UI_Components</Filter>
-    </ClCompile>
     <ClCompile Include="ComponentCanvas.cpp">
       <Filter>Components\UI_Components</Filter>
     </ClCompile>
@@ -810,6 +807,9 @@
       <Filter>Components\UI_Components</Filter>
     </ClCompile>
     <ClCompile Include="ComponentLabel.cpp">
+      <Filter>Components\UI_Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentCheckbox.cpp">
       <Filter>Components\UI_Components</Filter>
     </ClCompile>
   </ItemGroup>

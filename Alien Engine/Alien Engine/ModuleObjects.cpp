@@ -12,7 +12,7 @@
 #include "ComponentCanvas.h"
 #include "ComponentButton.h"
 #include "ComponentImage.h"
-#include "ComponentUI.h"
+#include "ComponentCheckbox.h"
 #include "ReturnZ.h"
 #include "Time.h"
 #include "ModuleRenderer3D.h"
@@ -60,6 +60,11 @@ bool ModuleObjects::Start()
 	image->SetName("TEST IMAGE");
 	image->AddComponent(new  ComponentTransform(image, { 0.0f,15.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 })); 
 	image->AddComponent(new ComponentImage(image, { 30,20 }));
+
+	checkbox = new GameObject(canvas);
+	checkbox->SetName("test Checkbox");
+	checkbox->AddComponent(new ComponentTransform(checkbox, { 35.0f,30.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	checkbox->AddComponent(new ComponentButton(checkbox, { 30,10 }));
 
 	GameObject* camera_hardcoded = new GameObject(base_game_object);
 	camera_hardcoded->SetName("Camera Hardcoded");

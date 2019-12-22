@@ -7,14 +7,13 @@
 
 enum class InteractiveStates;
 
-class ComponentButton : public Component {
+class ComponentCheckbox : public Component {
 	friend class CompZ;
 
 public:
 
-	ComponentButton(GameObject* attach);
-	ComponentButton(GameObject* attach, float2 size);
-	~ComponentButton();
+	ComponentCheckbox(GameObject* attach, float2 size = { 0.0f,0.0f });
+	~ComponentCheckbox();
 	void Update();
 	void PostUpdate();
 	void Draw();
@@ -23,14 +22,14 @@ public:
 	void DoLogicHovered();
 	void DoLogicPressed();
 	void DoLogicExit();
-	
+
 	void SaveComponent(JSONArraypack* to_save);
 	void LoadComponent(JSONArraypack* to_load);
 
 	bool DrawInspector();
 
-	void CreatButtonPlane();
-	void UpdateButtonPlane();
+	void CreatCheckboxPlane();
+	void UpdateCheckboxPlane();
 
 	void BindTex();
 private:
@@ -44,9 +43,12 @@ private:
 	uint indexId = 0;
 	uint vertexId = 0;
 	uint textureId = 0;
-	bool createButtonIMG = false;
+	
 
-	float2 size_button;
+	float2 size_checkbox;
+	float2 size_check;
+	float3 pos_check;
+
 	bool dragable = false;
 	bool function = false;
 
@@ -58,4 +60,5 @@ private:
 	InteractiveStates state = InteractiveStates::NO_STATE;
 
 	ResourceTexture* tex = nullptr;
+	ResourceTexture* tex_check = nullptr;
 };

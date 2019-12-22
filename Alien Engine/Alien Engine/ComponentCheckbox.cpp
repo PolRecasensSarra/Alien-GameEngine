@@ -1,4 +1,4 @@
-#include "ComponentButton.h"
+#include "ComponentCheckbox.h"
 #include "ComponentTransform.h"
 #include "GameObject.h"
 #include "Application.h"
@@ -10,31 +10,32 @@
 #include "imgui/imgui_internal.h"
 
 
-ComponentButton::ComponentButton(GameObject* attach) : Component(attach)
+ComponentCheckbox::ComponentCheckbox(GameObject* attach, float2 size) :Component(attach)
 {
-	type = ComponentType::BUTTON;
+	type = ComponentType::CHECKBOX;
 
-}
-
-ComponentButton::ComponentButton(GameObject* attach, float2 size) :Component(attach)
-{
-	type = ComponentType::BUTTON;
-	
 	this->size = size;
-	this->size_button = size;
+	this->size_checkbox = size;
+	this->size_check = size_check;
 
-	if (size.x == 0) 
+	if (size.x == 0)
 	{
 		this->size.x = 20;
 		this->size.y = 10;
 	}
+	if (this->size_check.x == 0)
+	{
+		this->size_check.x = 5;
+		this->size_check.y = 5;
+	}
+
 }
 
-ComponentButton::~ComponentButton()
+ComponentCheckbox::~ComponentCheckbox()
 {
 }
 
-void ComponentButton::Update()
+void ComponentCheckbox::Update()
 {
 	if (Time::IsInGameState())
 		UpdateStates();
@@ -42,23 +43,22 @@ void ComponentButton::Update()
 	if (function)
 	{
 		//call the fade function mega hardcoded
-		
+
 		function = false;
 	}
-	
 }
 
-void ComponentButton::PostUpdate()
+void ComponentCheckbox::PostUpdate()
 {
 	Draw();
 }
 
-void ComponentButton::Draw()
+void ComponentCheckbox::Draw()
 {
-	UpdateButtonPlane();
+	UpdateCheckboxPlane();
 
 	BindTex();
-	
+
 	if (!tex)
 	{
 		ComponentTransform* transform = (ComponentTransform*)game_object_attached->GetComponent(ComponentType::TRANSFORM);
@@ -86,22 +86,21 @@ void ComponentButton::Draw()
 
 		}
 	}
-	//do magic
 }
 
-void ComponentButton::UpdateStates()
+void ComponentCheckbox::UpdateStates()
 {
 	float3 pos = float3::zero;
-	
-	float2 origin = float2((App->input->GetMousePosition().x - App->ui->panel_game->posX), (App->input->GetMousePosition().y - (App->ui->panel_game->posY+19)));
+
+	float2 origin = float2((App->input->GetMousePosition().x - App->ui->panel_game->posX), (App->input->GetMousePosition().y - (App->ui->panel_game->posY + 19)));
 
 	ComponentTransform* transform = (ComponentTransform*)game_object_attached->GetComponent(ComponentType::TRANSFORM);
 	if (transform != nullptr)
 		pos = transform->GetGlobalPosition();
 
 
-	float width = size_button.x;
-	float height = size_button.y;
+	float width = size_checkbox.x;
+	float height = size_checkbox.y;
 	float x = pos.x;
 	float y = pos.y;
 
@@ -171,36 +170,33 @@ void ComponentButton::UpdateStates()
 	}
 }
 
-void ComponentButton::DoLogicClicked()
+void ComponentCheckbox::DoLogicClicked()
 {
 	function = true;
 }
 
-void ComponentButton::DoLogicHovered()
+void ComponentCheckbox::DoLogicHovered()
 {
-
 	actual_color = hover_color;
-	//change colors
 }
 
-void ComponentButton::DoLogicPressed()
+void ComponentCheckbox::DoLogicPressed()
 {
 	actual_color = pressed_color;
-	//change color
 }
 
-void ComponentButton::DoLogicExit()
+void ComponentCheckbox::DoLogicExit()
 {
 	actual_color = normal_color;
 }
 
-void ComponentButton::SaveComponent(JSONArraypack* to_save)
+void ComponentCheckbox::SaveComponent(JSONArraypack* to_save)
 {
 	to_save->SetNumber("Type", (int)type);
 	to_save->SetString("ID", std::to_string(ID));
-	to_save->SetFloat2("SizeButton", size_button);
+	to_save->SetFloat2("SizeButton", size_checkbox);
 	to_save->SetFloat2("Size", size);
-	to_save->SetColor("Color", { actual_color.x,actual_color.y,actual_color.z ,actual_color.w});
+	to_save->SetColor("Color", { actual_color.x,actual_color.y,actual_color.z ,actual_color.w });
 	to_save->SetBoolean("HasTexture", (tex != nullptr) ? true : false);
 
 	if (tex != nullptr)
@@ -209,10 +205,10 @@ void ComponentButton::SaveComponent(JSONArraypack* to_save)
 	to_save->SetBoolean("Enabled", enabled);
 }
 
-void ComponentButton::LoadComponent(JSONArraypack* to_load)
+void ComponentCheckbox::LoadComponent(JSONArraypack* to_load)
 {
 	ID = std::stoull(to_load->GetString("ID"));
-	size_button = to_load->GetFloat2("SizeButton");
+	size_checkbox = to_load->GetFloat2("SizeButton");
 	size = to_load->GetFloat2("Size");
 	Color c = to_load->GetColor("Color");
 	actual_color = { c.r, c.g,c.b, c.a };
@@ -224,17 +220,12 @@ void ComponentButton::LoadComponent(JSONArraypack* to_load)
 		if (tex != nullptr)
 		{
 			tex->IncreaseReferences();
-			CreatButtonPlane();
+			CreatCheckboxPlane();
 		}
 	}
-
-
-
 }
 
-
-
-bool ComponentButton::DrawInspector()
+bool ComponentCheckbox::DrawInspector()
 {
 	ImVec2 min_space = ImGui::GetWindowContentRegionMin();
 	ImVec2 max_space = ImGui::GetWindowContentRegionMax();
@@ -247,14 +238,14 @@ bool ComponentButton::DrawInspector()
 	// drop project files
 
 
-	if (ImGui::CollapsingHeader("Button", &not_destroy, ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader("CheckBox", &not_destroy, ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ImGui::ColorEdit4("Normal Color", (float*)& normal_color);
+		ImGui::ColorEdit4("Normal Color", (float*)&normal_color);
 		actual_color = normal_color;
 		ImGui::Spacing();
-		ImGui::ColorEdit4("Hover Color", (float*)& hover_color);
+		ImGui::ColorEdit4("Hover Color", (float*)&hover_color);
 		ImGui::Spacing();
-		ImGui::ColorEdit4("Pressed Color", (float*)& pressed_color);
+		ImGui::ColorEdit4("Pressed Color", (float*)&pressed_color);
 
 
 		ImGui::Text("Size");
@@ -262,60 +253,58 @@ bool ComponentButton::DrawInspector()
 
 
 		if (ImGui::DragFloat("X", &size.x, 0.5F, 0, 0, "%.3f", 1, game_object_attached->is_static))
-			size_button = size;
+			size_checkbox = size;
 		if (ImGui::DragFloat("Y", &size.y, 0.5F, 0, 0, "%.3f", 1, game_object_attached->is_static))
-			size_button = size;
+			size_checkbox = size;
 
 		if (tex != nullptr)
 			ImGui::Image((ImTextureID)tex->id, ImVec2(100, 100));
 		else
-			if (ImGui::Button("Target Graphic", ImVec2(100,100)))
+			if (ImGui::Button("Target Graphic", ImVec2(100, 100)))
 			{
 			}
-		
-			if (ImGui::BeginDragDropTarget())
-			{
-				const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(DROP_ID_PROJECT_NODE, ImGuiDragDropFlags_SourceNoDisableHover);
-					//(DROP_ID_PROJECT_NODE, ImGuiDragDropFlags_SourceNoDisableHover| ImGuiDragDropFlags_AcceptBeforeDelivery);
-				if (payload != nullptr && payload->IsDataType(DROP_ID_PROJECT_NODE)) {
-					FileNode* node = *(FileNode * *)payload->Data;
+
+		if (ImGui::BeginDragDropTarget())
+		{
+			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(DROP_ID_PROJECT_NODE, ImGuiDragDropFlags_SourceNoDisableHover);
+			//(DROP_ID_PROJECT_NODE, ImGuiDragDropFlags_SourceNoDisableHover| ImGuiDragDropFlags_AcceptBeforeDelivery);
+			if (payload != nullptr && payload->IsDataType(DROP_ID_PROJECT_NODE)) {
+				FileNode* node = *(FileNode**)payload->Data;
 
 
-					// drop texture
-					if (node != nullptr && node->type == FileDropType::TEXTURE && App->objects->GetSelectedObject() != nullptr)
-					{
-						std::string path = App->file_system->GetPathWithoutExtension(node->path + node->name);
-						path += "_meta.alien";
+				// drop texture
+				if (node != nullptr && node->type == FileDropType::TEXTURE && App->objects->GetSelectedObject() != nullptr)
+				{
+					std::string path = App->file_system->GetPathWithoutExtension(node->path + node->name);
+					path += "_meta.alien";
 
-						u64 ID = App->resources->GetIDFromAlienPath(path.data());
+					u64 ID = App->resources->GetIDFromAlienPath(path.data());
 
-						ResourceTexture* texture_dropped = (ResourceTexture*)App->resources->GetResourceWithID(ID);
+					ResourceTexture* texture_dropped = (ResourceTexture*)App->resources->GetResourceWithID(ID);
 
-						if (texture_dropped != nullptr) {
-							LOG("KSDHFISSBLVKSDJMV");
-							ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, this);
-							tex = texture_dropped; //id incorrect
-							/*if (App->objects->GetSelectedObject()->HasComponent(ComponentType::MATERIAL))
-								ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, App->objects->GetSelectedObject()->GetComponent(ComponentType::MATERIAL));
-							App->importer->ApplyTextureToSelectedObject(texture_dropped);*/
-							tex->IncreaseReferences();
-							if (!createButtonIMG)
-							{
-								CreatButtonPlane();
-								createButtonIMG = true;
-							}
-						}
-						createButtonIMG = false;
-						ImGui::ClearDragDrop();
+					if (texture_dropped != nullptr) {
+						LOG("enter one time checkbox");
+						ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, this);
+						tex = texture_dropped; //id incorrect
+						/*if (App->objects->GetSelectedObject()->HasComponent(ComponentType::MATERIAL))
+							ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, App->objects->GetSelectedObject()->GetComponent(ComponentType::MATERIAL));
+						App->importer->ApplyTextureToSelectedObject(texture_dropped);*/
+						tex->IncreaseReferences();
+						
+						CreatCheckboxPlane();
+						
 					}
 					
+					ImGui::ClearDragDrop();
 				}
-				
-
-				ImGui::EndDragDropTarget();
 
 			}
-		
+
+
+			ImGui::EndDragDropTarget();
+
+		}
+
 
 	}
 	ImGui::Spacing();
@@ -325,7 +314,7 @@ bool ComponentButton::DrawInspector()
 	return true;
 }
 
-void ComponentButton::CreatButtonPlane()
+void ComponentCheckbox::CreatCheckboxPlane()
 {
 	float3 pos = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalPosition();
 	float3 size_mult = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalScale();
@@ -359,7 +348,7 @@ void ComponentButton::CreatButtonPlane()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void ComponentButton::UpdateButtonPlane()
+void ComponentCheckbox::UpdateCheckboxPlane()
 {
 	float3 pos = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalPosition();
 	float3 size_mult = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalScale();
@@ -374,7 +363,7 @@ void ComponentButton::UpdateButtonPlane()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void ComponentButton::BindTex()
+void ComponentCheckbox::BindTex()
 {
 	if (tex)
 	{
@@ -418,6 +407,3 @@ void ComponentButton::BindTex()
 
 	}
 }
-
-
-

@@ -239,7 +239,7 @@ bool ComponentImage::DrawInspector()
 		if (texture != nullptr)
 			ImGui::Image((ImTextureID)texture->id, ImVec2(100, 100));
 		else
-			if (ImGui::Button("targergraphic", ImVec2(100, 100)))
+			if (ImGui::Button("Target Graphic", ImVec2(100, 100)))
 			{
 			}
 
