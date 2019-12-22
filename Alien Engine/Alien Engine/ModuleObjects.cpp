@@ -64,7 +64,7 @@ bool ModuleObjects::Start()
 	checkbox = new GameObject(canvas);
 	checkbox->SetName("test Checkbox");
 	checkbox->AddComponent(new ComponentTransform(checkbox, { 35.0f,30.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
-	checkbox->AddComponent(new ComponentButton(checkbox, { 30,10 }));
+	checkbox->AddComponent(new ComponentCheckbox(checkbox, { 30,10 }));
 
 	GameObject* camera_hardcoded = new GameObject(base_game_object);
 	camera_hardcoded->SetName("Camera Hardcoded");

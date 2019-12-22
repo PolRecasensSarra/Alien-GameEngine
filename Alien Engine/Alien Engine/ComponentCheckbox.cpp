@@ -84,6 +84,31 @@ void ComponentCheckbox::Draw()
 			glEnd();
 			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
+			//-------------------------------------------------------------------------
+
+			glBegin(GL_QUADS);
+			glLineWidth(8.0f);
+			glColor4f(actual_check_color.x, actual_check_color.y, actual_check_color.z, actual_check_color.w);
+
+			
+			size_check = { (size.x * 0.2f), (size.y * 0.4f) };
+			float3 pos_check = { pos.x + 5, ((pos.y + (size.y * 0.5f)) - (size_check.y*0.5f)), pos.z };
+
+			float3 v1_check = float3(pos_check.x, pos_check.y, pos_check.z);
+			float3 v2_check = float3(pos_check.x + (size_check.x * size_mult.x), pos_check.y, pos_check.z);
+			float3 v3_check = float3(pos_check.x + (size_check.x * size_mult.x), pos_check.y + (size_check.y * size_mult.y), pos_check.z);
+			float3 v4_check = float3(pos_check.x, pos_check.y + (size_check.y * size_mult.y), pos_check.z);
+
+			glVertex3f(v1_check.x, v1_check.y, v1_check.z);
+			glVertex3f(v2_check.x, v2_check.y, v2_check.z);
+			glVertex3f(v3_check.x, v3_check.y, v3_check.z);
+			glVertex3f(v4_check.x, v4_check.y, v4_check.z);
+
+			glEnd();
+			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+			
+
 		}
 	}
 }
@@ -116,7 +141,7 @@ void ComponentCheckbox::UpdateStates()
 
 	if (origin.x >= left && origin.y >= top && origin.x <= right && origin.y <= bottom)
 	{
-
+		bool same_frame = false;
 		if (state == InteractiveStates::NO_STATE)
 		{
 			state = InteractiveStates::ENTER;
@@ -132,14 +157,38 @@ void ComponentCheckbox::UpdateStates()
 			if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
 			{
 				DoLogicPressed();
+				state = InteractiveStates::PRESSED;
+				same_frame = true;
+				
 			}
 			else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
 			{
 				DoLogicPressed();
-				if (dragable)
+				
+			}
+			else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP)
+			{
+				if (!dragable)
 				{
-					//Move(); //I don't know if this is okai so maybe we delete this
+					DoLogicClicked();
 				}
+			}
+			else
+			{
+				DoLogicHovered();
+			}
+		}
+		if (!same_frame && state == InteractiveStates::PRESSED)
+		{
+			if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_DOWN)
+			{
+				DoLogicExitCheck();
+				state = InteractiveStates::HOVER;
+			}
+			else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_REPEAT)
+			{
+				DoLogicPressed();
+				
 			}
 			else if (App->input->GetMouseButton(SDL_BUTTON_LEFT) == KEY_UP)
 			{
@@ -162,6 +211,10 @@ void ComponentCheckbox::UpdateStates()
 			DoLogicExit();
 			//Exit();
 		}
+		if (state == InteractiveStates::PRESSED)
+		{
+			state = InteractiveStates::PRESSED;
+		}
 		else
 		{
 			state = InteractiveStates::NO_STATE;
@@ -183,11 +236,17 @@ void ComponentCheckbox::DoLogicHovered()
 void ComponentCheckbox::DoLogicPressed()
 {
 	actual_color = pressed_color;
+	actual_check_color = pressed_check_color;
 }
 
 void ComponentCheckbox::DoLogicExit()
 {
 	actual_color = normal_color;
+}
+
+void ComponentCheckbox::DoLogicExitCheck()
+{
+	actual_check_color = normal_check_color;
 }
 
 void ComponentCheckbox::SaveComponent(JSONArraypack* to_save)
@@ -346,6 +405,41 @@ void ComponentCheckbox::CreatCheckboxPlane()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * 6, index, GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+
+	//------------------------------------------------------------------------------
+
+	float3 pos_check = { pos.x + 5, pos.y + 5, pos.z };
+	size_check = { size.x * 0.3f, size.y * 0.1f };
+	
+
+	vertex_check[0] = float3(pos_check.x, pos_check.y, pos_check.z);
+	uv_check[0] = float2(0, 1);
+
+	vertex_check[1] = float3(pos_check.x + (size_check.x * size_mult.x), pos_check.y, pos_check.z);
+	uv_check[1] = float2(1, 1);
+
+	vertex_check[2] = float3(pos_check.x + (size_check.x * size_mult.x), pos_check.y + (size_check.y * size_mult.y), pos_check.z);
+	uv_check[2] = float2(1, 0);
+
+	vertex_check[3] = float3(pos_check.x, pos_check.y + (size_check.y * size_mult.y), pos_check.z);
+	uv_check[3] = float2(0, 0);
+
+	glGenBuffers(1, (GLuint*)&vertexId_check);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexId_check);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, vertex_check, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
+	//	glGenBuffers(1, (GLuint*)& texture->id);
+	glBindBuffer(GL_ARRAY_BUFFER, tex_check->id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 8, uv, GL_STATIC_DRAW);
+
+
+	glGenBuffers(1, (GLuint*)&indexId_check);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId_check);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * 6, index_check, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 void ComponentCheckbox::UpdateCheckboxPlane()
@@ -360,6 +454,21 @@ void ComponentCheckbox::UpdateCheckboxPlane()
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertexId); //aixo potser no o si 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, vertex, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	//---------------------------------------------------------------------------------------
+
+	float3 pos_check = { pos.x + 5, pos.y + 5, pos.z };
+	size_check = { size.x * 0.3f, size.y * 0.1f};
+	
+
+	vertex_check[0] = float3(pos_check.x, pos_check.y, pos_check.z);
+	vertex_check[1] = float3(pos_check.x + (size_check.x * size_mult.x), pos_check.y, pos_check.z);
+	vertex_check[2] = float3(pos_check.x + (size_check.x * size_mult.x), pos_check.y + (size_check.y * size_mult.y), pos_check.z);
+	vertex_check[3] = float3(pos_check.x, pos_check.y + (size_check.y * size_mult.y), pos_check.z);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vertexId_check); //aixo potser no o si 
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, vertex_check, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
@@ -391,6 +500,47 @@ void ComponentCheckbox::BindTex()
 		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
+
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glDisableClientState(GL_VERTEX_ARRAY);
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glDisable(GL_ALPHA_TEST);
+
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+	}
+	if (tex_check)
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_ALPHA_TEST);
+		glAlphaFunc(GL_GREATER, 0.0f);
+
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+		glEnable(GL_TEXTURE_2D);
+
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+		glEnableClientState(GL_VERTEX_ARRAY);
+
+		glBindTexture(GL_TEXTURE_2D, tex_check->id);
+
+		glBindBuffer(GL_ARRAY_BUFFER, vertexId_check);
+		glVertexPointer(3, GL_FLOAT, 0, NULL);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		glBindBuffer(GL_ARRAY_BUFFER, tex_check->id);
+		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId_check);
 
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
 

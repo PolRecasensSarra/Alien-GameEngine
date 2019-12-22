@@ -31,6 +31,7 @@ enum class InteractiveStates
 	NO_STATE,
 	ENTER,
 	HOVER,
+	PRESSED,
 	EXIT
 };
 
