@@ -527,8 +527,12 @@ void CompZ::SetCompZ(Component* component, CompZ** compZ)
 		ComponentButton* button = (ComponentButton*)component;
 		CompButtonZ* buttonZ = new CompButtonZ();
 		*compZ = buttonZ;
-		if (button->tex != nullptr)
+		if (button->tex != nullptr) {
 			buttonZ->resourceID = button->tex->GetID();
+		}
+		else {
+			buttonZ->resourceID = 0;
+		}
 		buttonZ->objectID = button->game_object_attached->ID;
 		buttonZ->size = button->size;
 		break; }
@@ -536,8 +540,12 @@ void CompZ::SetCompZ(Component* component, CompZ** compZ)
 		ComponentImage* image = (ComponentImage*)component;
 		CompImageZ* imageZ = new CompImageZ();
 		*compZ = imageZ;
-		if(image->texture != nullptr)
+		if (image->texture != nullptr) {
 			imageZ->resourceID = image->texture->GetID();
+		}
+		else {
+			imageZ->resourceID = 0;
+		}
 		imageZ->objectID = image->game_object_attached->ID;
 		imageZ->size = image->size;
 		break; }
@@ -641,11 +649,15 @@ void CompZ::SetComponent(Component* component, CompZ* compZ)
 	case ComponentType::BUTTON: {
 		ComponentButton* button = (ComponentButton*)component;
 		CompButtonZ* buttonZ = (CompButtonZ*)compZ;
-		if (buttonZ->resourceID == 0) {
-			button->tex = nullptr;
+		if (buttonZ->resourceID != 0) {
+			LOG("%u", buttonZ->resourceID);
+			button->tex = ((ResourceTexture*)App->resources->GetResourceWithID(buttonZ->resourceID));
+			button->tex->IncreaseReferences();
+			button->CreatButtonPlane();
 		}
 		else {
-			button->tex = ((ResourceTexture*)App->resources->GetResourceWithID(buttonZ->resourceID));
+			LOG("SIDAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+			button->tex = nullptr;
 		}
 		button->size = buttonZ->size;
 		break; }
@@ -657,6 +669,8 @@ void CompZ::SetComponent(Component* component, CompZ* compZ)
 		}
 		else {
 			image->texture = ((ResourceTexture*)App->resources->GetResourceWithID(imageZ->resourceID));
+			image->texture->IncreaseReferences();
+			image->CreatImgPlane();
 		}
 		image->size = imageZ->size;
 		break; }

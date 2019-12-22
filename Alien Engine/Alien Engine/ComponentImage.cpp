@@ -202,7 +202,10 @@ void ComponentImage::LoadComponent(JSONArraypack* to_load)
 		u64 ID = std::stoull(to_load->GetString("TextureID"));
 		texture = (ResourceTexture*)App->resources->GetResourceWithID(ID);
 		if (texture != nullptr)
+		{
 			texture->IncreaseReferences();
+			CreatImgPlane();
+		}
 	}
 }
 
@@ -239,7 +242,7 @@ bool ComponentImage::DrawInspector()
 
 		if (ImGui::BeginDragDropTarget())
 		{
-			const ImGuiPayload* payload = ImGui::GetDragDropPayload();
+			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(DROP_ID_PROJECT_NODE, ImGuiDragDropFlags_SourceNoDisableHover);
 			//(DROP_ID_PROJECT_NODE, ImGuiDragDropFlags_SourceNoDisableHover| ImGuiDragDropFlags_AcceptBeforeDelivery);
 			if (payload != nullptr && payload->IsDataType(DROP_ID_PROJECT_NODE)) {
 				FileNode* node = *(FileNode * *)payload->Data;
@@ -257,7 +260,7 @@ bool ComponentImage::DrawInspector()
 
 					if (texture_dropped != nullptr) {
 
-
+						ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, this);
 						texture = texture_dropped; //id incorrect
 						/*if (App->objects->GetSelectedObject()->HasComponent(ComponentType::MATERIAL))
 							ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, App->objects->GetSelectedObject()->GetComponent(ComponentType::MATERIAL));
@@ -270,10 +273,11 @@ bool ComponentImage::DrawInspector()
 						}
 					}
 					createIMG = false;
+					ImGui::ClearDragDrop();
 				}
 
 			}
-			ImGui::GetDragDropPayload();
+			
 
 			ImGui::EndDragDropTarget();
 
