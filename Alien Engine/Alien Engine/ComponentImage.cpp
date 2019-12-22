@@ -6,12 +6,13 @@
 #include "ComponentTransform.h"
 #include "FileNode.h"
 #include "imgui/imgui_internal.h"
-ComponentImage::ComponentImage(GameObject* attach, float2 size):Component(attach)
+ComponentImage::ComponentImage(GameObject* attach, float2 size, float3 margin):Component(attach)
 {
 	type = ComponentType::IMAGE;
 
 	this->sizeIMG = size;
 	this->size = size;
+	this->margin = margin;
 
 }
 
@@ -55,6 +56,7 @@ void ComponentImage::SetComponent(Component* component)
 void ComponentImage::CreatImgPlane()
 {
 	float3 pos = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalPosition();
+	pos += margin;
 	float3 size_mult = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalScale();
 
 	vertex[0] = float3(pos.x, pos.y, pos.z);
@@ -90,6 +92,7 @@ void ComponentImage::UpdateImgPlane()
 {
 	float3 pos = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalPosition();
 	float3 size_mult = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalScale();
+	pos += margin;
 
 	vertex[0] = float3(pos.x, pos.y, pos.z);
 	vertex[1] = float3(pos.x + (size.x * size_mult.x), pos.y, pos.z);
@@ -159,10 +162,11 @@ void ComponentImage::Draw()
 	{
 		glBegin(GL_QUADS);
 		glLineWidth(8.0f);
-		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		glColor4f(1.0f, 0.0f, 1.0f, 1.0f);
 
 		float3 pos = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalPosition();
 		float3 size_mult = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalScale();
+		pos += margin;
 
 		float3 v1 = float3(pos.x, pos.y, pos.z);
 		float3 v2 = float3(pos.x + (size.x * size_mult.x), pos.y, pos.z);

@@ -6,6 +6,7 @@
 
 
 enum class InteractiveStates;
+class ComponentImage;
 
 class ComponentCheckbox : public Component {
 	friend class CompZ;
@@ -76,5 +77,7 @@ private:
 	InteractiveStates state = InteractiveStates::NO_STATE;
 
 	ResourceTexture* tex = nullptr;
-	ResourceTexture* tex_check = nullptr;
+	//ResourceTexture* tex_check = nullptr;
+
+	ComponentImage* check_image = nullptr;
 };

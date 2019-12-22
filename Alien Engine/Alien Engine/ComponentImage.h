@@ -9,7 +9,7 @@ class ComponentImage : public Component {
 
 public:
 
-	ComponentImage(GameObject* attach, float2 size = { 0.0f,0.0f });
+	ComponentImage(GameObject* attach, float2 size = { 0.0f,0.0f }, float3 margin = {0.0f,0.0f,0.0f});
 	~ComponentImage();
 
 	void BindImg();
@@ -41,6 +41,7 @@ public:
 	uint textureId = 0;
 
 	float2 sizeIMG;
+	float3 margin;
 private:
 	float2 position;
 	ResourceTexture* texture = nullptr;

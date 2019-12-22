@@ -1,5 +1,6 @@
 #include "ComponentCheckbox.h"
 #include "ComponentTransform.h"
+#include "ComponentImage.h"
 #include "GameObject.h"
 #include "Application.h"
 #include "ModuleUI.h"
@@ -28,6 +29,15 @@ ComponentCheckbox::ComponentCheckbox(GameObject* attach, float2 size) :Component
 		this->size_check.x = 5;
 		this->size_check.y = 5;
 	}
+
+	
+
+	float2 size_image = { (size.x * 0.2f), (size.y * 0.4f) };
+
+	int y = (size.y * 0.5f) - (size_check.y * 0.5f);
+	
+	game_object_attached->AddComponent(new ComponentImage(game_object_attached, size_image, {5.0f,y,0.0f}));
+	check_image = game_object_attached->GetComponent<ComponentImage>();
 
 }
 
@@ -384,37 +394,37 @@ void ComponentCheckbox::CreatCheckboxPlane()
 
 	//------------------------------------------------------------------------------
 
-	float3 pos_check = { pos.x + 5, pos.y + 5, pos.z };
-	size_check = { size.x * 0.3f, size.y * 0.1f };
-	
+	//float3 pos_check = { pos.x + 5, pos.y + 5, pos.z };
+	//size_check = { size.x * 0.3f, size.y * 0.1f };
+	//
 
-	vertex_check[0] = float3(pos_check.x, pos_check.y, pos_check.z);
-	uv_check[0] = float2(0, 1);
+	//vertex_check[0] = float3(pos_check.x, pos_check.y, pos_check.z);
+	//uv_check[0] = float2(0, 1);
 
-	vertex_check[1] = float3(pos_check.x + (size_check.x * size_mult.x), pos_check.y, pos_check.z);
-	uv_check[1] = float2(1, 1);
+	//vertex_check[1] = float3(pos_check.x + (size_check.x * size_mult.x), pos_check.y, pos_check.z);
+	//uv_check[1] = float2(1, 1);
 
-	vertex_check[2] = float3(pos_check.x + (size_check.x * size_mult.x), pos_check.y + (size_check.y * size_mult.y), pos_check.z);
-	uv_check[2] = float2(1, 0);
+	//vertex_check[2] = float3(pos_check.x + (size_check.x * size_mult.x), pos_check.y + (size_check.y * size_mult.y), pos_check.z);
+	//uv_check[2] = float2(1, 0);
 
-	vertex_check[3] = float3(pos_check.x, pos_check.y + (size_check.y * size_mult.y), pos_check.z);
-	uv_check[3] = float2(0, 0);
+	//vertex_check[3] = float3(pos_check.x, pos_check.y + (size_check.y * size_mult.y), pos_check.z);
+	//uv_check[3] = float2(0, 0);
 
-	glGenBuffers(1, (GLuint*)&vertexId_check);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexId_check);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, vertex_check, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-
-	//	glGenBuffers(1, (GLuint*)& texture->id);
-	glBindBuffer(GL_ARRAY_BUFFER, tex_check->id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 8, uv, GL_STATIC_DRAW);
+	//glGenBuffers(1, (GLuint*)&vertexId_check);
+	//glBindBuffer(GL_ARRAY_BUFFER, vertexId_check);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, vertex_check, GL_STATIC_DRAW);
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 
-	glGenBuffers(1, (GLuint*)&indexId_check);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId_check);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * 6, index_check, GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	////	glGenBuffers(1, (GLuint*)& texture->id);
+	//glBindBuffer(GL_ARRAY_BUFFER, tex_check->id);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 8, uv, GL_STATIC_DRAW);
+
+
+	//glGenBuffers(1, (GLuint*)&indexId_check);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId_check);
+	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * 6, index_check, GL_STATIC_DRAW);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 void ComponentCheckbox::UpdateCheckboxPlane()
@@ -433,18 +443,22 @@ void ComponentCheckbox::UpdateCheckboxPlane()
 
 	//---------------------------------------------------------------------------------------
 
-	float3 pos_check = { pos.x + 5, pos.y + 5, pos.z };
-	size_check = { size.x * 0.3f, size.y * 0.1f};
+	//float3 pos_check = { pos.x + 5, pos.y + 5, pos.z };
+	//size_check = { size.x * 0.3f, size.y * 0.1f};
+	//
+
+	//vertex_check[0] = float3(pos_check.x, pos_check.y, pos_check.z);
+	//vertex_check[1] = float3(pos_check.x + (size_check.x * size_mult.x), pos_check.y, pos_check.z);
+	//vertex_check[2] = float3(pos_check.x + (size_check.x * size_mult.x), pos_check.y + (size_check.y * size_mult.y), pos_check.z);
+	//vertex_check[3] = float3(pos_check.x, pos_check.y + (size_check.y * size_mult.y), pos_check.z);
+
+	//glBindBuffer(GL_ARRAY_BUFFER, vertexId_check); //aixo potser no o si 
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, vertex_check, GL_STATIC_DRAW);
+	//glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 	
 
-	vertex_check[0] = float3(pos_check.x, pos_check.y, pos_check.z);
-	vertex_check[1] = float3(pos_check.x + (size_check.x * size_mult.x), pos_check.y, pos_check.z);
-	vertex_check[2] = float3(pos_check.x + (size_check.x * size_mult.x), pos_check.y + (size_check.y * size_mult.y), pos_check.z);
-	vertex_check[3] = float3(pos_check.x, pos_check.y + (size_check.y * size_mult.y), pos_check.z);
 
-	glBindBuffer(GL_ARRAY_BUFFER, vertexId_check); //aixo potser no o si 
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, vertex_check, GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void ComponentCheckbox::BindTex()
@@ -490,7 +504,7 @@ void ComponentCheckbox::BindTex()
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 	}
-	if (tex_check)
+	/*if (tex_check)
 	{
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -530,5 +544,5 @@ void ComponentCheckbox::BindTex()
 
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-	}
+	}*/
 }
