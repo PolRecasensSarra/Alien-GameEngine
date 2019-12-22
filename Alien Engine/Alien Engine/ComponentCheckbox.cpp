@@ -9,6 +9,7 @@
 #include "ResourceTexture.h"
 #include "FileNode.h"
 #include "imgui/imgui_internal.h"
+#include <math.h>
 
 
 ComponentCheckbox::ComponentCheckbox(GameObject* attach, float2 size) :Component(attach)
@@ -32,11 +33,11 @@ ComponentCheckbox::ComponentCheckbox(GameObject* attach, float2 size) :Component
 
 	
 
-	float2 size_image = { (size.x * 0.2f), (size.y * 0.4f) };
+	float2 size_image = { (size.y * 0.5f), (size.y * 0.5f) };
+	float y = (size.y * 0.5f) - (size_image.y * 0.5f);
+	float x = size_image.x * 0.85f;
 
-	int y = (size.y * 0.5f) - (size_check.y * 0.5f);
-	
-	game_object_attached->AddComponent(new ComponentImage(game_object_attached, size_image, {5.0f,y,0.0f}));
+	game_object_attached->AddComponent(new ComponentImage(game_object_attached, size_image, { x,y,0.0f }));
 	check_image = game_object_attached->GetComponent<ComponentImage>();
 
 }
