@@ -9,7 +9,7 @@ class ComponentImage : public Component {
 
 public:
 
-	ComponentImage(GameObject* attach, float2 size = { 0.0f,0.0f }, float3 margin = {0.0f,0.0f,0.0f});
+	ComponentImage(GameObject* attach, float2 size = { 0.0f,0.0f }, float3 margin = { 0.0f,0.0f,0.0f }, bool is_custom = false);
 	~ComponentImage();
 
 	void BindImg();
@@ -48,4 +48,5 @@ private:
 	float2 position;
 	
 	bool createIMG = false;
+	bool is_custom = false;
 };

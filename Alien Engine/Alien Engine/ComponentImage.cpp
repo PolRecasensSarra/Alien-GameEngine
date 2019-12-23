@@ -6,13 +6,14 @@
 #include "ComponentTransform.h"
 #include "FileNode.h"
 #include "imgui/imgui_internal.h"
-ComponentImage::ComponentImage(GameObject* attach, float2 size, float3 margin):Component(attach)
+ComponentImage::ComponentImage(GameObject* attach, float2 size, float3 margin, bool is_custom):Component(attach)
 {
 	type = ComponentType::IMAGE;
 
 	this->sizeIMG = size;
 	this->size = size;
 	this->margin = margin;
+	this->is_custom = is_custom;
 
 }
 
@@ -196,6 +197,7 @@ void ComponentImage::SaveComponent(JSONArraypack* to_save)
 		to_save->SetString("TextureID", std::to_string(texture->GetID()));
 
 	to_save->SetBoolean("Enabled", enabled);
+	to_save->SetBoolean("isCustom", is_custom);
 }
 
 void ComponentImage::LoadComponent(JSONArraypack* to_load)
@@ -204,10 +206,19 @@ void ComponentImage::LoadComponent(JSONArraypack* to_load)
 	sizeIMG = to_load->GetFloat2("SizeButton");
 	size = to_load->GetFloat2("Size");
 	enabled = to_load->GetBoolean("Enabled");
+	is_custom = to_load->GetBoolean("isCutsom");
 
 	if (to_load->GetBoolean("HasTexture")) {
 		u64 ID = std::stoull(to_load->GetString("TextureID"));
-		texture = (ResourceTexture*)App->resources->GetResourceWithID(ID);
+		if (ID == 0 && is_custom)
+		{
+			texture = App->resources->icons.button;
+		}
+		else
+		{
+			texture = (ResourceTexture*)App->resources->GetResourceWithID(ID);
+		}
+
 		if (texture != nullptr)
 		{
 			texture->IncreaseReferences();
