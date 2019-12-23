@@ -236,9 +236,15 @@ bool ComponentImage::DrawInspector()
 		ImGui::Text("Size");
 
 		if (ImGui::DragFloat("X", &size.x, 0.5F, 0, 0, "%.3f", 1, game_object_attached->is_static))
+		{
+			ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, this);
 			sizeIMG = size;
+		}
 		if (ImGui::DragFloat("Y", &size.y, 0.5F, 0, 0, "%.3f", 1, game_object_attached->is_static))
+		{
+			ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, this);
 			sizeIMG = size;
+		}
 
 		if (texture != nullptr)
 			ImGui::Image((ImTextureID)texture->id, ImVec2(100, 100));

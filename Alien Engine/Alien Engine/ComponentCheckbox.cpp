@@ -298,9 +298,15 @@ bool ComponentCheckbox::DrawInspector()
 
 
 		if (ImGui::DragFloat("X", &size.x, 0.5F, 0, 0, "%.3f", 1, game_object_attached->is_static))
+		{
+			ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, this);
 			size_checkbox = size;
+		}
 		if (ImGui::DragFloat("Y", &size.y, 0.5F, 0, 0, "%.3f", 1, game_object_attached->is_static))
+		{
+			ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, this);
 			size_checkbox = size;
+		}
 
 		if (tex != nullptr)
 			ImGui::Image((ImTextureID)tex->id, ImVec2(100, 100));
@@ -312,7 +318,7 @@ bool ComponentCheckbox::DrawInspector()
 		if (ImGui::BeginDragDropTarget())
 		{
 			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(DROP_ID_PROJECT_NODE, ImGuiDragDropFlags_SourceNoDisableHover);
-			//(DROP_ID_PROJECT_NODE, ImGuiDragDropFlags_SourceNoDisableHover| ImGuiDragDropFlags_AcceptBeforeDelivery);
+			
 			if (payload != nullptr && payload->IsDataType(DROP_ID_PROJECT_NODE)) {
 				FileNode* node = *(FileNode**)payload->Data;
 
@@ -330,7 +336,7 @@ bool ComponentCheckbox::DrawInspector()
 					if (texture_dropped != nullptr) {
 						LOG("enter one time checkbox");
 						ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, this);
-						tex = texture_dropped; //id incorrect
+						tex = texture_dropped; 
 						
 						tex->IncreaseReferences();
 						
@@ -380,7 +386,6 @@ void ComponentCheckbox::CreatCheckboxPlane()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 
-	//	glGenBuffers(1, (GLuint*)& texture->id);
 	glBindBuffer(GL_ARRAY_BUFFER, tex->id);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 8, uv, GL_STATIC_DRAW);
 
@@ -391,39 +396,6 @@ void ComponentCheckbox::CreatCheckboxPlane()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 
-	//------------------------------------------------------------------------------
-
-	//float3 pos_check = { pos.x + 5, pos.y + 5, pos.z };
-	//size_check = { size.x * 0.3f, size.y * 0.1f };
-	//
-
-	//vertex_check[0] = float3(pos_check.x, pos_check.y, pos_check.z);
-	//uv_check[0] = float2(0, 1);
-
-	//vertex_check[1] = float3(pos_check.x + (size_check.x * size_mult.x), pos_check.y, pos_check.z);
-	//uv_check[1] = float2(1, 1);
-
-	//vertex_check[2] = float3(pos_check.x + (size_check.x * size_mult.x), pos_check.y + (size_check.y * size_mult.y), pos_check.z);
-	//uv_check[2] = float2(1, 0);
-
-	//vertex_check[3] = float3(pos_check.x, pos_check.y + (size_check.y * size_mult.y), pos_check.z);
-	//uv_check[3] = float2(0, 0);
-
-	//glGenBuffers(1, (GLuint*)&vertexId_check);
-	//glBindBuffer(GL_ARRAY_BUFFER, vertexId_check);
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, vertex_check, GL_STATIC_DRAW);
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-
-	////	glGenBuffers(1, (GLuint*)& texture->id);
-	//glBindBuffer(GL_ARRAY_BUFFER, tex_check->id);
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 8, uv, GL_STATIC_DRAW);
-
-
-	//glGenBuffers(1, (GLuint*)&indexId_check);
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId_check);
-	//glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * 6, index_check, GL_STATIC_DRAW);
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 void ComponentCheckbox::UpdateCheckboxPlane()
@@ -439,24 +411,6 @@ void ComponentCheckbox::UpdateCheckboxPlane()
 	glBindBuffer(GL_ARRAY_BUFFER, vertexId); //aixo potser no o si 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, vertex, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	//---------------------------------------------------------------------------------------
-
-	//float3 pos_check = { pos.x + 5, pos.y + 5, pos.z };
-	//size_check = { size.x * 0.3f, size.y * 0.1f};
-	//
-
-	//vertex_check[0] = float3(pos_check.x, pos_check.y, pos_check.z);
-	//vertex_check[1] = float3(pos_check.x + (size_check.x * size_mult.x), pos_check.y, pos_check.z);
-	//vertex_check[2] = float3(pos_check.x + (size_check.x * size_mult.x), pos_check.y + (size_check.y * size_mult.y), pos_check.z);
-	//vertex_check[3] = float3(pos_check.x, pos_check.y + (size_check.y * size_mult.y), pos_check.z);
-
-	//glBindBuffer(GL_ARRAY_BUFFER, vertexId_check); //aixo potser no o si 
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, vertex_check, GL_STATIC_DRAW);
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	
-
 
 }
 
@@ -503,45 +457,4 @@ void ComponentCheckbox::BindTex()
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 	}
-	/*if (tex_check)
-	{
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glEnable(GL_ALPHA_TEST);
-		glAlphaFunc(GL_GREATER, 0.0f);
-
-		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-
-		glEnable(GL_TEXTURE_2D);
-
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-		glEnableClientState(GL_VERTEX_ARRAY);
-
-		glBindTexture(GL_TEXTURE_2D, tex_check->id);
-
-		glBindBuffer(GL_ARRAY_BUFFER, vertexId_check);
-		glVertexPointer(3, GL_FLOAT, 0, NULL);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glBindBuffer(GL_ARRAY_BUFFER, tex_check->id);
-		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId_check);
-
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-		glDisableClientState(GL_VERTEX_ARRAY);
-
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glDisable(GL_ALPHA_TEST);
-
-		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-
-	}*/
 }
