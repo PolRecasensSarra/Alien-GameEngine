@@ -212,18 +212,20 @@ void ComponentImage::LoadComponent(JSONArraypack* to_load)
 		u64 ID = std::stoull(to_load->GetString("TextureID"));
 		if (ID == 0 && is_custom)
 		{
-			//texture = App->resources->icons.button;
+			texture = App->resources->icons.image_canvas;
+			CreatImgPlane();
 		}
 		else
 		{
 			texture = (ResourceTexture*)App->resources->GetResourceWithID(ID);
+			if (texture != nullptr)
+			{
+				texture->IncreaseReferences();
+				CreatImgPlane();
+			}
 		}
 
-		if (texture != nullptr)
-		{
-			texture->IncreaseReferences();
-			CreatImgPlane();
-		}
+		
 	}
 }
 

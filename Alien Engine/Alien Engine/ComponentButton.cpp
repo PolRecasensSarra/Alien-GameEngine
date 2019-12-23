@@ -226,17 +226,19 @@ void ComponentButton::LoadComponent(JSONArraypack* to_load)
 		if (ID == 0 && is_custom)
 		{
 			tex = App->resources->icons.button;
+			CreatButtonPlane();
 		}
 		else
 		{
 			tex = (ResourceTexture*)App->resources->GetResourceWithID(ID);
+			if (tex != nullptr)
+			{
+				tex->IncreaseReferences();
+				CreatButtonPlane();
+			}
 		}
 
-		if (tex != nullptr)
-		{
-			tex->IncreaseReferences();
-			CreatButtonPlane();
-		}
+		
 	}
 
 
