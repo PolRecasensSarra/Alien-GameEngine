@@ -13,6 +13,7 @@
 #include "ComponentCanvas.h"
 #include "ComponentImage.h"
 #include "ComponentCheckbox.h"
+#include "ComponentInputText.h"
 #include "ReturnZ.h"
 
 GameObject::GameObject(GameObject* parent)
@@ -817,6 +818,11 @@ void GameObject::LoadObject(JSONArraypack* to_load, GameObject* parent)
 				ComponentCheckbox* checkbox = new ComponentCheckbox(this);
 				checkbox->LoadComponent(components_to_load);
 				AddComponent(checkbox);
+				break; }
+			case (int)ComponentType::INPUTBOX: {
+				ComponentInputText* inputText = new ComponentInputText(this);
+				inputText->LoadComponent(components_to_load);
+				AddComponent(inputText);
 				break; }
 			default:
 				LOG("Unknown component type while loading");

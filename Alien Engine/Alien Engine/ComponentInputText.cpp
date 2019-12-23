@@ -1,24 +1,20 @@
-#include "ComponentCheckbox.h"
+#include "ComponentInputText.h"
 #include "ComponentTransform.h"
-#include "ComponentImage.h"
 #include "GameObject.h"
 #include "Application.h"
+#include "ReturnZ.h"
 #include "ModuleUI.h"
 #include "PanelGame.h"
-#include "ReturnZ.h"
 #include "ResourceTexture.h"
 #include "FileNode.h"
-#include "ModuleResources.h"
 #include "imgui/imgui_internal.h"
-#include <math.h>
 
-
-ComponentCheckbox::ComponentCheckbox(GameObject* attach, float2 size, bool is_custom) :Component(attach)
+ComponentInputText::ComponentInputText(GameObject* attach, float2 size, bool is_custom) :Component(attach)
 {
-	type = ComponentType::CHECKBOX;
+	type = ComponentType::INPUTBOX;
 
 	this->size = size;
-	this->size_checkbox = size;
+	this->size_input_text = size;
 	this->is_custom = is_custom;
 
 	if (size.x == 0)
@@ -26,44 +22,33 @@ ComponentCheckbox::ComponentCheckbox(GameObject* attach, float2 size, bool is_cu
 		this->size.x = 20;
 		this->size.y = 10;
 	}
-	
-
-	float2 size_image = { (size.y * 0.5f), (size.y * 0.5f) };
-	float y = (size.y * 0.5f) - (size_image.y * 0.5f);
-	float x = size_image.x * 0.85f;
-
-	game_object_attached->AddComponent(new ComponentImage(game_object_attached, size_image, { x,y,0.0f }));
-	game_object_attached->GetComponent<ComponentImage>()->texture = App->resources->icons.checkbox_empty;
-	game_object_attached->GetComponent<ComponentImage>()->CreatImgPlane();
-	check_image = game_object_attached->GetComponent<ComponentImage>();
-
 }
 
-ComponentCheckbox::~ComponentCheckbox()
+ComponentInputText::~ComponentInputText()
 {
 }
 
-void ComponentCheckbox::Update()
+void ComponentInputText::Update()
 {
 	if (Time::IsInGameState())
 		UpdateStates();
 
 	if (function)
 	{
-		//call the fade function mega hardcoded
+		//HERE GOES THE UPDATE OF THE LABEL
 
-		function = false;
+		//function = false;   WHEN PRESSING ENTER, PUT THIS TO FALSE
 	}
 }
 
-void ComponentCheckbox::PostUpdate()
+void ComponentInputText::PostUpdate()
 {
 	Draw();
 }
 
-void ComponentCheckbox::Draw()
+void ComponentInputText::Draw()
 {
-	UpdateCheckboxPlane();
+	UpdateInputTextPlane();
 
 	BindTex();
 
@@ -92,36 +77,11 @@ void ComponentCheckbox::Draw()
 			glEnd();
 			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
-			//-------------------------------------------------------------------------
-
-			glBegin(GL_QUADS);
-			glLineWidth(8.0f);
-			glColor4f(actual_check_color.x, actual_check_color.y, actual_check_color.z, actual_check_color.w);
-
-			
-			size_check = { (size.x * 0.2f), (size.y * 0.4f) };
-			float3 pos_check = { pos.x + 5, ((pos.y + (size.y * 0.5f)) - (size_check.y*0.5f)), pos.z };
-
-			float3 v1_check = float3(pos_check.x, pos_check.y, pos_check.z);
-			float3 v2_check = float3(pos_check.x + (size_check.x * size_mult.x), pos_check.y, pos_check.z);
-			float3 v3_check = float3(pos_check.x + (size_check.x * size_mult.x), pos_check.y + (size_check.y * size_mult.y), pos_check.z);
-			float3 v4_check = float3(pos_check.x, pos_check.y + (size_check.y * size_mult.y), pos_check.z);
-
-			glVertex3f(v1_check.x, v1_check.y, v1_check.z);
-			glVertex3f(v2_check.x, v2_check.y, v2_check.z);
-			glVertex3f(v3_check.x, v3_check.y, v3_check.z);
-			glVertex3f(v4_check.x, v4_check.y, v4_check.z);
-
-			glEnd();
-			glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-
-			
-
 		}
 	}
 }
 
-void ComponentCheckbox::UpdateStates()
+void ComponentInputText::UpdateStates()
 {
 	float3 pos = float3::zero;
 
@@ -132,8 +92,8 @@ void ComponentCheckbox::UpdateStates()
 		pos = transform->GetGlobalPosition();
 
 
-	float width = size_checkbox.x;
-	float height = size_checkbox.y;
+	float width = size_input_text.x;
+	float height = size_input_text.y;
 	float x = pos.x;
 	float y = pos.y;
 
@@ -203,44 +163,32 @@ void ComponentCheckbox::UpdateStates()
 	}
 }
 
-void ComponentCheckbox::DoLogicClicked()
+void ComponentInputText::DoLogicClicked()
 {
 	function = true;
-	if (actual_check_color.x == normal_check_color.x && actual_check_color.y == normal_check_color.y && actual_check_color.z == normal_check_color.z && actual_check_color.w == normal_check_color.w)
-	{
-		actual_check_color = pressed_check_color;
-		game_object_attached->GetComponent<ComponentImage>()->texture = App->resources->icons.checkbox_selected;
-		game_object_attached->GetComponent<ComponentImage>()->CreatImgPlane();
-	}
-	else
-	{
-		game_object_attached->GetComponent<ComponentImage>()->texture = App->resources->icons.checkbox_empty;
-		game_object_attached->GetComponent<ComponentImage>()->CreatImgPlane();
-		actual_check_color = normal_check_color;
-	}
+	//START GETTING THE INPUT TO ACTUALIZE THE LABEL
 }
 
-void ComponentCheckbox::DoLogicHovered()
+void ComponentInputText::DoLogicHovered()
 {
 	actual_color = hover_color;
 }
 
-void ComponentCheckbox::DoLogicPressed()
+void ComponentInputText::DoLogicPressed()
 {
 	actual_color = pressed_color;
 }
 
-void ComponentCheckbox::DoLogicExit()
+void ComponentInputText::DoLogicExit()
 {
 	actual_color = normal_color;
 }
 
-
-void ComponentCheckbox::SaveComponent(JSONArraypack* to_save)
+void ComponentInputText::SaveComponent(JSONArraypack* to_save)
 {
 	to_save->SetNumber("Type", (int)type);
 	to_save->SetString("ID", std::to_string(ID));
-	to_save->SetFloat2("SizeCheckbox", size_checkbox);
+	to_save->SetFloat2("SizeInputText", size_input_text);
 	to_save->SetFloat2("Size", size);
 	to_save->SetColor("Color", { actual_color.x,actual_color.y,actual_color.z ,actual_color.w });
 	to_save->SetBoolean("HasTexture", (tex != nullptr) ? true : false);
@@ -252,10 +200,10 @@ void ComponentCheckbox::SaveComponent(JSONArraypack* to_save)
 	to_save->SetBoolean("isCustom", is_custom);
 }
 
-void ComponentCheckbox::LoadComponent(JSONArraypack* to_load)
+void ComponentInputText::LoadComponent(JSONArraypack* to_load)
 {
 	ID = std::stoull(to_load->GetString("ID"));
-	size_checkbox = to_load->GetFloat2("SizeCheckbox");
+	size_input_text = to_load->GetFloat2("SizeInputText");
 	size = to_load->GetFloat2("Size");
 	Color c = to_load->GetColor("Color");
 	actual_color = { c.r, c.g,c.b, c.a };
@@ -264,11 +212,10 @@ void ComponentCheckbox::LoadComponent(JSONArraypack* to_load)
 
 	if (to_load->GetBoolean("HasTexture")) {
 		u64 ID = std::stoull(to_load->GetString("TextureID"));
-
 		if (ID == 0 && is_custom)
 		{
-			tex = App->resources->icons.checkbox;
-			CreatCheckboxPlane();
+			tex = App->resources->icons.test_image;
+			CreateInputTextPlane();
 		}
 		else
 		{
@@ -276,16 +223,15 @@ void ComponentCheckbox::LoadComponent(JSONArraypack* to_load)
 			if (tex != nullptr)
 			{
 				tex->IncreaseReferences();
-				CreatCheckboxPlane();
+				CreateInputTextPlane();
 			}
 		}
 
-		
+
 	}
-	UpdateCheckPos();
 }
 
-bool ComponentCheckbox::DrawInspector()
+bool ComponentInputText::DrawInspector()
 {
 	ImVec2 min_space = ImGui::GetWindowContentRegionMin();
 	ImVec2 max_space = ImGui::GetWindowContentRegionMax();
@@ -298,7 +244,7 @@ bool ComponentCheckbox::DrawInspector()
 	// drop project files
 
 
-	if (ImGui::CollapsingHeader("CheckBox", &not_destroy, ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader("Input Text", &not_destroy, ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::ColorEdit4("Normal Color", (float*)&normal_color);
 		actual_color = normal_color;
@@ -314,13 +260,14 @@ bool ComponentCheckbox::DrawInspector()
 
 		if (ImGui::DragFloat("X", &size.x, 0.5F, 0, 0, "%.3f", 1, game_object_attached->is_static))
 		{
-			ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, this);
-			size_checkbox = size;
+			//ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, this);
+			size_input_text = size;
 		}
+
 		if (ImGui::DragFloat("Y", &size.y, 0.5F, 0, 0, "%.3f", 1, game_object_attached->is_static))
 		{
-			ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, this);
-			size_checkbox = size;
+			//ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, this);
+			size_input_text = size;
 		}
 
 		if (tex != nullptr)
@@ -333,7 +280,7 @@ bool ComponentCheckbox::DrawInspector()
 		if (ImGui::BeginDragDropTarget())
 		{
 			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(DROP_ID_PROJECT_NODE, ImGuiDragDropFlags_SourceNoDisableHover);
-			
+			//(DROP_ID_PROJECT_NODE, ImGuiDragDropFlags_SourceNoDisableHover| ImGuiDragDropFlags_AcceptBeforeDelivery);
 			if (payload != nullptr && payload->IsDataType(DROP_ID_PROJECT_NODE)) {
 				FileNode* node = *(FileNode**)payload->Data;
 
@@ -349,14 +296,15 @@ bool ComponentCheckbox::DrawInspector()
 					ResourceTexture* texture_dropped = (ResourceTexture*)App->resources->GetResourceWithID(ID);
 
 					if (texture_dropped != nullptr) {
-						LOG("enter one time checkbox");
-						ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, this);
-						tex = texture_dropped; 
-						
+						LOG("KSDHFISSBLVKSDJMV");
+						//ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, this);
+						tex = texture_dropped; //id incorrect
+						/*if (App->objects->GetSelectedObject()->HasComponent(ComponentType::MATERIAL))
+							ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, App->objects->GetSelectedObject()->GetComponent(ComponentType::MATERIAL));
+						App->importer->ApplyTextureToSelectedObject(texture_dropped);*/
 						tex->IncreaseReferences();
-						
-						CreatCheckboxPlane();
-						
+						CreateInputTextPlane();
+
 					}
 					
 					ImGui::ClearDragDrop();
@@ -378,7 +326,7 @@ bool ComponentCheckbox::DrawInspector()
 	return true;
 }
 
-void ComponentCheckbox::CreatCheckboxPlane()
+void ComponentInputText::CreateInputTextPlane()
 {
 	float3 pos = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalPosition();
 	float3 size_mult = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalScale();
@@ -409,11 +357,9 @@ void ComponentCheckbox::CreatCheckboxPlane()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * 6, index, GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
-
 }
 
-void ComponentCheckbox::UpdateCheckboxPlane()
+void ComponentInputText::UpdateInputTextPlane()
 {
 	float3 pos = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalPosition();
 	float3 size_mult = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalScale();
@@ -426,10 +372,9 @@ void ComponentCheckbox::UpdateCheckboxPlane()
 	glBindBuffer(GL_ARRAY_BUFFER, vertexId); //aixo potser no o si 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, vertex, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
 }
 
-void ComponentCheckbox::BindTex()
+void ComponentInputText::BindTex()
 {
 	if (tex)
 	{
@@ -472,14 +417,4 @@ void ComponentCheckbox::BindTex()
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 	}
-}
-
-void ComponentCheckbox::UpdateCheckPos()
-{
-	float2 size_image = { (size.y * 0.5f), (size.y * 0.5f) };
-	float y = (size.y * 0.5f) - (size_image.y * 0.5f);
-	float x = size_image.x * 0.85f;
-	check_image->size = size_image;
-	check_image->margin.x = x;
-	check_image->margin.y = y;
 }

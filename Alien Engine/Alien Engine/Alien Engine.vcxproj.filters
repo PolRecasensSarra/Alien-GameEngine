@@ -663,6 +663,9 @@
     <ClInclude Include="ResourceFont.h">
       <Filter>Resources</Filter>
     </ClInclude>
+    <ClInclude Include="ComponentInputText.h">
+      <Filter>Components\UI_Components</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -967,6 +970,9 @@
     </ClCompile>
     <ClCompile Include="ResourceFont.cpp">
       <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentInputText.cpp">
+      <Filter>Components\UI_Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

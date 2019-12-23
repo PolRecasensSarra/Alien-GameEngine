@@ -189,7 +189,7 @@ void ComponentImage::SaveComponent(JSONArraypack* to_save)
 {
 	to_save->SetNumber("Type", (int)type);
 	to_save->SetString("ID", std::to_string(ID));
-	to_save->SetFloat2("SizeButton", sizeIMG);
+	to_save->SetFloat2("SizeImage", sizeIMG);
 	to_save->SetFloat2("Size", size);
 	to_save->SetBoolean("HasTexture", (texture != nullptr) ? true : false);
 
@@ -203,7 +203,7 @@ void ComponentImage::SaveComponent(JSONArraypack* to_save)
 void ComponentImage::LoadComponent(JSONArraypack* to_load)
 {
 	ID = std::stoull(to_load->GetString("ID"));
-	sizeIMG = to_load->GetFloat2("SizeButton");
+	sizeIMG = to_load->GetFloat2("SizeImage");
 	size = to_load->GetFloat2("Size");
 	enabled = to_load->GetBoolean("Enabled");
 	is_custom = to_load->GetBoolean("isCutsom");
