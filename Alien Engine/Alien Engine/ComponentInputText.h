@@ -32,6 +32,8 @@ public:
 	void UpdateInputTextPlane();
 
 	void BindTex();
+private:
+	void CheckIfDefaulTextureIsSettedAfterReturnZ();
 
 private:
 	float3 vertex[4];

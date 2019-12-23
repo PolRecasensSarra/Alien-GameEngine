@@ -33,6 +33,10 @@ public:
 	void UpdateButtonPlane();
 
 	void BindTex();
+
+private:
+	void CheckIfDefaulTextureIsSettedAfterReturnZ();
+
 private:
 
 	float3 vertex[4];

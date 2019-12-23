@@ -37,6 +37,7 @@ public:
 
 private:
 	void UpdateCheckPos();
+	void CheckIfDefaulTextureIsSettedAfterReturnZ();
 
 private:
 

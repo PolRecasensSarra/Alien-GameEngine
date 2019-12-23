@@ -76,7 +76,7 @@ bool ModuleObjects::Start()
 
 	inputText = new GameObject(canvas);
 	inputText->SetName("test Input Text");
-	inputText->AddComponent(new ComponentTransform(checkbox, { 35.0f,80.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	inputText->AddComponent(new ComponentTransform(inputText, { 35.0f,80.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
 	inputText->AddComponent(new ComponentInputText(inputText, {30,10}, true));
 	inputText->GetComponent<ComponentInputText>()->tex = App->resources->icons.test_image;
 	inputText->GetComponent<ComponentInputText>()->CreateInputTextPlane();

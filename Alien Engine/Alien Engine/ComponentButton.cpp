@@ -62,6 +62,7 @@ void ComponentButton::Draw()
 	
 	if (!tex)
 	{
+		CheckIfDefaulTextureIsSettedAfterReturnZ();
 		ComponentTransform* transform = (ComponentTransform*)game_object_attached->GetComponent(ComponentType::TRANSFORM);
 		if (transform != nullptr) {
 
@@ -436,6 +437,15 @@ void ComponentButton::BindTex()
 
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
+	}
+}
+
+void ComponentButton::CheckIfDefaulTextureIsSettedAfterReturnZ()
+{
+	if (tex == nullptr && is_custom)
+	{
+		tex = App->resources->icons.button;
+		CreatButtonPlane();
 	}
 }
 

@@ -9,6 +9,7 @@
 #include "ComponentImage.h"
 #include "ComponentCanvas.h"
 #include "ComponentCheckbox.h"
+#include "ComponentInputText.h"
 #include "ResourceTexture.h"
 #include "Octree.h"
 
@@ -216,6 +217,10 @@ void ReturnZ::DoAction(ReturnZ* action, bool is_fordward)
 			ComponentCheckbox* checkbox = (ComponentCheckbox*)App->objects->GetGameObjectByID(comp->comp->objectID)->GetComponentWithID(comp->comp->compID);
 			CompZ::SetComponent(checkbox, comp->comp);
 			break; }
+		case ComponentType::INPUTBOX: {
+			ComponentInputText* inputText = (ComponentInputText*)App->objects->GetGameObjectByID(comp->comp->objectID)->GetComponentWithID(comp->comp->compID);
+			CompZ::SetComponent(inputText, comp->comp);
+			break; }
 		}
 		break; }
 	case ReturnActions::DELETE_COMPONENT: {
@@ -347,6 +352,11 @@ void ReturnZ::SetDeleteObject(GameObject* obj, ActionDeleteObject* to_fill)
 					CompZ::SetCompZ((*item), (CompZ**)&checkboxZ);
 					comp = checkboxZ;
 					break; }
+				case ComponentType::INPUTBOX: {
+					CompInputTextZ* inputTextZ = nullptr;
+					CompZ::SetCompZ((*item), (CompZ**)&inputTextZ);
+					comp = inputTextZ;
+					break; }
 				default:
 					LOG("A component hasn't been saved");
 					break;
@@ -451,10 +461,16 @@ void ReturnZ::CreateObject(ActionDeleteObject* obj)
 					new_obj->AddComponent(canvas);
 					break; }
 				case ComponentType::CHECKBOX: {
-					ComponentCanvas* canvas = new ComponentCanvas(new_obj);
-					CompCanvasZ* canvasZ = (CompCanvasZ*)(*item);
-					CompZ::SetComponent(canvas, canvasZ);
-					new_obj->AddComponent(canvas);
+					ComponentCheckbox* checkbox = new ComponentCheckbox(new_obj);
+					CompCheckboxZ* checkboxZ = (CompCheckboxZ*)(*item);
+					CompZ::SetComponent(checkbox, checkboxZ);
+					new_obj->AddComponent(checkbox);
+					break; }
+				case ComponentType::INPUTBOX: {
+					ComponentInputText* inputText = new ComponentInputText(new_obj);
+					CompInputTextZ* inputTextZ = (CompInputTextZ*)(*item);
+					CompZ::SetComponent(inputText, inputTextZ);
+					new_obj->AddComponent(inputText);
 					break; }
 
 				default:
@@ -601,7 +617,20 @@ void CompZ::SetCompZ(Component* component, CompZ** compZ)
 			checkboxZ->resourceID = 0;
 		}
 		checkboxZ->objectID = checkbox->game_object_attached->ID;
-		checkboxZ->size = checkboxZ->size;
+		checkboxZ->size = checkbox->size;
+		break; }
+	case ComponentType::INPUTBOX: {
+		ComponentInputText* inputText = (ComponentInputText*)component;
+		CompInputTextZ* inputTextZ = new CompInputTextZ();
+		*compZ = inputTextZ;
+		if (inputText->tex != nullptr) {
+			inputTextZ->resourceID = inputText->tex->GetID();
+		}
+		else {
+			inputTextZ->resourceID = 0;
+		}
+		inputTextZ->objectID = inputText->game_object_attached->ID;
+		inputTextZ->size = inputText->size;
 		break; }
 	}
 
@@ -748,6 +777,19 @@ void CompZ::SetComponent(Component* component, CompZ* compZ)
 		}
 		checkbox->size = checkboxZ->size;
 		break; }
+	case ComponentType::INPUTBOX: {
+		ComponentInputText* inputText = (ComponentInputText*)component;
+		CompInputTextZ* inputTextZ = (CompInputTextZ*)compZ;
+		if (inputTextZ->resourceID == 0) {
+			inputText->tex = nullptr;
+		}
+		else {
+			inputText->tex = ((ResourceTexture*)App->resources->GetResourceWithID(inputTextZ->resourceID));
+			inputText->tex->IncreaseReferences();
+			inputText->CreateInputTextPlane();
+		}
+		inputText->size = inputTextZ->size;
+		break; }
 	}
 	component->SetEnable(compZ->enabled);
 	component->ID = compZ->compID;
@@ -802,6 +844,11 @@ void CompZ::AttachCompZToGameObject(CompZ* compZ)
 		ComponentCheckbox* checkbox = new ComponentCheckbox(obj);
 		CompZ::SetComponent(checkbox, compZ);
 		obj->AddComponent(checkbox);
+		break; }
+	case ComponentType::INPUTBOX: {
+		ComponentInputText* inputText = new ComponentInputText(obj);
+		CompZ::SetComponent(inputText, compZ);
+		obj->AddComponent(inputText);
 		break; }
 	}
 }

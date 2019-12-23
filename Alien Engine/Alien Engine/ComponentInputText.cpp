@@ -57,6 +57,7 @@ void ComponentInputText::Draw()
 
 	if (!tex)
 	{
+		CheckIfDefaulTextureIsSettedAfterReturnZ();
 		ComponentTransform* transform = (ComponentTransform*)game_object_attached->GetComponent(ComponentType::TRANSFORM);
 		if (transform != nullptr) {
 
@@ -263,13 +264,13 @@ bool ComponentInputText::DrawInspector()
 
 		if (ImGui::DragFloat("X", &size.x, 0.5F, 0, 0, "%.3f", 1, game_object_attached->is_static))
 		{
-			//ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, this);
+			ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, this);
 			size_input_text = size;
 		}
 
 		if (ImGui::DragFloat("Y", &size.y, 0.5F, 0, 0, "%.3f", 1, game_object_attached->is_static))
 		{
-			//ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, this);
+			ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, this);
 			size_input_text = size;
 		}
 
@@ -283,7 +284,6 @@ bool ComponentInputText::DrawInspector()
 		if (ImGui::BeginDragDropTarget())
 		{
 			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(DROP_ID_PROJECT_NODE, ImGuiDragDropFlags_SourceNoDisableHover);
-			//(DROP_ID_PROJECT_NODE, ImGuiDragDropFlags_SourceNoDisableHover| ImGuiDragDropFlags_AcceptBeforeDelivery);
 			if (payload != nullptr && payload->IsDataType(DROP_ID_PROJECT_NODE)) {
 				FileNode* node = *(FileNode**)payload->Data;
 
@@ -300,11 +300,9 @@ bool ComponentInputText::DrawInspector()
 
 					if (texture_dropped != nullptr) {
 						LOG("KSDHFISSBLVKSDJMV");
-						//ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, this);
-						tex = texture_dropped; //id incorrect
-						/*if (App->objects->GetSelectedObject()->HasComponent(ComponentType::MATERIAL))
-							ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, App->objects->GetSelectedObject()->GetComponent(ComponentType::MATERIAL));
-						App->importer->ApplyTextureToSelectedObject(texture_dropped);*/
+						ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, this);
+						tex = texture_dropped; 
+						
 						tex->IncreaseReferences();
 						CreateInputTextPlane();
 
@@ -419,5 +417,14 @@ void ComponentInputText::BindTex()
 
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
+	}
+}
+
+void ComponentInputText::CheckIfDefaulTextureIsSettedAfterReturnZ()
+{
+	if (tex == nullptr && is_custom)
+	{
+		tex = App->resources->icons.test_image;
+		CreateInputTextPlane();
 	}
 }

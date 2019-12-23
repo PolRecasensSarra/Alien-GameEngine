@@ -113,6 +113,7 @@ void ComponentImage::PostUpdate()
 
 void ComponentImage::Draw()
 {
+	
 	UpdateImgPlane();
 	
 //-------------------------------------------------------------------------------------------
@@ -161,6 +162,8 @@ void ComponentImage::Draw()
 	//------------------------------------------------------------
 	else
 	{
+		CheckIfDefaulTextureIsSettedAfterReturnZ();
+
 		glBegin(GL_QUADS);
 		glLineWidth(8.0f);
 		glColor4f(1.0f, 0.0f, 1.0f, 1.0f);
@@ -316,4 +319,13 @@ bool ComponentImage::DrawInspector()
 
 
 	return true;
+}
+
+void ComponentImage::CheckIfDefaulTextureIsSettedAfterReturnZ()
+{
+	if (texture == nullptr && is_custom)
+	{
+		texture = App->resources->icons.image_canvas;
+		CreatImgPlane();
+	}
 }
