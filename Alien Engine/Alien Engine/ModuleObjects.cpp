@@ -73,7 +73,7 @@ bool ModuleObjects::Start()
 
 	GameObject* camera_hardcoded = new GameObject(base_game_object);
 	camera_hardcoded->SetName("Camera Hardcoded");
-	camera_hardcoded->AddComponent(new  ComponentTransform(camera_hardcoded, { -10.0f,15.0f,25.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	camera_hardcoded->AddComponent(new  ComponentTransform(camera_hardcoded, { 27.0f,20.0f,45.0f }, { 0,0,0,0 }, { 1,1,1 }));
 	camera_hardcoded->AddComponent(new ComponentCamera(camera_hardcoded));
 
 
