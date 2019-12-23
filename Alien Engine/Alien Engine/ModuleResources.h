@@ -15,7 +15,6 @@ class ResourceMesh;
 class ResourceTexture;
 
 struct Icons {
-
 	ResourceTexture* jpg_file = nullptr;
 	ResourceTexture* png_file = nullptr;
 	ResourceTexture* dds_file = nullptr;
@@ -42,6 +41,7 @@ struct Icons {
 	ResourceTexture* checkbox_selected = nullptr;
 	ResourceTexture* button = nullptr;
 	ResourceTexture* checkbox = nullptr;
+
 };
 
 

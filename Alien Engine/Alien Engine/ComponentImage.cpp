@@ -212,7 +212,7 @@ void ComponentImage::LoadComponent(JSONArraypack* to_load)
 		u64 ID = std::stoull(to_load->GetString("TextureID"));
 		if (ID == 0 && is_custom)
 		{
-			texture = App->resources->icons.button;
+			//texture = App->resources->icons.button;
 		}
 		else
 		{
