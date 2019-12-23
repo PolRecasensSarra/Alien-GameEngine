@@ -58,4 +58,5 @@ private:
 
 public:
 	ResourceTexture* tex = nullptr;
+	//ComponentLabel* label = nullptr;
 };

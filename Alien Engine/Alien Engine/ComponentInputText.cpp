@@ -22,6 +22,8 @@ ComponentInputText::ComponentInputText(GameObject* attach, float2 size, bool is_
 		this->size.x = 20;
 		this->size.y = 10;
 	}
+
+	//TODO::// CREATE A COMPONENT LABEL FOR THIS INPUT TEXT
 }
 
 ComponentInputText::~ComponentInputText()
@@ -35,6 +37,7 @@ void ComponentInputText::Update()
 
 	if (function)
 	{
+		//TODO:://
 		//HERE GOES THE UPDATE OF THE LABEL
 
 		//function = false;   WHEN PRESSING ENTER, PUT THIS TO FALSE
@@ -113,7 +116,7 @@ void ComponentInputText::UpdateStates()
 		if (state == InteractiveStates::NO_STATE)
 		{
 			state = InteractiveStates::ENTER;
-			//Enter();
+		
 		}
 		if (state == InteractiveStates::ENTER)
 		{
@@ -153,12 +156,12 @@ void ComponentInputText::UpdateStates()
 		{
 			state = InteractiveStates::EXIT;
 			DoLogicExit();
-			//Exit();
+		
 		}
 		else
 		{
 			state = InteractiveStates::NO_STATE;
-			//Idle();
+		
 		}
 	}
 }
@@ -166,7 +169,7 @@ void ComponentInputText::UpdateStates()
 void ComponentInputText::DoLogicClicked()
 {
 	function = true;
-	//START GETTING THE INPUT TO ACTUALIZE THE LABEL
+	//START GETTING THE INPUT TO ACTUALIZE THE LABEL IN THE UPDATE
 }
 
 void ComponentInputText::DoLogicHovered()
