@@ -62,7 +62,9 @@ bool ModuleObjects::Start()
 	image = new GameObject(canvas);
 	image->SetName("TEST IMAGE");
 	image->AddComponent(new  ComponentTransform(image, { 0.0f,15.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 })); 
-	image->AddComponent(new ComponentImage(image, { 30,20 }));
+	image->AddComponent(new ComponentImage(image, { 30,20 }, { 0.0f,0.0f,0.0f }, true));
+	image->GetComponent<ComponentImage>()->texture = App->resources->icons.image_canvas;
+	image->GetComponent<ComponentImage>()->CreatImgPlane();
 
 	checkbox = new GameObject(canvas);
 	checkbox->SetName("test Checkbox");
