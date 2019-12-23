@@ -590,6 +590,19 @@ void CompZ::SetCompZ(Component* component, CompZ** compZ)
 		canvasZ->objectID = canvas->game_object_attached->ID;
 		canvasZ->size = canvas->size;
 		break; }
+	case ComponentType::CHECKBOX: {
+		ComponentCheckbox* checkbox = (ComponentCheckbox*)component;
+		CompCheckboxZ* checkboxZ = new CompCheckboxZ();
+		*compZ = checkboxZ;
+		if (checkbox->tex != nullptr) {
+			checkboxZ->resourceID = checkbox->tex->GetID();
+		}
+		else {
+			checkboxZ->resourceID = 0;
+		}
+		checkboxZ->objectID = checkbox->game_object_attached->ID;
+		checkboxZ->size = checkboxZ->size;
+		break; }
 	}
 
 
@@ -719,8 +732,21 @@ void CompZ::SetComponent(Component* component, CompZ* compZ)
 		break; }
 	case ComponentType::CANVAS: {
 		ComponentCanvas* canvas = (ComponentCanvas*)component;
-		CompImageZ* canvasZ = (CompImageZ*)compZ;
+		CompCanvasZ* canvasZ = (CompCanvasZ*)compZ;
 		canvas->size = canvasZ->size;
+		break; }
+	case ComponentType::CHECKBOX: {
+		ComponentCheckbox* checkbox = (ComponentCheckbox*)component;
+		CompCheckboxZ* checkboxZ = (CompCheckboxZ*)compZ;
+		if (checkboxZ->resourceID == 0) {
+			checkbox->tex = nullptr;
+		}
+		else {
+			checkbox->tex = ((ResourceTexture*)App->resources->GetResourceWithID(checkboxZ->resourceID));
+			checkbox->tex->IncreaseReferences();
+			checkbox->CreatCheckboxPlane();
+		}
+		checkbox->size = checkboxZ->size;
 		break; }
 	}
 	component->SetEnable(compZ->enabled);
@@ -771,6 +797,11 @@ void CompZ::AttachCompZToGameObject(CompZ* compZ)
 		ComponentCanvas* canvas = new ComponentCanvas(obj);
 		CompZ::SetComponent(canvas, compZ);
 		obj->AddComponent(canvas);
+		break; }
+	case ComponentType::CHECKBOX: {
+		ComponentCheckbox* checkbox = new ComponentCheckbox(obj);
+		CompZ::SetComponent(checkbox, compZ);
+		obj->AddComponent(checkbox);
 		break; }
 	}
 }
