@@ -16,12 +16,13 @@ ComponentButton::ComponentButton(GameObject* attach) : Component(attach)
 
 }
 
-ComponentButton::ComponentButton(GameObject* attach, float2 size) :Component(attach)
+ComponentButton::ComponentButton(GameObject* attach, float2 size, bool is_custom) :Component(attach)
 {
 	type = ComponentType::BUTTON;
 	
 	this->size = size;
 	this->size_button = size;
+	this->is_custom = is_custom;
 
 	if (size.x == 0) 
 	{
@@ -207,6 +208,7 @@ void ComponentButton::SaveComponent(JSONArraypack* to_save)
 		to_save->SetString("TextureID", std::to_string(tex->GetID()));
 
 	to_save->SetBoolean("Enabled", enabled);
+	to_save->SetBoolean("isCustom", is_custom);
 }
 
 void ComponentButton::LoadComponent(JSONArraypack* to_load)
@@ -217,10 +219,19 @@ void ComponentButton::LoadComponent(JSONArraypack* to_load)
 	Color c = to_load->GetColor("Color");
 	actual_color = { c.r, c.g,c.b, c.a };
 	enabled = to_load->GetBoolean("Enabled");
+	is_custom = to_load->GetBoolean("isCutsom");
 
 	if (to_load->GetBoolean("HasTexture")) {
 		u64 ID = std::stoull(to_load->GetString("TextureID"));
-		tex = (ResourceTexture*)App->resources->GetResourceWithID(ID);
+		if (ID == 0 && is_custom)
+		{
+			tex = App->resources->icons.button;
+		}
+		else
+		{
+			tex = (ResourceTexture*)App->resources->GetResourceWithID(ID);
+		}
+
 		if (tex != nullptr)
 		{
 			tex->IncreaseReferences();

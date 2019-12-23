@@ -13,13 +13,13 @@
 #include <math.h>
 
 
-ComponentCheckbox::ComponentCheckbox(GameObject* attach, float2 size) :Component(attach)
+ComponentCheckbox::ComponentCheckbox(GameObject* attach, float2 size, bool is_custom) :Component(attach)
 {
 	type = ComponentType::CHECKBOX;
 
 	this->size = size;
 	this->size_checkbox = size;
-	
+	this->is_custom = is_custom;
 
 	if (size.x == 0)
 	{
@@ -35,6 +35,7 @@ ComponentCheckbox::ComponentCheckbox(GameObject* attach, float2 size) :Component
 	game_object_attached->AddComponent(new ComponentImage(game_object_attached, size_image, { x,y,0.0f }));
 	game_object_attached->GetComponent<ComponentImage>()->texture = App->resources->icons.checkbox_empty;
 	game_object_attached->GetComponent<ComponentImage>()->CreatImgPlane();
+	check_image = game_object_attached->GetComponent<ComponentImage>();
 
 }
 
@@ -248,6 +249,7 @@ void ComponentCheckbox::SaveComponent(JSONArraypack* to_save)
 		to_save->SetString("TextureID", std::to_string(tex->GetID()));
 
 	to_save->SetBoolean("Enabled", enabled);
+	to_save->SetBoolean("isCustom", is_custom);
 }
 
 void ComponentCheckbox::LoadComponent(JSONArraypack* to_load)
@@ -258,16 +260,27 @@ void ComponentCheckbox::LoadComponent(JSONArraypack* to_load)
 	Color c = to_load->GetColor("Color");
 	actual_color = { c.r, c.g,c.b, c.a };
 	enabled = to_load->GetBoolean("Enabled");
+	is_custom = to_load->GetBoolean("isCutsom");
 
 	if (to_load->GetBoolean("HasTexture")) {
 		u64 ID = std::stoull(to_load->GetString("TextureID"));
-		tex = (ResourceTexture*)App->resources->GetResourceWithID(ID);
+
+		if (ID == 0 && is_custom)
+		{
+			tex = App->resources->icons.checkbox;
+		}
+		else
+		{
+			tex = (ResourceTexture*)App->resources->GetResourceWithID(ID);
+		}
+
 		if (tex != nullptr)
 		{
 			tex->IncreaseReferences();
 			CreatCheckboxPlane();
 		}
 	}
+	UpdateCheckPos();
 }
 
 bool ComponentCheckbox::DrawInspector()
@@ -457,4 +470,14 @@ void ComponentCheckbox::BindTex()
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 	}
+}
+
+void ComponentCheckbox::UpdateCheckPos()
+{
+	float2 size_image = { (size.y * 0.5f), (size.y * 0.5f) };
+	float y = (size.y * 0.5f) - (size_image.y * 0.5f);
+	float x = size_image.x * 0.85f;
+	check_image->size = size_image;
+	check_image->margin.x = x;
+	check_image->margin.y = y;
 }

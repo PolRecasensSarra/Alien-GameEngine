@@ -47,6 +47,8 @@ bool ModuleResources::Start()
 	icons.prefab_lock = App->importer->LoadEngineTexture("Configuration/EngineTextures/prefab_lock.png");
 	icons.checkbox_empty = App->importer->LoadEngineTexture("Configuration/EngineTextures/checkbox_empty.png");
 	icons.checkbox_selected = App->importer->LoadEngineTexture("Configuration/EngineTextures/checkbox_selected.png");
+	icons.button = App->importer->LoadEngineTexture("Configuration/EngineTextures/button_new_game.png");
+	icons.checkbox = App->importer->LoadEngineTexture("Configuration/EngineTextures/checkbox.png");
 
 	
 	camera_mesh = App->importer->LoadEngineModels("Configuration/Engine Models/camera.FBX");

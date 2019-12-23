@@ -13,7 +13,7 @@ class ComponentButton : public Component {
 public:
 
 	ComponentButton(GameObject* attach);
-	ComponentButton(GameObject* attach, float2 size);
+	ComponentButton(GameObject* attach, float2 size, bool is_custom = false);
 	~ComponentButton();
 	void Update();
 	void PostUpdate();
@@ -49,6 +49,7 @@ private:
 	float2 size_button;
 	bool dragable = false;
 	bool function = false;
+	bool is_custom = false;
 
 	ImVec4 actual_color = ImVec4(0.8f, 0.8f, 0.8f, 1.0f);
 	ImVec4 normal_color = ImVec4(0.8f, 0.8f, 0.8f, 1.0f);
@@ -57,5 +58,6 @@ private:
 
 	InteractiveStates state = InteractiveStates::NO_STATE;
 
+public:
 	ResourceTexture* tex = nullptr;
 };
