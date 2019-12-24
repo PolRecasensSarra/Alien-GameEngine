@@ -32,7 +32,7 @@ ComponentInputText::~ComponentInputText()
 
 void ComponentInputText::Update()
 {
-	if (Time::IsInGameState())
+	if (Time::IsInGameState() && !function)
 		UpdateStates();
 
 	if (function)
@@ -41,6 +41,11 @@ void ComponentInputText::Update()
 		//HERE GOES THE UPDATE OF THE LABEL
 
 		//function = false;   WHEN PRESSING ENTER, PUT THIS TO FALSE
+		if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+		{
+			function = false;
+			//STOP GETTING INPUT
+		}
 	}
 }
 
@@ -170,7 +175,6 @@ void ComponentInputText::UpdateStates()
 void ComponentInputText::DoLogicClicked()
 {
 	function = true;
-	//START GETTING THE INPUT TO ACTUALIZE THE LABEL IN THE UPDATE
 }
 
 void ComponentInputText::DoLogicHovered()
@@ -321,6 +325,21 @@ bool ComponentInputText::DrawInspector()
 
 	}
 	ImGui::Spacing();
+	ImGui::Spacing();
+
+	if (Time::IsInGameState())
+	{
+		ImGui::Separator();
+
+		ImGui::Text("Function");
+		ImGui::Spacing();
+		if (ImGui::Button("Execute Logic"))
+		{
+			DoLogicClicked();
+		}
+		ImGui::Spacing();
+	}
+
 	ImGui::Separator();
 
 
