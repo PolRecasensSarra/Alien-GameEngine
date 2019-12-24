@@ -12,6 +12,7 @@ ResourceFont::ResourceFont(const char* path, const uint& id, const uint& width, 
 	this->id = id;
 	this->width = width;
 	this->height = height;
+	name = App->file_system->GetBaseFileName(path);
 
 	type = ResourceType::RESOURCE_FONT;
 }
@@ -51,6 +52,8 @@ bool ResourceFont::CreateMetaData(const u64& force_id)
 
 	if (App->StringCmp(ext.data(), "ttf")) {
 		App->file_system->Copy(path.data(), meta_data_path.data());
+
+		ImportFont(meta_data_path.c_str(), 48);
 
 	}
 
@@ -95,6 +98,7 @@ bool ResourceFont::ReadBaseInfo(const char* assets_path)
 	if (!App->file_system->Exists(meta_data_path.data())) {
 		return false;
 	}
+	ImportFont(meta_data_path.c_str(), 48);
 
 	App->resources->AddResource(this);
 
@@ -106,7 +110,7 @@ bool ResourceFont::DeleteMetaData()
 	return false;
 }
 
-bool ResourceFont::ImportFont(const char* path, uint ttff_size, u64 ID)
+bool ResourceFont::ImportFont(const char* path, uint ttff_size)
 {
 
 	

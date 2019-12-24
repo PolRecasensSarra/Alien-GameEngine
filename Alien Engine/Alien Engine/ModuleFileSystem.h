@@ -23,7 +23,7 @@ struct aiFileIO;
 #define SCRIPTS_FOLDER "Assets/Scripts/"
 #define SCENE_FOLDER "Assets/Scenes/"
 #define ASSETS_PREFAB_FOLDER "Assets/Prefabs/"
-#define ASSETS_FONT_FOLDER "Assets/Prefabs/"
+#define ASSETS_FONT_FOLDER "Assets/Fonts/"
 
 #include "Resource_.h"
 

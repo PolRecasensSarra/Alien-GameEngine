@@ -48,6 +48,7 @@ public:
 	ModuleUI(bool start_enabled = true);
 	~ModuleUI();
 
+	bool Init();
 	bool Start();
 	update_status PreUpdate(float dt);
 	bool CleanUp();

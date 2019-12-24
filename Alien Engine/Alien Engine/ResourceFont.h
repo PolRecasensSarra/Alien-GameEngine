@@ -29,7 +29,7 @@ class ResourceFont : public Resource {
 public:
 	ResourceFont() { type = ResourceType::RESOURCE_FONT; }
 	ResourceFont(const char* path, const uint& id, const uint& width, const uint& height);
-	ResourceFont(const char* path) { this->path = std::string(path); type = ResourceType::RESOURCE_FONT; }
+	ResourceFont(const char* path) { this->path = std::string(path); type = ResourceType::RESOURCE_FONT;}
 
 	virtual ~ResourceFont();
 	bool CreateMetaData(const u64& force_id = 0);
@@ -41,7 +41,7 @@ public:
 
 	//testing
 
-	bool ImportFont(const char* path, uint ttff_size, u64 ID);
+	bool ImportFont(const char* path, uint ttff_size);
 
 	static uint LoadTextureCharacter(uint width, uint height, uchar* buffer);
 
