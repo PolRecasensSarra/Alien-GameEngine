@@ -113,6 +113,7 @@ void ComponentImage::PostUpdate()
 
 void ComponentImage::Draw()
 {
+	
 	UpdateImgPlane();
 	
 //-------------------------------------------------------------------------------------------
@@ -161,6 +162,8 @@ void ComponentImage::Draw()
 	//------------------------------------------------------------
 	else
 	{
+		CheckIfDefaulTextureIsSettedAfterReturnZ();
+
 		glBegin(GL_QUADS);
 		glLineWidth(8.0f);
 		glColor4f(1.0f, 0.0f, 1.0f, 1.0f);
@@ -189,7 +192,7 @@ void ComponentImage::SaveComponent(JSONArraypack* to_save)
 {
 	to_save->SetNumber("Type", (int)type);
 	to_save->SetString("ID", std::to_string(ID));
-	to_save->SetFloat2("SizeButton", sizeIMG);
+	to_save->SetFloat2("SizeImage", sizeIMG);
 	to_save->SetFloat2("Size", size);
 	to_save->SetBoolean("HasTexture", (texture != nullptr) ? true : false);
 
@@ -203,7 +206,7 @@ void ComponentImage::SaveComponent(JSONArraypack* to_save)
 void ComponentImage::LoadComponent(JSONArraypack* to_load)
 {
 	ID = std::stoull(to_load->GetString("ID"));
-	sizeIMG = to_load->GetFloat2("SizeButton");
+	sizeIMG = to_load->GetFloat2("SizeImage");
 	size = to_load->GetFloat2("Size");
 	enabled = to_load->GetBoolean("Enabled");
 	is_custom = to_load->GetBoolean("isCutsom");
@@ -316,4 +319,13 @@ bool ComponentImage::DrawInspector()
 
 
 	return true;
+}
+
+void ComponentImage::CheckIfDefaulTextureIsSettedAfterReturnZ()
+{
+	if (texture == nullptr && is_custom)
+	{
+		texture = App->resources->icons.image_canvas;
+		CreatImgPlane();
+	}
 }

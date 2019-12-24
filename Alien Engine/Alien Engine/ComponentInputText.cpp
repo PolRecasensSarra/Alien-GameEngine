@@ -1,65 +1,60 @@
-#include "ComponentButton.h"
+#include "ComponentInputText.h"
 #include "ComponentTransform.h"
 #include "GameObject.h"
 #include "Application.h"
+#include "ReturnZ.h"
 #include "ModuleUI.h"
 #include "PanelGame.h"
-#include "ReturnZ.h"
 #include "ResourceTexture.h"
 #include "FileNode.h"
 #include "imgui/imgui_internal.h"
 
-
-ComponentButton::ComponentButton(GameObject* attach) : Component(attach)
+ComponentInputText::ComponentInputText(GameObject* attach, float2 size, bool is_custom) :Component(attach)
 {
-	type = ComponentType::BUTTON;
+	type = ComponentType::INPUTBOX;
 
-}
-
-ComponentButton::ComponentButton(GameObject* attach, float2 size, bool is_custom) :Component(attach)
-{
-	type = ComponentType::BUTTON;
-	
 	this->size = size;
-	this->size_button = size;
+	this->size_input_text = size;
 	this->is_custom = is_custom;
 
-	if (size.x == 0) 
+	if (size.x == 0)
 	{
 		this->size.x = 20;
 		this->size.y = 10;
 	}
+
+	//TODO::// CREATE A COMPONENT LABEL FOR THIS INPUT TEXT
 }
 
-ComponentButton::~ComponentButton()
+ComponentInputText::~ComponentInputText()
 {
 }
 
-void ComponentButton::Update()
+void ComponentInputText::Update()
 {
 	if (Time::IsInGameState())
 		UpdateStates();
 
 	if (function)
 	{
-		//call the fade function mega hardcoded
-		
-		function = false;
+		//TODO:://
+		//HERE GOES THE UPDATE OF THE LABEL
+
+		//function = false;   WHEN PRESSING ENTER, PUT THIS TO FALSE
 	}
-	
 }
 
-void ComponentButton::PostUpdate()
+void ComponentInputText::PostUpdate()
 {
 	Draw();
 }
 
-void ComponentButton::Draw()
+void ComponentInputText::Draw()
 {
-	UpdateButtonPlane();
+	UpdateInputTextPlane();
 
 	BindTex();
-	
+
 	if (!tex)
 	{
 		CheckIfDefaulTextureIsSettedAfterReturnZ();
@@ -88,22 +83,21 @@ void ComponentButton::Draw()
 
 		}
 	}
-	//do magic
 }
 
-void ComponentButton::UpdateStates()
+void ComponentInputText::UpdateStates()
 {
 	float3 pos = float3::zero;
-	
-	float2 origin = float2((App->input->GetMousePosition().x - App->ui->panel_game->posX), (App->input->GetMousePosition().y - (App->ui->panel_game->posY+19)));
+
+	float2 origin = float2((App->input->GetMousePosition().x - App->ui->panel_game->posX), (App->input->GetMousePosition().y - (App->ui->panel_game->posY + 19)));
 
 	ComponentTransform* transform = (ComponentTransform*)game_object_attached->GetComponent(ComponentType::TRANSFORM);
 	if (transform != nullptr)
 		pos = transform->GetGlobalPosition();
 
 
-	float width = size_button.x;
-	float height = size_button.y;
+	float width = size_input_text.x;
+	float height = size_input_text.y;
 	float x = pos.x;
 	float y = pos.y;
 
@@ -123,7 +117,7 @@ void ComponentButton::UpdateStates()
 		if (state == InteractiveStates::NO_STATE)
 		{
 			state = InteractiveStates::ENTER;
-			//Enter();
+		
 		}
 		if (state == InteractiveStates::ENTER)
 		{
@@ -163,46 +157,44 @@ void ComponentButton::UpdateStates()
 		{
 			state = InteractiveStates::EXIT;
 			DoLogicExit();
-			//Exit();
+		
 		}
 		else
 		{
 			state = InteractiveStates::NO_STATE;
-			//Idle();
+		
 		}
 	}
 }
 
-void ComponentButton::DoLogicClicked()
+void ComponentInputText::DoLogicClicked()
 {
 	function = true;
+	//START GETTING THE INPUT TO ACTUALIZE THE LABEL IN THE UPDATE
 }
 
-void ComponentButton::DoLogicHovered()
+void ComponentInputText::DoLogicHovered()
 {
-
 	actual_color = hover_color;
-	//change colors
 }
 
-void ComponentButton::DoLogicPressed()
+void ComponentInputText::DoLogicPressed()
 {
 	actual_color = pressed_color;
-	//change color
 }
 
-void ComponentButton::DoLogicExit()
+void ComponentInputText::DoLogicExit()
 {
 	actual_color = normal_color;
 }
 
-void ComponentButton::SaveComponent(JSONArraypack* to_save)
+void ComponentInputText::SaveComponent(JSONArraypack* to_save)
 {
 	to_save->SetNumber("Type", (int)type);
 	to_save->SetString("ID", std::to_string(ID));
-	to_save->SetFloat2("SizeButton", size_button);
+	to_save->SetFloat2("SizeInputText", size_input_text);
 	to_save->SetFloat2("Size", size);
-	to_save->SetColor("Color", { actual_color.x,actual_color.y,actual_color.z ,actual_color.w});
+	to_save->SetColor("Color", { actual_color.x,actual_color.y,actual_color.z ,actual_color.w });
 	to_save->SetBoolean("HasTexture", (tex != nullptr) ? true : false);
 
 	if (tex != nullptr)
@@ -212,10 +204,10 @@ void ComponentButton::SaveComponent(JSONArraypack* to_save)
 	to_save->SetBoolean("isCustom", is_custom);
 }
 
-void ComponentButton::LoadComponent(JSONArraypack* to_load)
+void ComponentInputText::LoadComponent(JSONArraypack* to_load)
 {
 	ID = std::stoull(to_load->GetString("ID"));
-	size_button = to_load->GetFloat2("SizeButton");
+	size_input_text = to_load->GetFloat2("SizeInputText");
 	size = to_load->GetFloat2("Size");
 	Color c = to_load->GetColor("Color");
 	actual_color = { c.r, c.g,c.b, c.a };
@@ -226,8 +218,8 @@ void ComponentButton::LoadComponent(JSONArraypack* to_load)
 		u64 ID = std::stoull(to_load->GetString("TextureID"));
 		if (ID == 0 && is_custom)
 		{
-			tex = App->resources->icons.button;
-			CreatButtonPlane();
+			tex = App->resources->icons.test_image;
+			CreateInputTextPlane();
 		}
 		else
 		{
@@ -235,20 +227,15 @@ void ComponentButton::LoadComponent(JSONArraypack* to_load)
 			if (tex != nullptr)
 			{
 				tex->IncreaseReferences();
-				CreatButtonPlane();
+				CreateInputTextPlane();
 			}
 		}
 
-		
+
 	}
-
-
-
 }
 
-
-
-bool ComponentButton::DrawInspector()
+bool ComponentInputText::DrawInspector()
 {
 	ImVec2 min_space = ImGui::GetWindowContentRegionMin();
 	ImVec2 max_space = ImGui::GetWindowContentRegionMax();
@@ -261,14 +248,14 @@ bool ComponentButton::DrawInspector()
 	// drop project files
 
 
-	if (ImGui::CollapsingHeader("Button", &not_destroy, ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader("Input Text", &not_destroy, ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ImGui::ColorEdit4("Normal Color", (float*)& normal_color);
+		ImGui::ColorEdit4("Normal Color", (float*)&normal_color);
 		actual_color = normal_color;
 		ImGui::Spacing();
-		ImGui::ColorEdit4("Hover Color", (float*)& hover_color);
+		ImGui::ColorEdit4("Hover Color", (float*)&hover_color);
 		ImGui::Spacing();
-		ImGui::ColorEdit4("Pressed Color", (float*)& pressed_color);
+		ImGui::ColorEdit4("Pressed Color", (float*)&pressed_color);
 
 
 		ImGui::Text("Size");
@@ -278,65 +265,59 @@ bool ComponentButton::DrawInspector()
 		if (ImGui::DragFloat("X", &size.x, 0.5F, 0, 0, "%.3f", 1, game_object_attached->is_static))
 		{
 			ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, this);
-			size_button = size;
+			size_input_text = size;
 		}
 
 		if (ImGui::DragFloat("Y", &size.y, 0.5F, 0, 0, "%.3f", 1, game_object_attached->is_static))
 		{
 			ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, this);
-			size_button = size;
+			size_input_text = size;
 		}
 
 		if (tex != nullptr)
 			ImGui::Image((ImTextureID)tex->id, ImVec2(100, 100));
 		else
-			if (ImGui::Button("Target Graphic", ImVec2(100,100)))
+			if (ImGui::Button("Target Graphic", ImVec2(100, 100)))
 			{
 			}
-		
-			if (ImGui::BeginDragDropTarget())
-			{
-				const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(DROP_ID_PROJECT_NODE, ImGuiDragDropFlags_SourceNoDisableHover);
-					//(DROP_ID_PROJECT_NODE, ImGuiDragDropFlags_SourceNoDisableHover| ImGuiDragDropFlags_AcceptBeforeDelivery);
-				if (payload != nullptr && payload->IsDataType(DROP_ID_PROJECT_NODE)) {
-					FileNode* node = *(FileNode * *)payload->Data;
+
+		if (ImGui::BeginDragDropTarget())
+		{
+			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(DROP_ID_PROJECT_NODE, ImGuiDragDropFlags_SourceNoDisableHover);
+			if (payload != nullptr && payload->IsDataType(DROP_ID_PROJECT_NODE)) {
+				FileNode* node = *(FileNode**)payload->Data;
 
 
-					// drop texture
-					if (node != nullptr && node->type == FileDropType::TEXTURE && App->objects->GetSelectedObject() != nullptr)
-					{
-						std::string path = App->file_system->GetPathWithoutExtension(node->path + node->name);
-						path += "_meta.alien";
+				// drop texture
+				if (node != nullptr && node->type == FileDropType::TEXTURE && App->objects->GetSelectedObject() != nullptr)
+				{
+					std::string path = App->file_system->GetPathWithoutExtension(node->path + node->name);
+					path += "_meta.alien";
 
-						u64 ID = App->resources->GetIDFromAlienPath(path.data());
+					u64 ID = App->resources->GetIDFromAlienPath(path.data());
 
-						ResourceTexture* texture_dropped = (ResourceTexture*)App->resources->GetResourceWithID(ID);
+					ResourceTexture* texture_dropped = (ResourceTexture*)App->resources->GetResourceWithID(ID);
 
-						if (texture_dropped != nullptr) {
-							LOG("KSDHFISSBLVKSDJMV");
-							ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, this);
-							tex = texture_dropped; //id incorrect
-							/*if (App->objects->GetSelectedObject()->HasComponent(ComponentType::MATERIAL))
-								ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, App->objects->GetSelectedObject()->GetComponent(ComponentType::MATERIAL));
-							App->importer->ApplyTextureToSelectedObject(texture_dropped);*/
-							tex->IncreaseReferences();
-							if (!createButtonIMG)
-							{
-								CreatButtonPlane();
-								createButtonIMG = true;
-							}
-						}
-						createButtonIMG = false;
-						ImGui::ClearDragDrop();
+					if (texture_dropped != nullptr) {
+						LOG("KSDHFISSBLVKSDJMV");
+						ReturnZ::AddNewAction(ReturnZ::ReturnActions::CHANGE_COMPONENT, this);
+						tex = texture_dropped; 
+						
+						tex->IncreaseReferences();
+						CreateInputTextPlane();
+
 					}
 					
+					ImGui::ClearDragDrop();
 				}
-				
-
-				ImGui::EndDragDropTarget();
 
 			}
-		
+
+
+			ImGui::EndDragDropTarget();
+
+		}
+
 
 	}
 	ImGui::Spacing();
@@ -346,7 +327,7 @@ bool ComponentButton::DrawInspector()
 	return true;
 }
 
-void ComponentButton::CreatButtonPlane()
+void ComponentInputText::CreateInputTextPlane()
 {
 	float3 pos = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalPosition();
 	float3 size_mult = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalScale();
@@ -369,7 +350,6 @@ void ComponentButton::CreatButtonPlane()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 
-	//	glGenBuffers(1, (GLuint*)& texture->id);
 	glBindBuffer(GL_ARRAY_BUFFER, tex->id);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 8, uv, GL_STATIC_DRAW);
 
@@ -380,7 +360,7 @@ void ComponentButton::CreatButtonPlane()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void ComponentButton::UpdateButtonPlane()
+void ComponentInputText::UpdateInputTextPlane()
 {
 	float3 pos = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalPosition();
 	float3 size_mult = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalScale();
@@ -395,7 +375,7 @@ void ComponentButton::UpdateButtonPlane()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void ComponentButton::BindTex()
+void ComponentInputText::BindTex()
 {
 	if (tex)
 	{
@@ -440,14 +420,11 @@ void ComponentButton::BindTex()
 	}
 }
 
-void ComponentButton::CheckIfDefaulTextureIsSettedAfterReturnZ()
+void ComponentInputText::CheckIfDefaulTextureIsSettedAfterReturnZ()
 {
 	if (tex == nullptr && is_custom)
 	{
-		tex = App->resources->icons.button;
-		CreatButtonPlane();
+		tex = App->resources->icons.test_image;
+		CreateInputTextPlane();
 	}
 }
-
-
-

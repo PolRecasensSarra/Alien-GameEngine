@@ -32,7 +32,7 @@ ComponentCheckbox::ComponentCheckbox(GameObject* attach, float2 size, bool is_cu
 	float y = (size.y * 0.5f) - (size_image.y * 0.5f);
 	float x = size_image.x * 0.85f;
 
-	game_object_attached->AddComponent(new ComponentImage(game_object_attached, size_image, { x,y,0.0f }));
+	game_object_attached->AddComponent(new ComponentImage(game_object_attached, size_image, { x,y,0.0f }, true));
 	game_object_attached->GetComponent<ComponentImage>()->texture = App->resources->icons.checkbox_empty;
 	game_object_attached->GetComponent<ComponentImage>()->CreatImgPlane();
 	check_image = game_object_attached->GetComponent<ComponentImage>();
@@ -66,9 +66,10 @@ void ComponentCheckbox::Draw()
 	UpdateCheckboxPlane();
 
 	BindTex();
-
+	
 	if (!tex)
 	{
+		CheckIfDefaulTextureIsSettedAfterReturnZ();
 		ComponentTransform* transform = (ComponentTransform*)game_object_attached->GetComponent(ComponentType::TRANSFORM);
 		if (transform != nullptr) {
 
@@ -240,7 +241,7 @@ void ComponentCheckbox::SaveComponent(JSONArraypack* to_save)
 {
 	to_save->SetNumber("Type", (int)type);
 	to_save->SetString("ID", std::to_string(ID));
-	to_save->SetFloat2("SizeButton", size_checkbox);
+	to_save->SetFloat2("SizeCheckbox", size_checkbox);
 	to_save->SetFloat2("Size", size);
 	to_save->SetColor("Color", { actual_color.x,actual_color.y,actual_color.z ,actual_color.w });
 	to_save->SetBoolean("HasTexture", (tex != nullptr) ? true : false);
@@ -255,7 +256,7 @@ void ComponentCheckbox::SaveComponent(JSONArraypack* to_save)
 void ComponentCheckbox::LoadComponent(JSONArraypack* to_load)
 {
 	ID = std::stoull(to_load->GetString("ID"));
-	size_checkbox = to_load->GetFloat2("SizeButton");
+	size_checkbox = to_load->GetFloat2("SizeCheckbox");
 	size = to_load->GetFloat2("Size");
 	Color c = to_load->GetColor("Color");
 	actual_color = { c.r, c.g,c.b, c.a };
@@ -483,3 +484,16 @@ void ComponentCheckbox::UpdateCheckPos()
 	check_image->margin.x = x;
 	check_image->margin.y = y;
 }
+
+void ComponentCheckbox::CheckIfDefaulTextureIsSettedAfterReturnZ()
+{
+	if (tex == nullptr && is_custom)
+	{
+		tex = App->resources->icons.checkbox;
+		CreatCheckboxPlane();
+
+	}
+	
+}
+
+

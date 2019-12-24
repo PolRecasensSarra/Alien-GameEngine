@@ -13,6 +13,7 @@
 #include "ComponentButton.h"
 #include "ComponentImage.h"
 #include "ComponentCheckbox.h"
+#include "ComponentInputText.h"
 #include "ResourceTexture.h"
 #include "ReturnZ.h"
 #include "Time.h"
@@ -69,9 +70,16 @@ bool ModuleObjects::Start()
 	checkbox = new GameObject(canvas);
 	checkbox->SetName("test Checkbox");
 	checkbox->AddComponent(new ComponentTransform(checkbox, { 35.0f,30.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
-	checkbox->AddComponent(new ComponentCheckbox(checkbox, { 30,10 }));
+	checkbox->AddComponent(new ComponentCheckbox(checkbox, { 30,10 }, true));
 	checkbox->GetComponent<ComponentCheckbox>()->tex = App->resources->icons.checkbox;
 	checkbox->GetComponent<ComponentCheckbox>()->CreatCheckboxPlane();
+
+	inputText = new GameObject(canvas);
+	inputText->SetName("test Input Text");
+	inputText->AddComponent(new ComponentTransform(inputText, { 35.0f,80.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	inputText->AddComponent(new ComponentInputText(inputText, {30,10}, true));
+	inputText->GetComponent<ComponentInputText>()->tex = App->resources->icons.test_image;
+	inputText->GetComponent<ComponentInputText>()->CreateInputTextPlane();
 
 	GameObject* camera_hardcoded = new GameObject(base_game_object);
 	camera_hardcoded->SetName("Camera Hardcoded");

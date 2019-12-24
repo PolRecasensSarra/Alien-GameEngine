@@ -29,6 +29,9 @@ public:
 
 	bool DrawInspector();
 
+private:
+	void CheckIfDefaulTextureIsSettedAfterReturnZ(); 
+
 public:
 	float3 vertex[4];
 	float2 uv[4];
@@ -48,5 +51,6 @@ private:
 	float2 position;
 	
 	bool createIMG = false;
+public:
 	bool is_custom = false;
 };

@@ -7,14 +7,13 @@
 
 enum class InteractiveStates;
 
-class ComponentButton : public Component {
+class ComponentInputText : public Component {
 	friend class CompZ;
 
 public:
+	ComponentInputText(GameObject* attach, float2 size = { 0.0f,0.0f }, bool is_custom = false);
+	~ComponentInputText();
 
-	ComponentButton(GameObject* attach);
-	ComponentButton(GameObject* attach, float2 size, bool is_custom = false);
-	~ComponentButton();
 	void Update();
 	void PostUpdate();
 	void Draw();
@@ -23,22 +22,20 @@ public:
 	void DoLogicHovered();
 	void DoLogicPressed();
 	void DoLogicExit();
-	
+
 	void SaveComponent(JSONArraypack* to_save);
 	void LoadComponent(JSONArraypack* to_load);
 
 	bool DrawInspector();
 
-	void CreatButtonPlane();
-	void UpdateButtonPlane();
+	void CreateInputTextPlane();
+	void UpdateInputTextPlane();
 
 	void BindTex();
-
 private:
 	void CheckIfDefaulTextureIsSettedAfterReturnZ();
 
 private:
-
 	float3 vertex[4];
 	float2 uv[4];
 	uint index[6]{
@@ -48,9 +45,8 @@ private:
 	uint indexId = 0;
 	uint vertexId = 0;
 	uint textureId = 0;
-	bool createButtonIMG = false;
 
-	float2 size_button;
+	float2 size_input_text;
 	bool dragable = false;
 	bool function = false;
 	bool is_custom = false;
@@ -64,4 +60,5 @@ private:
 
 public:
 	ResourceTexture* tex = nullptr;
+	//ComponentLabel* label = nullptr;
 };
