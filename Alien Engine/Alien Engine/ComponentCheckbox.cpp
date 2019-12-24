@@ -50,9 +50,17 @@ void ComponentCheckbox::Update()
 
 	if (function)
 	{
-		//call the fade function mega hardcoded
-
-		function = false;
+		if (!is_function_active)
+		{
+			//execute the function
+			is_function_active = true;
+		}
+		else
+		{
+			//execute the function that put it as the begining
+			is_function_active = false;
+		}
+		
 	}
 }
 
@@ -212,6 +220,7 @@ void ComponentCheckbox::DoLogicClicked()
 		actual_check_color = pressed_check_color;
 		game_object_attached->GetComponent<ComponentImage>()->texture = App->resources->icons.checkbox_selected;
 		game_object_attached->GetComponent<ComponentImage>()->CreatImgPlane();
+
 	}
 	else
 	{
@@ -373,6 +382,22 @@ bool ComponentCheckbox::DrawInspector()
 
 	}
 	ImGui::Spacing();
+	ImGui::Spacing();
+
+	if (Time::IsInGameState())
+	{
+		ImGui::Separator();
+
+		ImGui::Text("Function");
+		ImGui::Spacing();
+		if (ImGui::Button("Execute Logic"))
+		{
+			DoLogicClicked();
+		}
+		ImGui::Spacing();
+	}
+
+
 	ImGui::Separator();
 
 

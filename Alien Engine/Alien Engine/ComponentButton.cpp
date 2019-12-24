@@ -340,6 +340,22 @@ bool ComponentButton::DrawInspector()
 
 	}
 	ImGui::Spacing();
+	ImGui::Spacing();
+
+	if (Time::IsInGameState())
+	{
+		ImGui::Separator();
+
+		ImGui::Text("Function");
+		ImGui::Spacing();
+		if (ImGui::Button("Execute Logic"))
+		{
+			function = true;
+		}
+		ImGui::Spacing();
+	}
+	
+	
 	ImGui::Separator();
 
 
