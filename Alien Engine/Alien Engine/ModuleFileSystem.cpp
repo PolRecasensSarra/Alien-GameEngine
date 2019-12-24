@@ -174,7 +174,7 @@ void ModuleFileSystem::DiscoverEverythig(FileNode* node)
 	GetPreviousNames(previous_names, node);
 	node->path = previous_names;
 
-	if (App->StringCmp(node->path.data(), MODELS_FOLDER) || App->StringCmp(node->path.data(), SCENE_FOLDER) || App->StringCmp(node->path.data(), TEXTURES_FOLDER) || App->StringCmp(node->path.data(), SCRIPTS_FOLDER) || App->StringCmp(node->path.data(), ASSETS_PREFAB_FOLDER))
+	if (App->StringCmp(node->path.data(), MODELS_FOLDER) || App->StringCmp(node->path.data(), SCENE_FOLDER) || App->StringCmp(node->path.data(), TEXTURES_FOLDER) || App->StringCmp(node->path.data(), SCRIPTS_FOLDER) || App->StringCmp(node->path.data(), ASSETS_PREFAB_FOLDER) || App->StringCmp(node->path.data(), ASSETS_FONT_FOLDER))
 		node->is_base_file = true;
 
 	if (!node->is_file) {
@@ -206,7 +206,7 @@ void ModuleFileSystem::DiscoverFolders(FileNode* node)
 	GetPreviousNames(previous_names, node);
 	node->path = previous_names;
 
-	if (App->StringCmp(node->path.data(), MODELS_FOLDER) || App->StringCmp(node->path.data(), TEXTURES_FOLDER) || App->StringCmp(node->path.data(), SCRIPTS_FOLDER))
+	if (App->StringCmp(node->path.data(), MODELS_FOLDER) || App->StringCmp(node->path.data(), TEXTURES_FOLDER) || App->StringCmp(node->path.data(), SCRIPTS_FOLDER) || App->StringCmp(node->path.data(), ASSETS_FONT_FOLDER))
 		node->is_base_file = true;
 
 	if (!node->is_file) {
@@ -571,7 +571,7 @@ const FileDropType& ModuleFileSystem::SearchExtension(const std::string& extern_
 	else
 		LOG("Extension unknown!");
 
-
+	//TODO drag font 
 	return ext_type;
 }
 

@@ -60,6 +60,9 @@ bool ModuleUI::Start()
 	LoadLayouts();
 	LoadActiveLayout();
 
+	if (FT_Init_FreeType(&library))
+		LOG("Error Initializing FreeType")
+
 	return ret;
 }
 
@@ -95,6 +98,9 @@ bool ModuleUI::CleanUp()
 		}
 	}
 	layouts.clear();
+
+	FT_Done_FreeType(library);
+
 
 	return true;
 }

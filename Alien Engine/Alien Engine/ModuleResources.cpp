@@ -9,6 +9,7 @@
 #include "RandomHelper.h"
 #include "PanelProject.h"
 #include "ResourcePrefab.h"
+#include "ResourceFont.h"
 #include "FileNode.h"
 
 ModuleResources::ModuleResources(bool start_enabled) : Module(start_enabled)
@@ -87,7 +88,7 @@ update_status ModuleResources::Update(float dt)
 
 bool ModuleResources::CleanUp()
 {
-	std::vector<Resource*>::iterator item = resources.begin();
+	std::vector<Resource*>::iterator item = resources.begin(); //TODO see how to delete fonts
 	for (; item != resources.end(); ++item) {
 		if (*item != nullptr) {
 			if ((*item)->GetType() == ResourceType::RESOURCE_MODEL)
@@ -324,7 +325,7 @@ FileNode* ModuleResources::GetFileNodeByPath(const std::string& path, FileNode* 
 
 void ModuleResources::ReadAllMetaData()
 {
-	SDL_assert((uint)ResourceType::RESOURECE_MAX == 3); // load the new resource
+	SDL_assert((uint)ResourceType::RESOURECE_MAX == 4); // load the new resource
 
 	std::vector<std::string> files;
 	std::vector<std::string> directories;
@@ -343,9 +344,20 @@ void ModuleResources::ReadAllMetaData()
 	ReadModels(directories, files, MODELS_FOLDER);
 	files.clear();
 	directories.clear();
+
+	App->file_system->DiscoverFiles(ASSETS_FONT_FOLDER, files, directories);
+	ReadFonts(directories, files, ASSETS_FONT_FOLDER);
+
+	files.clear();
+	directories.clear();
+
+	
 	// Init Prefabs
 	App->file_system->DiscoverFiles(ASSETS_PREFAB_FOLDER, files, directories);
 	ReadPrefabs(directories, files, ASSETS_PREFAB_FOLDER);
+
+
+
 }
 
 void ModuleResources::ReadTextures(std::vector<std::string> directories, std::vector<std::string> files, std::string current_folder)
@@ -406,6 +418,27 @@ void ModuleResources::ReadPrefabs(std::vector<std::string> directories, std::vec
 			std::string dir = current_folder + directories[i] + "/";
 			App->file_system->DiscoverFiles(dir.data(), new_files, new_directories);
 			ReadPrefabs(new_directories, new_files, dir);
+		}
+	}
+}
+
+void ModuleResources::ReadFonts(std::vector<std::string> directories, std::vector<std::string> files, std::string current_folder) 
+{
+	for (uint i = 0; i < files.size(); ++i) {
+		ResourceFont* font = new ResourceFont();
+		if (!font->ReadBaseInfo(std::string(current_folder + files[i]).data())) {
+			u64 id = font->GetID();
+			font->CreateMetaData(id);
+		}
+	}
+	if (!directories.empty()) {
+		std::vector<std::string> new_files;
+		std::vector<std::string> new_directories;
+
+		for (uint i = 0; i < directories.size(); ++i) {
+			std::string dir = current_folder + directories[i] + "/";
+			App->file_system->DiscoverFiles(dir.data(), new_files, new_directories);
+			ReadFonts(new_directories, new_files, dir);
 		}
 	}
 }

@@ -13,7 +13,7 @@ class Resource;
 class ResourceModel;
 class ResourceMesh;
 class ResourceTexture;
-
+class ResourceFont;
 struct Icons {
 	ResourceTexture* jpg_file = nullptr;
 	ResourceTexture* png_file = nullptr;
@@ -83,6 +83,7 @@ private:
 
 	void ReadPrefabs(std::vector<std::string> directories, std::vector<std::string> files, std::string current_folder);
 
+	void ReadFonts(std::vector<std::string> directories, std::vector<std::string> files, std::string current_folder);
 public:
 
 	Icons icons;

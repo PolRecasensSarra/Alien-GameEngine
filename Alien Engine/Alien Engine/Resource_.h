@@ -4,6 +4,7 @@
 
 typedef unsigned int uint;
 typedef unsigned long long u64;
+typedef unsigned char uchar;
 
 enum class ResourceType {
 	RESOURCE_NONE = -1,

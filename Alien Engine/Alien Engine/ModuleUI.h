@@ -8,6 +8,8 @@
 #include "Panel.h"
 #include "Time.h"
 #include <utility>
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
 class Panel;
 class PanelConfig;
@@ -22,7 +24,6 @@ class PanelLayout;
 class PanelProject;
 class PanelSceneSelector;
 class PanelGame;
-
 struct ShortCut;
 
 struct Layout {
@@ -180,5 +181,8 @@ public:
 	uint number_of_layouts = 0;
 	
 	const char* actual_name="";
+
+	FT_Library library; //true type init
+
 };
 
