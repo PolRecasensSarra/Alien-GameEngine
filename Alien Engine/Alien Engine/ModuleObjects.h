@@ -59,6 +59,9 @@ public:
 	// primitives
 	void CreateBasePrimitive(PrimitiveType type);
 
+	// UI
+	void CreateBaseUI(ComponentType type);
+
 	// poly options
 	void ChangeWireframeMode();
 	void ChangeViewMeshMode();

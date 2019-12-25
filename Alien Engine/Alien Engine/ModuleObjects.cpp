@@ -901,3 +901,43 @@ void ModuleObjects::CreateBasePrimitive(PrimitiveType type)
 	ReturnZ::AddNewAction(ReturnZ::ReturnActions::ADD_OBJECT, object);
 }
 
+void ModuleObjects::CreateBaseUI(ComponentType type)
+{
+	GameObject* object = new GameObject(canvas);
+	ComponentTransform* transform = new ComponentTransform(object, { 0,0,0 }, { 0,0,0,0 }, { 1,1,1 });
+	object->AddComponent(transform);
+
+	switch (type)
+	{
+	case ComponentType::IMAGE: {
+		object->SetName("Image");
+		object->AddComponent(new ComponentImage(object, { 100,100 }, { 0.0f,0.0f,0.0f }));
+		break; }
+	case ComponentType::BUTTON: {
+		object->SetName("Button");
+		object->AddComponent(new ComponentButton(object, { 400,40 }));
+		break; }
+	case ComponentType::LABEL: {
+		object->SetName("Label");
+		break; }
+	case ComponentType::CHECKBOX: {
+		object->SetName("CheckBox");
+		object->AddComponent(new ComponentCheckbox(object, { 178,39 }));
+		break; }
+	case ComponentType::INPUTBOX: {
+		object->SetName("Input Box");
+		object->AddComponent(new ComponentInputText(object, { 178,39 }));
+		break; }
+	case ComponentType::CANVAS: {
+		object->SetName("Canvas");
+		object->AddComponent(new ComponentCanvas(object));
+		break; }
+	default: {
+		break; }
+	}
+
+	
+	SetNewSelectedObject(object);
+	ReturnZ::AddNewAction(ReturnZ::ReturnActions::ADD_OBJECT, object);
+}
+
