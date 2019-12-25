@@ -43,7 +43,7 @@ struct Icons {
 	ResourceTexture* button2 = nullptr;
 	ResourceTexture* checkbox = nullptr;
 	ResourceTexture* image_canvas = nullptr;
-	ResourceTexture* test_image = nullptr;
+	ResourceTexture* input_box = nullptr;
 
 };
 

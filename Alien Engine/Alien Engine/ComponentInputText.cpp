@@ -222,7 +222,7 @@ void ComponentInputText::LoadComponent(JSONArraypack* to_load)
 		u64 ID = std::stoull(to_load->GetString("TextureID"));
 		if (ID == 0 && is_custom)
 		{
-			tex = App->resources->icons.test_image;
+			tex = App->resources->icons.input_box;
 			CreateInputTextPlane();
 		}
 		else
@@ -443,7 +443,7 @@ void ComponentInputText::CheckIfDefaulTextureIsSettedAfterReturnZ()
 {
 	if (tex == nullptr && is_custom)
 	{
-		tex = App->resources->icons.test_image;
+		tex = App->resources->icons.input_box;
 		CreateInputTextPlane();
 	}
 }

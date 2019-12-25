@@ -76,9 +76,9 @@ bool ModuleObjects::Start()
 
 	inputText = new GameObject(canvas);
 	inputText->SetName("test Input Text");
-	inputText->AddComponent(new ComponentTransform(inputText, { 35.0f,80.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
-	inputText->AddComponent(new ComponentInputText(inputText, {30,10}, true));
-	inputText->GetComponent<ComponentInputText>()->tex = App->resources->icons.test_image;
+	inputText->AddComponent(new ComponentTransform(inputText, { 280.0f,70.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	inputText->AddComponent(new ComponentInputText(inputText, {178,39}, true));
+	inputText->GetComponent<ComponentInputText>()->tex = App->resources->icons.input_box;
 	inputText->GetComponent<ComponentInputText>()->CreateInputTextPlane();
 
 	GameObject* camera_hardcoded = new GameObject(base_game_object);
