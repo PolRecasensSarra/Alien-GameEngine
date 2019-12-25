@@ -83,8 +83,9 @@ bool ModuleObjects::Start()
 
 	GameObject* camera_hardcoded = new GameObject(base_game_object);
 	camera_hardcoded->SetName("Camera Hardcoded");
-	camera_hardcoded->AddComponent(new  ComponentTransform(camera_hardcoded, { 27.0f,20.0f,45.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	camera_hardcoded->AddComponent(new  ComponentTransform(camera_hardcoded, { 355.0f,204.0f,350.0f }, { 0,1,0,0 }, { 1,1,1 }));
 	camera_hardcoded->AddComponent(new ComponentCamera(camera_hardcoded));
+	camera_hardcoded->GetComponent<ComponentCamera>()->frustum.farPlaneDistance = 520.0f;
 
 
 	current_scene.name_without_extension = "Untitled*";
