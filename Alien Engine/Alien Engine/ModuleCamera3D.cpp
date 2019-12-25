@@ -138,8 +138,8 @@ void ModuleCamera3D::Movement()
 
 		if (!movement.Equals(float3::zero))
 		{
-			frustum->Translate(movement * mouse_speed);
-			reference += movement * mouse_speed;
+			frustum->Translate(movement * mouse_speed*30);
+			reference += (movement * mouse_speed * 30);
 		}
 
 		if (App->input->GetMouseButton(SDL_BUTTON_MIDDLE) == KEY_UP)
@@ -162,7 +162,7 @@ void ModuleCamera3D::Zoom()
 		zoom -= frustum->front;
 	}
 
-	frustum->Translate(zoom * mouse_speed);
+	frustum->Translate(zoom * mouse_speed*30);
 }
 
 void ModuleCamera3D::Rotation(float dt)

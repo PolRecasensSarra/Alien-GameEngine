@@ -32,7 +32,7 @@ ComponentCheckbox::ComponentCheckbox(GameObject* attach, float2 size, bool is_cu
 	float y = (size.y * 0.5f) - (size_image.y * 0.5f);
 	float x = size_image.x * 0.85f;
 
-	game_object_attached->AddComponent(new ComponentImage(game_object_attached, size_image, { x,y,0.0f }, true));
+	game_object_attached->AddComponent(new ComponentImage(game_object_attached, size_image, { x,y,0.1f }, true));
 	game_object_attached->GetComponent<ComponentImage>()->texture = App->resources->icons.checkbox_empty;
 	game_object_attached->GetComponent<ComponentImage>()->CreatImgPlane();
 	check_image = game_object_attached->GetComponent<ComponentImage>();

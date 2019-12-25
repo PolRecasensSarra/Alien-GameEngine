@@ -49,8 +49,9 @@ bool ModuleResources::Start()
 	icons.checkbox_empty = App->importer->LoadEngineTexture("Configuration/EngineTextures/checkbox_empty.png");
 	icons.checkbox_selected = App->importer->LoadEngineTexture("Configuration/EngineTextures/checkbox_selected.png");
 	icons.button = App->importer->LoadEngineTexture("Configuration/EngineTextures/button_new_game.png");
+	icons.button2 = App->importer->LoadEngineTexture("Configuration/EngineTextures/button_singleplayer.png");
 	icons.checkbox = App->importer->LoadEngineTexture("Configuration/EngineTextures/checkbox.png");
-	icons.image_canvas = App->importer->LoadEngineTexture("Configuration/EngineTextures/image_canvas.png");
+	icons.image_canvas = App->importer->LoadEngineTexture("Configuration/EngineTextures/image_canvas.jpg");
 	icons.test_image = App->importer->LoadEngineTexture("Configuration/EngineTextures/test_image.png");
 	
 
