@@ -904,6 +904,14 @@ void ModuleObjects::CreateBasePrimitive(PrimitiveType type)
 
 void ModuleObjects::CreateBaseUI(ComponentType type)
 {
+	if (canvas == nullptr)
+	{
+		canvas = new GameObject(base_game_object);
+		canvas->SetName("Canvas");
+		canvas->AddComponent(new ComponentTransform(canvas, { 0.0f,2.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+		canvas->AddComponent(new ComponentCanvas(canvas));
+	}
+
 	GameObject* object = new GameObject(canvas);
 	ComponentTransform* transform = new ComponentTransform(object, { 0,0,0 }, { 0,0,0,0 }, { 1,1,1 });
 	object->AddComponent(transform);

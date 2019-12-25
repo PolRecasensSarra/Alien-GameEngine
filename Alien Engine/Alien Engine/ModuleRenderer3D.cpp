@@ -420,3 +420,35 @@ bool ModuleRenderer3D::IsInsideFrustum(const ComponentCamera* camera, const AABB
 
 	return true;
 }
+
+bool ModuleRenderer3D::GetVSync() const
+{
+	return vsync;
+}
+
+bool ModuleRenderer3D::SetVSync(bool vsync)
+{
+	bool ret = true;
+
+	this->vsync = vsync;
+
+	if (this->vsync)
+	{
+
+		if (SDL_GL_SetSwapInterval(1) == -1)
+		{
+			ret = false;
+			
+		}
+	}
+	else {
+
+		if (SDL_GL_SetSwapInterval(0) == -1)
+		{
+			ret = false;
+			
+		}
+	}
+
+	return ret;
+}

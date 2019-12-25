@@ -9,6 +9,7 @@
 #include "ResourceTexture.h"
 #include "FileNode.h"
 #include "ModuleResources.h"
+#include "ModuleRenderer3D.h"
 #include "imgui/imgui_internal.h"
 #include <math.h>
 
@@ -56,15 +57,24 @@ void ComponentCheckbox::Update()
 	{
 		if (!is_function_active)
 		{
+			// VSync
+			
+			App->renderer3D->SetVSync(true);
+			if (App->fps_cap)
+				App->fps_cap = false;
+			
 			//execute the function
 			is_function_active = true;
 		}
 		else
 		{
+			App->renderer3D->SetVSync(false);
+			if (!App->fps_cap)
+				App->fps_cap = true;
 			//execute the function that put it as the begining
 			is_function_active = false;
 		}
-		
+		function = false;
 	}
 }
 
