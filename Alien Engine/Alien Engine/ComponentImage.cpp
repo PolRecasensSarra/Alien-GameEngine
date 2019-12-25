@@ -4,6 +4,8 @@
 #include "ReturnZ.h"
 #include "ResourceTexture.h"
 #include "ComponentTransform.h"
+#include "ModuleUI.h"
+#include "PanelGame.h"
 #include "FileNode.h"
 #include "imgui/imgui_internal.h"
 ComponentImage::ComponentImage(GameObject* attach, float2 size, float3 margin, bool is_custom):Component(attach)
@@ -107,7 +109,11 @@ void ComponentImage::UpdateImgPlane()
 
 void ComponentImage::PostUpdate()
 {
-
+	std::string name = game_object_attached->GetName();
+	if (name == "TEST IMAGE")
+	{
+		size = {App->ui->panel_game->width, App->ui->panel_game->height};
+	}
 	Draw();
 }
 

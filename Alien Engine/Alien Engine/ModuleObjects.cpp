@@ -55,7 +55,7 @@ bool ModuleObjects::Start()
 
 	button = new GameObject(canvas);
 	button->SetName("testButton");
-	button->AddComponent(new ComponentTransform(button, { 150.0f,250.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	button->AddComponent(new ComponentTransform(button, { 150.0f,200.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
 	button->AddComponent(new ComponentButton(button, { 400,40 }, true));
 	button->GetComponent<ComponentButton>()->tex = App->resources->icons.button2;
 	button->GetComponent<ComponentButton>()->CreatButtonPlane();
@@ -69,7 +69,7 @@ bool ModuleObjects::Start()
 
 	checkbox = new GameObject(canvas);
 	checkbox->SetName("test Checkbox");
-	checkbox->AddComponent(new ComponentTransform(checkbox, { 250.0f,150.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	checkbox->AddComponent(new ComponentTransform(checkbox, { 280.0f,120.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
 	checkbox->AddComponent(new ComponentCheckbox(checkbox, { 178,39 }, true));
 	checkbox->GetComponent<ComponentCheckbox>()->tex = App->resources->icons.checkbox;
 	checkbox->GetComponent<ComponentCheckbox>()->CreatCheckboxPlane();
