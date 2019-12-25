@@ -27,6 +27,10 @@ ComponentCheckbox::ComponentCheckbox(GameObject* attach, float2 size, bool is_cu
 		this->size.y = 10;
 	}
 	
+	if (!game_object_attached->HasComponent(ComponentType::TRANSFORM))
+	{
+		game_object_attached->AddComponent(new ComponentTransform(game_object_attached, { 0.0f,0.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	}
 
 	float2 size_image = { (size.y * 0.5f), (size.y * 0.5f) };
 	float y = (size.y * 0.5f) - (size_image.y * 0.5f);

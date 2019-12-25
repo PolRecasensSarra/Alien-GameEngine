@@ -29,6 +29,11 @@ ComponentButton::ComponentButton(GameObject* attach, float2 size, bool is_custom
 		this->size.x = 20;
 		this->size.y = 10;
 	}
+
+	if (!game_object_attached->HasComponent(ComponentType::TRANSFORM))
+	{
+		game_object_attached->AddComponent(new ComponentTransform(game_object_attached, { 0.0f,0.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	}
 }
 
 ComponentButton::~ComponentButton()

@@ -23,6 +23,11 @@ ComponentInputText::ComponentInputText(GameObject* attach, float2 size, bool is_
 		this->size.y = 10;
 	}
 
+	if (!game_object_attached->HasComponent(ComponentType::TRANSFORM))
+	{
+		game_object_attached->AddComponent(new ComponentTransform(game_object_attached, { 0.0f,0.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	}
+
 	//TODO::// CREATE A COMPONENT LABEL FOR THIS INPUT TEXT
 }
 

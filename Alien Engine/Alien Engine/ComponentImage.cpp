@@ -17,6 +17,10 @@ ComponentImage::ComponentImage(GameObject* attach, float2 size, float3 margin, b
 	this->margin = margin;
 	this->is_custom = is_custom;
 
+	if (!game_object_attached->HasComponent(ComponentType::TRANSFORM))
+	{
+		game_object_attached->AddComponent(new ComponentTransform(game_object_attached, { 0.0f,0.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	}
 }
 
 ComponentImage::~ComponentImage()
