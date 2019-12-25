@@ -71,12 +71,12 @@ bool ModuleObjects::Start()
 	checkbox->SetName("test Checkbox");
 	checkbox->AddComponent(new ComponentTransform(checkbox, { 280.0f,120.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
 	checkbox->AddComponent(new ComponentCheckbox(checkbox, { 178,39 }, true));
-	checkbox->GetComponent<ComponentCheckbox>()->tex = App->resources->icons.checkbox;
+	checkbox->GetComponent<ComponentCheckbox>()->tex = App->resources->icons.checkbox2;
 	checkbox->GetComponent<ComponentCheckbox>()->CreatCheckboxPlane();
 
 	inputText = new GameObject(canvas);
 	inputText->SetName("test Input Text");
-	inputText->AddComponent(new ComponentTransform(inputText, { 280.0f,70.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	inputText->AddComponent(new ComponentTransform(inputText, { 280.0f,50.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
 	inputText->AddComponent(new ComponentInputText(inputText, {178,39}, true));
 	inputText->GetComponent<ComponentInputText>()->tex = App->resources->icons.input_box;
 	inputText->GetComponent<ComponentInputText>()->CreateInputTextPlane();

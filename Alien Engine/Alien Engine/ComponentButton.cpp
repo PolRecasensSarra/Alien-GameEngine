@@ -226,7 +226,7 @@ void ComponentButton::LoadComponent(JSONArraypack* to_load)
 		u64 ID = std::stoull(to_load->GetString("TextureID"));
 		if (ID == 0 && is_custom)
 		{
-			tex = App->resources->icons.button;
+			tex = App->resources->icons.button2;
 			CreatButtonPlane();
 		}
 		else
@@ -460,7 +460,7 @@ void ComponentButton::CheckIfDefaulTextureIsSettedAfterReturnZ()
 {
 	if (tex == nullptr && is_custom)
 	{
-		tex = App->resources->icons.button;
+		tex = App->resources->icons.button2;
 		CreatButtonPlane();
 	}
 }

@@ -277,7 +277,7 @@ void ComponentCheckbox::LoadComponent(JSONArraypack* to_load)
 
 		if (ID == 0 && is_custom)
 		{
-			tex = App->resources->icons.checkbox;
+			tex = App->resources->icons.checkbox2;
 			CreatCheckboxPlane();
 		}
 		else
@@ -514,7 +514,7 @@ void ComponentCheckbox::CheckIfDefaulTextureIsSettedAfterReturnZ()
 {
 	if (tex == nullptr && is_custom)
 	{
-		tex = App->resources->icons.checkbox;
+		tex = App->resources->icons.checkbox2;
 		CreatCheckboxPlane();
 
 	}
