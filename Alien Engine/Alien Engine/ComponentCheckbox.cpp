@@ -9,6 +9,7 @@
 #include "ResourceTexture.h"
 #include "FileNode.h"
 #include "ModuleResources.h"
+#include "ModuleRenderer3D.h"
 #include "imgui/imgui_internal.h"
 #include <math.h>
 
@@ -27,12 +28,16 @@ ComponentCheckbox::ComponentCheckbox(GameObject* attach, float2 size, bool is_cu
 		this->size.y = 10;
 	}
 	
+	if (!game_object_attached->HasComponent(ComponentType::TRANSFORM))
+	{
+		game_object_attached->AddComponent(new ComponentTransform(game_object_attached, { 0.0f,0.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	}
 
 	float2 size_image = { (size.y * 0.5f), (size.y * 0.5f) };
 	float y = (size.y * 0.5f) - (size_image.y * 0.5f);
 	float x = size_image.x * 0.85f;
 
-	game_object_attached->AddComponent(new ComponentImage(game_object_attached, size_image, { x,y,0.0f }, true));
+	game_object_attached->AddComponent(new ComponentImage(game_object_attached, size_image, { x,y,0.1f }, true));
 	game_object_attached->GetComponent<ComponentImage>()->texture = App->resources->icons.checkbox_empty;
 	game_object_attached->GetComponent<ComponentImage>()->CreatImgPlane();
 	check_image = game_object_attached->GetComponent<ComponentImage>();
@@ -50,8 +55,25 @@ void ComponentCheckbox::Update()
 
 	if (function)
 	{
-		//call the fade function mega hardcoded
-
+		if (!is_function_active)
+		{
+			// VSync
+			
+			App->renderer3D->SetVSync(true);
+			if (App->fps_cap)
+				App->fps_cap = false;
+			
+			//execute the function
+			is_function_active = true;
+		}
+		else
+		{
+			App->renderer3D->SetVSync(false);
+			if (!App->fps_cap)
+				App->fps_cap = true;
+			//execute the function that put it as the begining
+			is_function_active = false;
+		}
 		function = false;
 	}
 }
@@ -212,6 +234,7 @@ void ComponentCheckbox::DoLogicClicked()
 		actual_check_color = pressed_check_color;
 		game_object_attached->GetComponent<ComponentImage>()->texture = App->resources->icons.checkbox_selected;
 		game_object_attached->GetComponent<ComponentImage>()->CreatImgPlane();
+
 	}
 	else
 	{
@@ -268,7 +291,7 @@ void ComponentCheckbox::LoadComponent(JSONArraypack* to_load)
 
 		if (ID == 0 && is_custom)
 		{
-			tex = App->resources->icons.checkbox;
+			tex = App->resources->icons.checkbox2;
 			CreatCheckboxPlane();
 		}
 		else
@@ -373,6 +396,22 @@ bool ComponentCheckbox::DrawInspector()
 
 	}
 	ImGui::Spacing();
+	ImGui::Spacing();
+
+	if (Time::IsInGameState())
+	{
+		ImGui::Separator();
+
+		ImGui::Text("Function");
+		ImGui::Spacing();
+		if (ImGui::Button("Execute Logic"))
+		{
+			DoLogicClicked();
+		}
+		ImGui::Spacing();
+	}
+
+
 	ImGui::Separator();
 
 
@@ -475,6 +514,20 @@ void ComponentCheckbox::BindTex()
 	}
 }
 
+bool ComponentCheckbox::Fade()
+{
+	if (actual_color.w <= 0.01)
+	{
+		game_object_attached->enabled = false;
+		return true;
+	}
+	else
+	{
+		actual_color.w -= 0.01;
+		return false;
+	}
+}
+
 void ComponentCheckbox::UpdateCheckPos()
 {
 	float2 size_image = { (size.y * 0.5f), (size.y * 0.5f) };
@@ -489,7 +542,7 @@ void ComponentCheckbox::CheckIfDefaulTextureIsSettedAfterReturnZ()
 {
 	if (tex == nullptr && is_custom)
 	{
-		tex = App->resources->icons.checkbox;
+		tex = App->resources->icons.checkbox2;
 		CreatCheckboxPlane();
 
 	}

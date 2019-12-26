@@ -31,7 +31,7 @@ void ComponentCanvas::DebugDraw()
 
 
 	glBegin(GL_LINE_LOOP);
-	glColor4f(1.0f, 0.0f, 1.0f, 1.0f);
+	glColor4f(actual_color.x, actual_color.y, actual_color.z, actual_color.w);
 
 	float3 pos = transform->GetGlobalPosition();
 	float3 size_mult = transform->GetGlobalScale();
@@ -59,4 +59,45 @@ void ComponentCanvas::SaveComponent(JSONArraypack* to_save)
 void ComponentCanvas::LoadComponent(JSONArraypack* to_load)
 {
 	ID = std::stoull(to_load->GetString("ID"));
+}
+
+bool ComponentCanvas::FadeAllUIElements(GameObject* gameObject)
+{
+	bool ret = false;
+	if (!gameObject->components.empty()) {
+		std::vector<Component*>::iterator item = gameObject->components.begin();
+		for (; item != gameObject->components.end(); ++item) {
+			if (*item != nullptr && (*item)->IsEnabled()) {
+				ret = (*item)->Fade();
+			}
+		}
+	}
+
+	if (!gameObject->children.empty()) {
+		std::vector<GameObject*>::iterator child = gameObject->children.begin();
+		for (; child != gameObject->children.end(); ++child) {
+			if (*child != nullptr && (*child)->IsEnabled()) {
+				FadeAllUIElements((*child));
+			}
+		}
+	}
+	if (faded)
+		ret = true;
+
+	return ret;
+}
+
+bool ComponentCanvas::Fade()
+{
+	if (actual_color.w <= 0.01)
+	{
+		game_object_attached->enabled = false;
+		faded = true;
+		return true;
+	}
+	else
+	{
+		actual_color.w -= 0.01;
+		return false;
+	}
 }

@@ -6,6 +6,7 @@
 #include "PanelGame.h"
 #include "ReturnZ.h"
 #include "ResourceTexture.h"
+#include "ComponentCanvas.h"
 #include "FileNode.h"
 #include "imgui/imgui_internal.h"
 
@@ -29,6 +30,11 @@ ComponentButton::ComponentButton(GameObject* attach, float2 size, bool is_custom
 		this->size.x = 20;
 		this->size.y = 10;
 	}
+
+	if (!game_object_attached->HasComponent(ComponentType::TRANSFORM))
+	{
+		game_object_attached->AddComponent(new ComponentTransform(game_object_attached, { 0.0f,0.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	}
 }
 
 ComponentButton::~ComponentButton()
@@ -37,14 +43,14 @@ ComponentButton::~ComponentButton()
 
 void ComponentButton::Update()
 {
-	if (Time::IsInGameState())
+	if (Time::IsInGameState() && !function)
 		UpdateStates();
 
 	if (function)
 	{
 		//call the fade function mega hardcoded
+		function = !FadeFunction();
 		
-		function = false;
 	}
 	
 }
@@ -226,7 +232,7 @@ void ComponentButton::LoadComponent(JSONArraypack* to_load)
 		u64 ID = std::stoull(to_load->GetString("TextureID"));
 		if (ID == 0 && is_custom)
 		{
-			tex = App->resources->icons.button;
+			tex = App->resources->icons.button2;
 			CreatButtonPlane();
 		}
 		else
@@ -340,6 +346,22 @@ bool ComponentButton::DrawInspector()
 
 	}
 	ImGui::Spacing();
+	ImGui::Spacing();
+
+	if (Time::IsInGameState())
+	{
+		ImGui::Separator();
+
+		ImGui::Text("Function");
+		ImGui::Spacing();
+		if (ImGui::Button("Execute Logic"))
+		{
+			function = true;
+		}
+		ImGui::Spacing();
+	}
+	
+	
 	ImGui::Separator();
 
 
@@ -440,14 +462,42 @@ void ComponentButton::BindTex()
 	}
 }
 
+bool ComponentButton::Fade()
+{
+	if (actual_color.w <= 0.01)
+	{
+		game_object_attached->enabled = false;
+		return true;
+	}
+	else
+	{
+		actual_color.w -= 0.01;
+		return false;
+	}
+}
+
 void ComponentButton::CheckIfDefaulTextureIsSettedAfterReturnZ()
 {
 	if (tex == nullptr && is_custom)
 	{
-		tex = App->resources->icons.button;
+		tex = App->resources->icons.button2;
 		CreatButtonPlane();
 	}
 }
+
+bool ComponentButton::FadeFunction()
+{
+	bool ret = false;
+
+	if (App->objects->image != nullptr)
+	{
+		ret = App->objects->canvas->GetComponent<ComponentCanvas>()->FadeAllUIElements(App->objects->canvas);
+	}
+
+	return ret;
+}
+
+
 
 
 

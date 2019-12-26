@@ -57,30 +57,30 @@ bool ModuleObjects::Start()
 
 	button = new GameObject(canvas);
 	button->SetName("testButton");
-	button->AddComponent(new ComponentTransform(button, { 10.0f,0.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
-	button->AddComponent(new ComponentButton(button, { 30,10 }, true));
-	button->GetComponent<ComponentButton>()->tex = App->resources->icons.button;
+	button->AddComponent(new ComponentTransform(button, { 150.0f,200.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	button->AddComponent(new ComponentButton(button, { 400,40 }, true));
+	button->GetComponent<ComponentButton>()->tex = App->resources->icons.button2;
 	button->GetComponent<ComponentButton>()->CreatButtonPlane();
 
 	image = new GameObject(canvas);
 	image->SetName("TEST IMAGE");
-	image->AddComponent(new  ComponentTransform(image, { 0.0f,15.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 })); 
-	image->AddComponent(new ComponentImage(image, { 30,20 }, { 0.0f,0.0f,0.0f }, true));
+	image->AddComponent(new  ComponentTransform(image, { 0.0f,0.0f,-0.3f }, { 0,0,0,0 }, { 1,1,1 })); 
+	image->AddComponent(new ComponentImage(image, { 700,400 }, { 0.0f,0.0f,0.0f }, true));
 	image->GetComponent<ComponentImage>()->texture = App->resources->icons.image_canvas;
 	image->GetComponent<ComponentImage>()->CreatImgPlane();
 
 	checkbox = new GameObject(canvas);
 	checkbox->SetName("test Checkbox");
-	checkbox->AddComponent(new ComponentTransform(checkbox, { 35.0f,30.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
-	checkbox->AddComponent(new ComponentCheckbox(checkbox, { 30,10 }, true));
-	checkbox->GetComponent<ComponentCheckbox>()->tex = App->resources->icons.checkbox;
+	checkbox->AddComponent(new ComponentTransform(checkbox, { 280.0f,120.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	checkbox->AddComponent(new ComponentCheckbox(checkbox, { 178,39 }, true));
+	checkbox->GetComponent<ComponentCheckbox>()->tex = App->resources->icons.checkbox2;
 	checkbox->GetComponent<ComponentCheckbox>()->CreatCheckboxPlane();
 
 	inputText = new GameObject(canvas);
 	inputText->SetName("test Input Text");
-	inputText->AddComponent(new ComponentTransform(inputText, { 35.0f,80.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
-	inputText->AddComponent(new ComponentInputText(inputText, {30,10}, true));
-	inputText->GetComponent<ComponentInputText>()->tex = App->resources->icons.test_image;
+	inputText->AddComponent(new ComponentTransform(inputText, { 280.0f,50.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	inputText->AddComponent(new ComponentInputText(inputText, {178,39}, true));
+	inputText->GetComponent<ComponentInputText>()->tex = App->resources->icons.input_box;
 	inputText->GetComponent<ComponentInputText>()->CreateInputTextPlane();
 
 
@@ -94,8 +94,10 @@ bool ModuleObjects::Start()
 
 	GameObject* camera_hardcoded = new GameObject(base_game_object);
 	camera_hardcoded->SetName("Camera Hardcoded");
-	camera_hardcoded->AddComponent(new  ComponentTransform(camera_hardcoded, { 27.0f,20.0f,45.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	camera_hardcoded->AddComponent(new  ComponentTransform(camera_hardcoded, { 355.0f,204.0f,350.0f }, { 0,1,0,0 }, { 1,1,1 }));
 	camera_hardcoded->AddComponent(new ComponentCamera(camera_hardcoded));
+	camera_hardcoded->GetComponent<ComponentCamera>()->far_plane = 520.0f;
+	camera_hardcoded->GetComponent<ComponentCamera>()->frustum.farPlaneDistance = 520.0f;
 
 
 	current_scene.name_without_extension = "Untitled*";
@@ -908,6 +910,54 @@ void ModuleObjects::CreateBasePrimitive(PrimitiveType type)
 	object->AddComponent(mesh);
 	object->AddComponent(material);
 	mesh->RecalculateAABB_OBB();
+	SetNewSelectedObject(object);
+	ReturnZ::AddNewAction(ReturnZ::ReturnActions::ADD_OBJECT, object);
+}
+
+void ModuleObjects::CreateBaseUI(ComponentType type)
+{
+	if (canvas == nullptr)
+	{
+		canvas = new GameObject(base_game_object);
+		canvas->SetName("Canvas");
+		canvas->AddComponent(new ComponentTransform(canvas, { 0.0f,2.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+		canvas->AddComponent(new ComponentCanvas(canvas));
+	}
+
+	GameObject* object = new GameObject(canvas);
+	ComponentTransform* transform = new ComponentTransform(object, { 0,0,0 }, { 0,0,0,0 }, { 1,1,1 });
+	object->AddComponent(transform);
+
+	switch (type)
+	{
+	case ComponentType::IMAGE: {
+		object->SetName("Image");
+		object->AddComponent(new ComponentImage(object, { 100,100 }, { 0.0f,0.0f,0.0f }));
+		break; }
+	case ComponentType::BUTTON: {
+		object->SetName("Button");
+		object->AddComponent(new ComponentButton(object, { 400,40 }));
+		break; }
+	case ComponentType::LABEL: {
+		object->SetName("Label");
+		break; }
+	case ComponentType::CHECKBOX: {
+		object->SetName("CheckBox");
+		object->AddComponent(new ComponentCheckbox(object, { 178,39 }));
+		break; }
+	case ComponentType::INPUTBOX: {
+		object->SetName("Input Box");
+		object->AddComponent(new ComponentInputText(object, { 178,39 }));
+		break; }
+	case ComponentType::CANVAS: {
+		object->SetName("Canvas");
+		object->AddComponent(new ComponentCanvas(object));
+		break; }
+	default: {
+		break; }
+	}
+
+	
 	SetNewSelectedObject(object);
 	ReturnZ::AddNewAction(ReturnZ::ReturnActions::ADD_OBJECT, object);
 }

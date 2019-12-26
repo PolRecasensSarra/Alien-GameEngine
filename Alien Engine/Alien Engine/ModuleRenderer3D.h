@@ -35,6 +35,10 @@ public:
 	bool SetCameraToDraw(const ComponentCamera* camera);
 
 	bool IsInsideFrustum(const ComponentCamera* camera, const AABB& aabb);
+
+	bool SetVSync(bool vsync);
+	bool GetVSync() const;
+
 public:
 
 	// buffers to draw scene
@@ -66,6 +70,7 @@ public:
 	mat4x4 ModelMatrix, ViewMatrix, ProjectionMatrix;
 	
 	bool render_zbuffer = false;
+	bool vsync = false;
 
 public:
 

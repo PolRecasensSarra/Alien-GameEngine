@@ -33,9 +33,13 @@ public:
 	void UpdateButtonPlane();
 
 	void BindTex();
+	bool Fade();
+
 
 private:
 	void CheckIfDefaulTextureIsSettedAfterReturnZ();
+	bool FadeFunction();
+
 
 private:
 

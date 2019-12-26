@@ -210,7 +210,7 @@ void Application::FinishUpdate()
 	unsigned __int32 last_frame_ms = frame_time.Read();
 	unsigned __int32 frames_on_last_update = prev_last_sec_frame_count;
 
-	if (framerate_cap > 0 && last_frame_ms < framerate_cap && fps_cap)
+	if (framerate_cap > 0 && last_frame_ms < framerate_cap && fps_cap && !renderer3D->GetVSync())
 	{
 		j1PerfTimer time;
 		float delaytimestart = time.ReadMs();

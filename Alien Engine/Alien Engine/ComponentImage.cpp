@@ -4,6 +4,8 @@
 #include "ReturnZ.h"
 #include "ResourceTexture.h"
 #include "ComponentTransform.h"
+#include "ModuleUI.h"
+#include "PanelGame.h"
 #include "FileNode.h"
 #include "imgui/imgui_internal.h"
 ComponentImage::ComponentImage(GameObject* attach, float2 size, float3 margin, bool is_custom):Component(attach)
@@ -15,6 +17,10 @@ ComponentImage::ComponentImage(GameObject* attach, float2 size, float3 margin, b
 	this->margin = margin;
 	this->is_custom = is_custom;
 
+	if (!game_object_attached->HasComponent(ComponentType::TRANSFORM))
+	{
+		game_object_attached->AddComponent(new ComponentTransform(game_object_attached, { 0.0f,0.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	}
 }
 
 ComponentImage::~ComponentImage()
@@ -107,7 +113,11 @@ void ComponentImage::UpdateImgPlane()
 
 void ComponentImage::PostUpdate()
 {
-
+	std::string name = game_object_attached->GetName();
+	if (name == "TEST IMAGE")
+	{
+		size = {App->ui->panel_game->width, App->ui->panel_game->height};
+	}
 	Draw();
 }
 
@@ -124,7 +134,7 @@ void ComponentImage::Draw()
 		glEnable(GL_ALPHA_TEST);
 		glAlphaFunc(GL_GREATER, 0.0f);
 
-	    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	    glColor4f(actual_color.x, actual_color.y, actual_color.z, actual_color.w);
 
 		glEnable(GL_TEXTURE_2D);
 
@@ -319,6 +329,20 @@ bool ComponentImage::DrawInspector()
 
 
 	return true;
+}
+
+bool ComponentImage::Fade()
+{
+	if (actual_color.w <= 0.01)
+	{
+		game_object_attached->enabled = false;
+		return true;
+	}
+	else
+	{
+		actual_color.w -= 0.01;
+		return false;
+	}
 }
 
 void ComponentImage::CheckIfDefaulTextureIsSettedAfterReturnZ()

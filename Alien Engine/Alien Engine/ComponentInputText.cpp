@@ -23,6 +23,11 @@ ComponentInputText::ComponentInputText(GameObject* attach, float2 size, bool is_
 		this->size.y = 10;
 	}
 
+	if (!game_object_attached->HasComponent(ComponentType::TRANSFORM))
+	{
+		game_object_attached->AddComponent(new ComponentTransform(game_object_attached, { 0.0f,0.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	}
+
 	//TODO::// CREATE A COMPONENT LABEL FOR THIS INPUT TEXT
 }
 
@@ -32,7 +37,7 @@ ComponentInputText::~ComponentInputText()
 
 void ComponentInputText::Update()
 {
-	if (Time::IsInGameState())
+	if (Time::IsInGameState() && !function)
 		UpdateStates();
 
 	if (function)
@@ -41,6 +46,11 @@ void ComponentInputText::Update()
 		//HERE GOES THE UPDATE OF THE LABEL
 
 		//function = false;   WHEN PRESSING ENTER, PUT THIS TO FALSE
+		if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
+		{
+			function = false;
+			//STOP GETTING INPUT
+		}
 	}
 }
 
@@ -170,7 +180,6 @@ void ComponentInputText::UpdateStates()
 void ComponentInputText::DoLogicClicked()
 {
 	function = true;
-	//START GETTING THE INPUT TO ACTUALIZE THE LABEL IN THE UPDATE
 }
 
 void ComponentInputText::DoLogicHovered()
@@ -218,7 +227,7 @@ void ComponentInputText::LoadComponent(JSONArraypack* to_load)
 		u64 ID = std::stoull(to_load->GetString("TextureID"));
 		if (ID == 0 && is_custom)
 		{
-			tex = App->resources->icons.test_image;
+			tex = App->resources->icons.input_box;
 			CreateInputTextPlane();
 		}
 		else
@@ -321,6 +330,21 @@ bool ComponentInputText::DrawInspector()
 
 	}
 	ImGui::Spacing();
+	ImGui::Spacing();
+
+	if (Time::IsInGameState())
+	{
+		ImGui::Separator();
+
+		ImGui::Text("Function");
+		ImGui::Spacing();
+		if (ImGui::Button("Execute Logic"))
+		{
+			DoLogicClicked();
+		}
+		ImGui::Spacing();
+	}
+
 	ImGui::Separator();
 
 
@@ -420,11 +444,25 @@ void ComponentInputText::BindTex()
 	}
 }
 
+bool ComponentInputText::Fade()
+{
+	if (actual_color.w <= 0.01)
+	{
+		game_object_attached->enabled = false;
+		return true;
+	}
+	else
+	{
+		actual_color.w -= 0.01;
+		return false;
+	}
+}
+
 void ComponentInputText::CheckIfDefaulTextureIsSettedAfterReturnZ()
 {
 	if (tex == nullptr && is_custom)
 	{
-		tex = App->resources->icons.test_image;
+		tex = App->resources->icons.input_box;
 		CreateInputTextPlane();
 	}
 }

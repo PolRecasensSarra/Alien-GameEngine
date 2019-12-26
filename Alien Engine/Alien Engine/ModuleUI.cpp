@@ -441,7 +441,7 @@ void ModuleUI::MainMenuBar()
 	}
 	if (ImGui::BeginMenu("Create"))
 	{
-		if (ImGui::MenuItem("Crete Empty GameObject"))
+		if (ImGui::MenuItem("Create Empty GameObject"))
 		{
 			App->objects->CreateEmptyGameObject(nullptr);
 		}
@@ -480,6 +480,30 @@ void ModuleUI::MainMenuBar()
 		if (ImGui::MenuItem("Create...", panel_create_object->shortcut->GetNameScancodes()))
 		{
 			panel_create_object->ChangeEnable();
+		}
+		ImGui::EndMenu();
+	}
+	if (ImGui::BeginMenu("UI"))
+	{
+		if (ImGui::MenuItem("Button"))
+		{
+			App->objects->CreateBaseUI(ComponentType::BUTTON);
+		}
+		if (ImGui::MenuItem("Image"))
+		{
+			App->objects->CreateBaseUI(ComponentType::IMAGE);
+		}
+		if (ImGui::MenuItem("CheckBox"))
+		{
+			App->objects->CreateBaseUI(ComponentType::CHECKBOX);
+		}
+		if (ImGui::MenuItem("Input Box"))
+		{
+			App->objects->CreateBaseUI(ComponentType::INPUTBOX);
+		}
+		if (ImGui::MenuItem("Label"))
+		{
+			App->objects->CreateBaseUI(ComponentType::LABEL);
 		}
 		ImGui::EndMenu();
 	}

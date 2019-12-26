@@ -59,6 +59,9 @@ public:
 	// primitives
 	void CreateBasePrimitive(PrimitiveType type);
 
+	// UI
+	void CreateBaseUI(ComponentType type);
+
 	// poly options
 	void ChangeWireframeMode();
 	void ChangeViewMeshMode();
@@ -196,15 +199,18 @@ private:
 	// root
 	GameObject* base_game_object = nullptr;
 	GameObject* game_object_selected = nullptr;
-	GameObject* canvas = nullptr;
-	GameObject* button = nullptr;
-	GameObject* image  = nullptr;
-	GameObject* checkbox = nullptr;
-	GameObject* inputText = nullptr;
-	GameObject* label = nullptr;
+	
 	std::vector< std::tuple<GameObject*, GameObject*, bool>> to_reparent;
 
 	std::stack<ReturnZ*> save_return_actions;
 	std::stack<ReturnZ*> save_fordward_actions;
+
+public:
+	GameObject* canvas = nullptr;
+	GameObject* button = nullptr;
+	GameObject* image = nullptr;
+	GameObject* checkbox = nullptr;
+	GameObject* inputText = nullptr;
+	GameObject* label = nullptr;
 
 };
