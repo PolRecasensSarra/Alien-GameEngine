@@ -19,7 +19,7 @@ class ComponentLabel :public Component
 	friend class CompZ;
 
 public:
-	ComponentLabel(GameObject* attach, float2 size);
+	ComponentLabel(GameObject* attach, float2 size = { 0, 0});
 	~ComponentLabel();
 
 	void PostUpdate();

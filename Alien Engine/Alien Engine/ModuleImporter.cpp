@@ -9,6 +9,7 @@
 #include "ComponentTransform.h"
 #include "ComponentMaterial.h"
 #include "ComponentMesh.h"
+#include "ComponentLabel.h"
 #include "GameObject.h"
 #include "ModuleCamera3D.h"
 
@@ -16,6 +17,7 @@
 #include "ResourceMesh.h"
 #include "ResourceModel.h"
 #include "ResourceTexture.h"
+#include "ResourceFont.h"
 #include "ReturnZ.h"
 
 ModuleImporter::ModuleImporter(bool start_enabled) : Module(start_enabled)
@@ -262,6 +264,11 @@ ResourceMesh* ModuleImporter::LoadNodeMesh(const aiScene * scene, const aiNode* 
 	return ret;
 }
 
+
+
+
+
+
 ResourceTexture* ModuleImporter::LoadTextureFile(const char* path, bool has_been_dropped, bool is_custom)
 {
 	ResourceTexture* texture = nullptr;
@@ -371,6 +378,9 @@ void ModuleImporter::LoadTextureToResource(const char* path, ResourceTexture* te
 	ilDeleteImages(1, &new_image_id);
 }
 
+
+
+
 void ModuleImporter::ApplyTextureToSelectedObject(ResourceTexture* texture)
 {
 	GameObject* selected = App->objects->GetSelectedObject();
@@ -390,6 +400,8 @@ void ModuleImporter::ApplyTextureToSelectedObject(ResourceTexture* texture)
 	}
 	
 }
+
+
 
 void ModuleImporter::LoadParShapesMesh(par_shapes_mesh* shape, ResourceMesh* mesh)
 {
@@ -495,3 +507,59 @@ bool ModuleImporter::ReImportModel(ResourceModel* model)
 
 
 
+ResourceFont* ModuleImporter::LoadFontFile(const char* path, bool dropped)
+{
+	ResourceFont* font = nullptr;
+
+	if (!dropped && !App->file_system->Exists(path)) {
+		return nullptr;
+	}
+
+
+	Resource* font_m = nullptr;
+	if (App->resources->Exists(path, &font_m)) {
+
+		std::string meta_path_in_assets = App->file_system->GetPathWithoutExtension(path) + "_meta.alien";
+		u64 ID = App->resources->GetIDFromAlienPath(meta_path_in_assets.data());
+		font = (ResourceFont*)App->resources->GetResourceWithID(ID);
+
+		if (dropped && App->objects->GetSelectedObject() != nullptr)
+			ApplyFontToSelectedObj(font);
+
+		LOG("Font already loaded");
+
+		return font;
+
+
+	}
+
+	else {
+
+		font = new ResourceFont(path);
+
+		font->CreateMetaData();
+		App->resources->AddNewFileNode(path, true);
+
+		if (dropped && App->objects->GetSelectedObject() != nullptr) {
+			ApplyFontToSelectedObj(font);
+		}
+
+	}
+	return font;
+}
+
+void ModuleImporter::ApplyFontToSelectedObj(ResourceFont* font)
+{
+	GameObject* selected = App->objects->GetSelectedObject();
+
+	if (selected && selected->HasComponent(ComponentType::LABEL)) //TODO INPUTTEXT
+	{
+		ComponentLabel* label = (ComponentLabel*)selected->GetComponent(ComponentType::LABEL);
+
+		label->SetResourceFont(font);
+
+		//TODO RETURNZ
+	}
+
+	else LOG("Selected object doesn't support fonts!");
+}

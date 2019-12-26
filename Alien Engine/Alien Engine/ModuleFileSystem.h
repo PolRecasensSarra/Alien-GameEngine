@@ -37,7 +37,7 @@ enum class FileDropType {
 	SCRIPT,
 	SCENE,
 	PREFAB,
-
+	FONT,
 	UNKNOWN
 };
 

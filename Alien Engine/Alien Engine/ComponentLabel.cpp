@@ -27,6 +27,8 @@ ComponentLabel::ComponentLabel(GameObject* attach, float2 size) :Component(attac
 
 ComponentLabel::~ComponentLabel()
 {
+	if (text_img != nullptr)
+		text_img->DecreaseReferences();
 }
 
 
@@ -65,10 +67,34 @@ void ComponentLabel::Draw()
 
 void ComponentLabel::SaveComponent(JSONArraypack* to_save)
 {
+	to_save->SetNumber("Type", (int)type);
+	to_save->SetString("ID", std::to_string(ID));
+	to_save->SetFloat2("SizeText", size_text);
+	to_save->SetFloat2("Size", size);
+	to_save->SetBoolean("HasFont", (text_img != nullptr) ? true : false);
+
+	if (text_img != nullptr)
+		to_save->SetString("FontID", std::to_string(text_img->GetID()));
+
+	to_save->SetBoolean("Enable", enabled);
 }
 
 void ComponentLabel::LoadComponent(JSONArraypack* to_load)
 {
+	ID = std::stoull(to_load->GetString("ID"));
+	size_text = to_load->GetFloat2("SizeText");
+	size = to_load->GetFloat2("Size");
+	enabled = to_load->GetBoolean("Enabled");
+
+	if (to_load->GetBoolean("HasFont")) {
+
+		text_img = (ResourceFont*)App->resources->GetResourceWithID(ID);
+		if (text_img != nullptr)
+		{
+			text_img->IncreaseReferences();
+			CreateTextPlane();
+		}
+	}
 }
 
 void ComponentLabel::CreateTextPlane()
@@ -109,6 +135,7 @@ void ComponentLabel::CreateTextPlane()
 void ComponentLabel::SetResourceFont(ResourceFont* r_font)
 {
 	text_img = r_font;
+	LOG("new font set to %s", game_object_attached->GetName());
 }
 
 bool ComponentLabel::DrawInspector()
@@ -150,14 +177,14 @@ bool ComponentLabel::DrawInspector()
 
 		if (ImGui::BeginDragDropTarget())
 		{
-			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(DROP_ID_PROJECT_NODE, ImGuiDragDropFlags_SourceNoDisableHover);
+			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(DROP_ID_PROJECT_NODE, ImGuiDragDropFlags_SourceNoDisableHover );
 			//(DROP_ID_PROJECT_NODE, ImGuiDragDropFlags_SourceNoDisableHover| ImGuiDragDropFlags_AcceptBeforeDelivery);
 			if (payload != nullptr && payload->IsDataType(DROP_ID_PROJECT_NODE)) {
 				FileNode* node = *(FileNode * *)payload->Data;
 
 
 				// drop texture
-				if (node != nullptr && node->type == FileDropType::TEXTURE && App->objects->GetSelectedObject() != nullptr)
+				if (node != nullptr && node->type == FileDropType::FONT && App->objects->GetSelectedObject() != nullptr)
 				{
 					std::string path = App->file_system->GetPathWithoutExtension(node->path + node->name);
 					path += "_meta.alien";

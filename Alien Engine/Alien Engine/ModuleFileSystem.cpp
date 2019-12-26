@@ -531,6 +531,10 @@ void ModuleFileSystem::ManageNewDropFile(const char* extern_path)
 	case FileDropType::TEXTURE:
 		final_path = TEXTURES_FOLDER + final_path;
 		break;
+	case FileDropType::FONT:
+		final_path = ASSETS_FONT_FOLDER + final_path;
+		break;
+
 	}
 
 	std::string normalized = extern_path;
@@ -547,6 +551,11 @@ void ModuleFileSystem::ManageNewDropFile(const char* extern_path)
 	case FileDropType::TEXTURE:
 		LOG("Start Loading Texture");
 		App->importer->LoadTextureFile(final_path.data(), true);
+		break;
+
+	case FileDropType::FONT:
+		LOG("Start Loading Texture");
+		App->importer->LoadFontFile(final_path.data(), true);
 		break;
 	}
 }
@@ -568,6 +577,8 @@ const FileDropType& ModuleFileSystem::SearchExtension(const std::string& extern_
 		ext_type = FileDropType::TEXTURE;
 	else if (App->StringCmp(extension.data(), "tga"))
 		ext_type = FileDropType::TEXTURE;
+	else if (App->StringCmp(extension.data(), "ttf"))
+		ext_type = FileDropType::FONT;
 	else
 		LOG("Extension unknown!");
 

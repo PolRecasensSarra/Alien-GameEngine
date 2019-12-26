@@ -51,6 +51,10 @@ public:
 	void LoadTextureToResource(const char* path, ResourceTexture* texture);
 	void ApplyTextureToSelectedObject(ResourceTexture* texture);
 
+
+	//fonts
+	ResourceFont* LoadFontFile(const char* path, bool dropped = false);
+	void ApplyFontToSelectedObj(ResourceFont* font);
 private:
 	
 	// models
