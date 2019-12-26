@@ -98,6 +98,7 @@ bool ModuleObjects::Start()
 	camera_hardcoded->AddComponent(new ComponentCamera(camera_hardcoded));
 	camera_hardcoded->GetComponent<ComponentCamera>()->far_plane = 520.0f;
 	camera_hardcoded->GetComponent<ComponentCamera>()->frustum.farPlaneDistance = 520.0f;
+	SetNewSelectedObject(camera_hardcoded);
 
 
 	current_scene.name_without_extension = "Untitled*";
