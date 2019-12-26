@@ -259,6 +259,10 @@ bool ComponentInputText::DrawInspector()
 
 	if (ImGui::CollapsingHeader("Input Text", &not_destroy, ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		ImGui::TextColored(ImVec4(1.0f, 0.0f, 1.0f, 1.0f), name_input.c_str());
+		ImGui::Spacing();
+		ImGui::Spacing();
+		ImGui::Separator();
 		if (ImGui::ColorEdit4("Normal Color", (float*)&normal_color))
 			actual_color = normal_color;
 		ImGui::Spacing();
@@ -343,8 +347,28 @@ bool ComponentInputText::DrawInspector()
 			DoLogicClicked();
 		}
 		ImGui::Spacing();
+		ImGui::Separator();
+		ImGui::Spacing();
+
+		if (function)
+		{
+			ImGui::Text("Function");
+			ImGui::Spacing();
+
+			static char name[30];
+			memcpy(name, name_input.c_str(), 30);
+
+			if (ImGui::InputText("##EnterName", name, 30, ImGuiInputTextFlags_AutoSelectAll)) {
+				name_input = std::string(name);
+			}
+			if(ImGui::Button("Done"))
+			{
+				function = false;
+			}
+		}
 	}
 
+	ImGui::Spacing();
 	ImGui::Separator();
 
 

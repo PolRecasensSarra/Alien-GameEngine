@@ -60,6 +60,8 @@ private:
 
 	InteractiveStates state = InteractiveStates::NO_STATE;
 
+	std::string name_input;
+
 public:
 	ResourceTexture* tex = nullptr;
 	//ComponentLabel* label = nullptr;
