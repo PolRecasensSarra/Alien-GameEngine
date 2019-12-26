@@ -42,6 +42,22 @@ void ComponentInputText::Update()
 
 	if (function)
 	{
+
+		if (name_input.length() <= MAX_CHARACTERS) {
+			SDL_StartTextInput();
+			if (!App->input->text_input.empty()) {
+				std::string t = App->input->text_input;
+				App->input->text_input.clear();
+				AddText(t.data());
+			}
+		}
+		else
+			App->input->text_input.clear();
+
+		if (App->input->GetKey(SDL_SCANCODE_BACKSPACE) == KEY_DOWN && !name_input.empty())
+		{
+			DeleteText();
+		}
 		//TODO:://
 		//HERE GOES THE UPDATE OF THE LABEL
 
@@ -49,6 +65,7 @@ void ComponentInputText::Update()
 		if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
 		{
 			function = false;
+			SDL_StopTextInput();
 			//STOP GETTING INPUT
 		}
 	}
@@ -349,7 +366,7 @@ bool ComponentInputText::DrawInspector()
 		ImGui::Spacing();
 		ImGui::Separator();
 		ImGui::Spacing();
-
+			
 		if (function)
 		{
 			ImGui::Text("Function");
@@ -364,6 +381,7 @@ bool ComponentInputText::DrawInspector()
 			if(ImGui::Button("Done"))
 			{
 				function = false;
+				SDL_StopTextInput();
 			}
 		}
 	}
@@ -479,6 +497,20 @@ bool ComponentInputText::Fade()
 	{
 		actual_color.w -= 0.01;
 		return false;
+	}
+}
+
+void ComponentInputText::AddText(const char* txt)
+{
+	if (name_input.length() <= MAX_CHARACTERS) {
+		name_input += txt;	
+	}
+}
+
+void ComponentInputText::DeleteText()
+{
+	if (!name_input.empty()) {
+		name_input.pop_back();
 	}
 }
 

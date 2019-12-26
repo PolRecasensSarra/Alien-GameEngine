@@ -24,6 +24,7 @@ ModuleInput::~ModuleInput()
 // Called before render is available
 bool ModuleInput::Init()
 {
+	SDL_StopTextInput();
 	LOG("Init SDL input event system");
 	bool ret = true;
 	SDL_Init(0);
@@ -135,6 +136,9 @@ update_status ModuleInput::PreUpdate(float dt)
 			case SDL_QUIT:
 			quit = true;
 			break;
+			case SDL_TEXTINPUT: {
+				text_input = (std::string)e.text.text;
+				break; }
 			case SDL_DROPFILE: {
 				App->file_system->ManageNewDropFile(e.drop.file);
 				SDL_free(e.drop.file);

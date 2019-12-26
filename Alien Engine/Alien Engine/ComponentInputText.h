@@ -1,4 +1,5 @@
 #pragma once
+#define MAX_CHARACTERS 10
 
 #include "Component.h"
 #include "imgui/imgui.h"
@@ -33,6 +34,8 @@ public:
 
 	void BindTex();
 	bool Fade();
+	void AddText(const char* txt);
+	void DeleteText();
 
 private:
 	void CheckIfDefaulTextureIsSettedAfterReturnZ();

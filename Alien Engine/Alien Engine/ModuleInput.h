@@ -86,5 +86,6 @@ private:
 public:
 
 	ImGuiTextBuffer input;
+	std::string text_input;
 
 };
