@@ -7,7 +7,7 @@
 #include "imgui/imgui_internal.h"
 #include "FileNode.h"
 
-ComponentLabel::ComponentLabel(GameObject* attach, float2 size) :Component(attach)
+ComponentLabel::ComponentLabel(GameObject* attach, float2 size, bool is_custom) :Component(attach)
 {
 	type = ComponentType::LABEL;
 	this->size = size;
@@ -17,6 +17,7 @@ ComponentLabel::ComponentLabel(GameObject* attach, float2 size) :Component(attac
 		this->size.x = 20;
 		this->size.y = 10;
 	}
+	this->is_custom = is_custom;
 
 	if (!game_object_attached->HasComponent(ComponentType::TRANSFORM))
 	{

@@ -87,7 +87,7 @@ bool ModuleObjects::Start()
 	label = new GameObject(canvas);
 	label->SetName("test label");
 	label->AddComponent(new ComponentTransform(inputText, { 35.0f,80.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
-	label->AddComponent(new ComponentLabel(label, { 30,10 }));
+	label->AddComponent(new ComponentLabel(label, { 30,10 }, true));
 	//label->GetComponent<ComponentLabel>()-> = App->resources->icons.test_image;
 	label->GetComponent<ComponentLabel>()->CreateTextPlane();
 
