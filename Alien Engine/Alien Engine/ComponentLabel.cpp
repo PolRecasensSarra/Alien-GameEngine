@@ -89,7 +89,8 @@ void ComponentLabel::LoadComponent(JSONArraypack* to_load)
 
 	if (to_load->GetBoolean("HasFont")) {
 
-		text_img = (ResourceFont*)App->resources->GetResourceWithID(ID);
+		u64 Font_ID = std::stoull(to_load->GetString("FontID"));
+		text_img = (ResourceFont*)App->resources->GetResourceWithID(Font_ID);
 		if (text_img != nullptr)
 		{
 			text_img->IncreaseReferences();
