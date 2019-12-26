@@ -149,25 +149,12 @@ bool ResourceFont::ImportFont(const char* path, uint ttff_size)
 				maxHeight = face->glyph->bitmap.rows;
 
 
-			////Save buffer for next loads
-			//uint bufferSize = face->glyph->bitmap.width * face->glyph->bitmap.rows;
-			//uint8_t* characterBuffer = new uint8_t[bufferSize];
-			//uint bytes = sizeof(uint8_t) * bufferSize;
-			//memcpy(characterBuffer, (uint8_t*)face->glyph->bitmap.buffer, bytes);
-
-			//fontData.fontBuffer.push_back(characterBuffer); //this font data may be saved not as a stack of memory sino pel seu valor en total en un json (meta)
+		
 		}
 		glBindTexture(GL_TEXTURE_2D, 0);
 		FT_Done_Face(face);
 
-		/*ResourceData data;
-		data.file = file;
-		App->fs->GetFileName(file, data.name);
-		data.name += std::to_string(size);
-
-		uuid = uuid != 0 ? uuid : App->GenerateRandomNumber();
-		data.exportedFile = DIR_LIBRARY_FONT + std::string("/") + data.name + "_" + std::to_string(uuid) + ".fnt";
-		*/
+	
 		fontData.charactersMap = charactersBitmap;
 		fontData.fontSize = ttff_size;
 		fontData.maxCharHeight = maxHeight;

@@ -28,7 +28,7 @@
 class ResourceModel;
 class ResourceMesh;
 class ResourceTexture;
-
+class ResourceFont;
 class ModuleImporter : public Module
 {
 public:

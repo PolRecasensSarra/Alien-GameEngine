@@ -14,7 +14,9 @@
 #include "ComponentImage.h"
 #include "ComponentCheckbox.h"
 #include "ComponentInputText.h"
+#include "ComponentLabel.h"
 #include "ResourceTexture.h"
+#include "ResourceFont.h"
 #include "ReturnZ.h"
 #include "Time.h"
 #include "ModuleRenderer3D.h"
@@ -80,6 +82,15 @@ bool ModuleObjects::Start()
 	inputText->AddComponent(new ComponentInputText(inputText, {30,10}, true));
 	inputText->GetComponent<ComponentInputText>()->tex = App->resources->icons.test_image;
 	inputText->GetComponent<ComponentInputText>()->CreateInputTextPlane();
+
+
+	label = new GameObject(canvas);
+	label->SetName("test label");
+	label->AddComponent(new ComponentTransform(inputText, { 35.0f,80.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	label->AddComponent(new ComponentLabel(label, { 30,10 }));
+	//label->GetComponent<ComponentLabel>()-> = App->resources->icons.test_image;
+	label->GetComponent<ComponentLabel>()->CreateTextPlane();
+
 
 	GameObject* camera_hardcoded = new GameObject(base_game_object);
 	camera_hardcoded->SetName("Camera Hardcoded");

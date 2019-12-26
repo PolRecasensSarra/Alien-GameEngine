@@ -201,6 +201,7 @@ private:
 	GameObject* image  = nullptr;
 	GameObject* checkbox = nullptr;
 	GameObject* inputText = nullptr;
+	GameObject* label = nullptr;
 	std::vector< std::tuple<GameObject*, GameObject*, bool>> to_reparent;
 
 	std::stack<ReturnZ*> save_return_actions;

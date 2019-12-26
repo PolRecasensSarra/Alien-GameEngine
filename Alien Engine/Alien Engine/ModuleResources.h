@@ -43,7 +43,7 @@ struct Icons {
 	ResourceTexture* checkbox = nullptr;
 	ResourceTexture* image_canvas = nullptr;
 	ResourceTexture* test_image = nullptr;
-
+	ResourceTexture* ttf_file = nullptr;
 };
 
 

@@ -52,7 +52,7 @@ bool ModuleResources::Start()
 	icons.checkbox = App->importer->LoadEngineTexture("Configuration/EngineTextures/checkbox.png");
 	icons.image_canvas = App->importer->LoadEngineTexture("Configuration/EngineTextures/image_canvas.png");
 	icons.test_image = App->importer->LoadEngineTexture("Configuration/EngineTextures/test_image.png");
-	
+	//icons.ttf_file = App->importer->LoadEngineTexture("Configuration/EngineTextures/ttf_file.png");
 
 	
 	camera_mesh = App->importer->LoadEngineModels("Configuration/Engine Models/camera.FBX");
