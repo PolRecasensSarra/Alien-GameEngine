@@ -178,7 +178,7 @@ bool ComponentLabel::DrawInspector()
 
 		if (ImGui::BeginDragDropTarget())
 		{
-			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(DROP_ID_PROJECT_NODE, ImGuiDragDropFlags_SourceNoDisableHover );
+			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(DROP_ID_PROJECT_NODE, ImGuiDragDropFlags_AcceptBeforeDelivery);
 			//(DROP_ID_PROJECT_NODE, ImGuiDragDropFlags_SourceNoDisableHover| ImGuiDragDropFlags_AcceptBeforeDelivery);
 			if (payload != nullptr && payload->IsDataType(DROP_ID_PROJECT_NODE)) {
 				FileNode* node = *(FileNode * *)payload->Data;

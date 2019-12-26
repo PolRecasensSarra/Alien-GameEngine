@@ -5,6 +5,7 @@
 #include "ModuleFileSystem.h"
 
 class ResourceTexture;
+class ResourceFont;
 enum class FileDropType;
 
 class FileNode {

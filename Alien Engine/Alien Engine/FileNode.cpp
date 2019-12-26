@@ -2,7 +2,7 @@
 #include "Application.h"
 #include "ResourceModel.h"
 #include "ResourceTexture.h"
-
+#include "ResourceFont.h"
 #define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 #include <experimental/filesystem>
 
@@ -125,6 +125,18 @@ void FileNode::ResetPaths()
 		}
 		break; }
 
+	case FileDropType::FONT: {
+		std::string path = App->file_system->GetPathWithoutExtension(this->path + name);
+		path += "_meta.alienPrefab";
+		u64 ID = App->resources->GetIDFromAlienPath(path.data());
+		Resource* font = App->resources->GetResourceWithID(ID);
+		if (font != nullptr) {
+			font->SetAssetsPath(std::string(this->path + name).data());
+		}
+
+		break;}
+
+
 	default: {
 		LOG("Type in reset paths not added");
 		break; }
@@ -189,6 +201,16 @@ void FileNode::RemoveResourceOfGameObjects()
 				}
 			}
 			break; }
+
+		case FileDropType::FONT: {
+			std::string path_ = App->file_system->GetPathWithoutExtension(path + name);
+			path_ += "_meta.alien";
+			u64 ID = App->resources->GetIDFromAlienPath(path_.data());
+			ResourceFont* font_to_delete = (ResourceFont*)App->resources->GetResourceWithID(ID);
+			if (font_to_delete != nullptr) 
+				App->objects->GetRoot(true)->SearchResourceToDelete(ResourceType::RESOURCE_FONT, (Resource*)font_to_delete);
+			
+			break;}
 		}
 	}
 	else {
@@ -232,6 +254,12 @@ void FileNode::SetIcon()
 			icon = App->resources->icons.prefab_icon;
 			type = FileDropType::PREFAB;
 		}
+		else if (App->StringCmp(extension.data(), "ttf")) {
+			icon = App->resources->icons.prefab_icon; //TODO: Change new Icon
+			type = FileDropType::FONT;
+		}
+
+
 		else {
 			// TODO: fer un icon que sigui unknown
 			icon = App->resources->icons.model;
