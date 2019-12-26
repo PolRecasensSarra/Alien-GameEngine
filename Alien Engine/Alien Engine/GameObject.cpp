@@ -100,6 +100,7 @@ void GameObject::Update()
 			}
 		}
 	}
+
 }
 
 void GameObject::PostUpdate()

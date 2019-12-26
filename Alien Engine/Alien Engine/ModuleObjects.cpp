@@ -135,6 +135,12 @@ update_status ModuleObjects::PreUpdate(float dt)
 update_status ModuleObjects::Update(float dt)
 {
 	base_game_object->Update();
+
+	if (want_to_change_scene)
+	{
+		LoadScene("Assets/Scenes/test.alienScene", false);
+		want_to_change_scene = false;
+	}
 	return UPDATE_CONTINUE;
 }
 

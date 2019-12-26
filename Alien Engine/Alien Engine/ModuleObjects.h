@@ -195,6 +195,9 @@ public:
 	bool enable_instancies = true;
 	ResourcePrefab* prefab_opened = nullptr;
 	bool ignore_cntrlZ = false;
+
+	bool want_to_change_scene = false;
+
 private:
 	// root
 	GameObject* base_game_object = nullptr;
@@ -204,6 +207,8 @@ private:
 
 	std::stack<ReturnZ*> save_return_actions;
 	std::stack<ReturnZ*> save_fordward_actions;
+
+
 
 public:
 	GameObject* canvas = nullptr;

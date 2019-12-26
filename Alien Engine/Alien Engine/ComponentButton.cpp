@@ -493,6 +493,10 @@ bool ComponentButton::FadeFunction()
 	{
 		ret = App->objects->canvas->GetComponent<ComponentCanvas>()->FadeAllUIElements(App->objects->canvas);
 	}
+	if (ret)
+	{
+		App->objects->want_to_change_scene = true;
+	}
 
 	return ret;
 }
