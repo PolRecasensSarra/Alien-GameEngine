@@ -129,7 +129,7 @@ void GameObject::PostUpdateUIScene()
 	if (!components.empty()) {
 		std::vector<Component*>::iterator item = components.begin();
 		for (; item != components.end(); ++item) {
-			if (*item != nullptr && (*item)->IsEnabled() && ((*item)->GetType() == ComponentType::CANVAS || (*item)->GetType() == ComponentType::BUTTON || (*item)->GetType() == ComponentType::CHECKBOX || (*item)->GetType() == ComponentType::INPUTBOX || (*item)->GetType() == ComponentType::IMAGE)) {
+			if (*item != nullptr && (*item)->IsEnabled() && ((*item)->GetType() == ComponentType::CANVAS || (*item)->GetType() == ComponentType::BUTTON || (*item)->GetType() == ComponentType::CHECKBOX || (*item)->GetType() == ComponentType::INPUTBOX || (*item)->GetType() == ComponentType::IMAGE || (*item)->GetType() == ComponentType::LABEL)) {
 				(*item)->PostUpdate();
 			}
 		}

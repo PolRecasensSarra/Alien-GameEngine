@@ -7,7 +7,7 @@
 #include "imgui/imgui_internal.h"
 #include "FileNode.h"
 
-ComponentLabel::ComponentLabel(GameObject* attach, float2 size) :Component(attach)
+ComponentLabel::ComponentLabel(GameObject* attach, float2 size, bool is_custom) :Component(attach)
 {
 	type = ComponentType::LABEL;
 	this->size = size;
@@ -17,6 +17,7 @@ ComponentLabel::ComponentLabel(GameObject* attach, float2 size) :Component(attac
 		this->size.x = 20;
 		this->size.y = 10;
 	}
+	this->is_custom = is_custom;
 
 	if (!game_object_attached->HasComponent(ComponentType::TRANSFORM))
 	{
@@ -65,10 +66,22 @@ void ComponentLabel::Draw()
 
 void ComponentLabel::SaveComponent(JSONArraypack* to_save)
 {
+	to_save->SetNumber("Type", (int)type);
+	to_save->SetString("ID", std::to_string(ID));
+	to_save->SetFloat2("SizeButton", size_text);
+	to_save->SetFloat2("Size", size);
+
+	to_save->SetBoolean("Enabled", enabled);
+	to_save->SetBoolean("isCustom", is_custom);
 }
 
 void ComponentLabel::LoadComponent(JSONArraypack* to_load)
 {
+	ID = std::stoull(to_load->GetString("ID"));
+	size_text = to_load->GetFloat2("SizeButton");
+	size = to_load->GetFloat2("Size");
+	enabled = to_load->GetBoolean("Enabled");
+	is_custom = to_load->GetBoolean("isCutsom");
 }
 
 void ComponentLabel::CreateTextPlane()

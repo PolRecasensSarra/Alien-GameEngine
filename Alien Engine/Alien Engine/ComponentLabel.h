@@ -19,7 +19,7 @@ class ComponentLabel :public Component
 	friend class CompZ;
 
 public:
-	ComponentLabel(GameObject* attach, float2 size);
+	ComponentLabel(GameObject* attach, float2 size = { 0.0f,0.0f }, bool is_custom = false);
 	~ComponentLabel();
 
 	void PostUpdate();
@@ -50,4 +50,7 @@ private:
 	ResourceFont* text_img = nullptr;
 
 	bool CreateText = false;
+
+public:
+	bool is_custom = false;
 };
