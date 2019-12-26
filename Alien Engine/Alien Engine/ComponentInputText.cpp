@@ -259,8 +259,8 @@ bool ComponentInputText::DrawInspector()
 
 	if (ImGui::CollapsingHeader("Input Text", &not_destroy, ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ImGui::ColorEdit4("Normal Color", (float*)&normal_color);
-		actual_color = normal_color;
+		if (ImGui::ColorEdit4("Normal Color", (float*)&normal_color))
+			actual_color = normal_color;
 		ImGui::Spacing();
 		ImGui::ColorEdit4("Hover Color", (float*)&hover_color);
 		ImGui::Spacing();
