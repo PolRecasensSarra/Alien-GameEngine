@@ -116,7 +116,7 @@ void ComponentInputText::UpdateStates()
 {
 	float3 pos = float3::zero;
 
-	float2 origin = float2((App->input->GetMousePosition().x - App->ui->panel_game->posX), (App->input->GetMousePosition().y - (App->ui->panel_game->posY + 19)));
+	float2 origin = float2((App->input->GetMousePosition().x - App->ui->panel_game->posX), -((App->input->GetMousePosition().y - (App->ui->panel_game->posY + App->ui->panel_game->height))));
 
 	ComponentTransform* transform = (ComponentTransform*)game_object_attached->GetComponent(ComponentType::TRANSFORM);
 	if (transform != nullptr)
