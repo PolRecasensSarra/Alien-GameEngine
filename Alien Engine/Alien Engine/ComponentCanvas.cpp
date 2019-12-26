@@ -54,11 +54,14 @@ void ComponentCanvas::SaveComponent(JSONArraypack* to_save)
 {
 	to_save->SetNumber("Type", (int)type);
 	to_save->SetString("ID", std::to_string(ID));
+	to_save->SetColor("Color", { actual_color.x,actual_color.y,actual_color.z ,actual_color.w });
 }
 
 void ComponentCanvas::LoadComponent(JSONArraypack* to_load)
 {
 	ID = std::stoull(to_load->GetString("ID"));
+	Color c = to_load->GetColor("Color");
+	actual_color = { c.r, c.g,c.b, c.a };
 }
 
 bool ComponentCanvas::FadeAllUIElements(GameObject* gameObject)

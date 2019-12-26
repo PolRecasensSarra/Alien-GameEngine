@@ -1049,6 +1049,22 @@ void GameObject::SearchToDelete()
 	}
 }
 
+GameObject* GameObject::Find(const char* name)
+{
+	GameObject* ret = nullptr;
+	if (App->StringCmp(name, this->name.c_str())) {
+		return this;
+	}
+	std::vector<GameObject*>::iterator item = children.begin();
+	for (; item != children.end(); ++item) {
+		if (*item != nullptr) {
+			ret = (*item)->Find(name);
+			if (ret != nullptr)
+				break;
+		}
+	}
+	return ret;
+}
 
 
 

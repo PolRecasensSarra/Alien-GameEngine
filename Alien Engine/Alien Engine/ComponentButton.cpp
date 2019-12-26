@@ -488,16 +488,18 @@ void ComponentButton::CheckIfDefaulTextureIsSettedAfterReturnZ()
 bool ComponentButton::FadeFunction()
 {
 	bool ret = false;
+	GameObject* go_finder = App->objects->GetRoot(true);
+	GameObject* canvas = go_finder->Find("Canvas");
 
-	if (App->objects->image != nullptr)
+	if (canvas != nullptr)
 	{
-		ret = App->objects->canvas->GetComponent<ComponentCanvas>()->FadeAllUIElements(App->objects->canvas);
-	}
-	if (ret)
-	{
-		App->objects->want_to_change_scene = true;
-	}
+		ret = canvas->GetComponent<ComponentCanvas>()->FadeAllUIElements(canvas);
 
+		if (ret)
+		{
+			App->objects->want_to_change_scene = true;
+		}
+	}
 	return ret;
 }
 

@@ -80,6 +80,7 @@ public:
 	// deleting 
 	void ToDelete(); // delete it at the begining of the next frame
 	void SearchToDelete();
+	GameObject* Find(const char* name);
 
 	// id's
 	GameObject* GetGameObjectByID(const u64 & id);
