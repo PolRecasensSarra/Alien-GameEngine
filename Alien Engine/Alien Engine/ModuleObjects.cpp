@@ -85,6 +85,7 @@ bool ModuleObjects::Start()
 	camera_hardcoded->SetName("Camera Hardcoded");
 	camera_hardcoded->AddComponent(new  ComponentTransform(camera_hardcoded, { 355.0f,204.0f,350.0f }, { 0,1,0,0 }, { 1,1,1 }));
 	camera_hardcoded->AddComponent(new ComponentCamera(camera_hardcoded));
+	camera_hardcoded->GetComponent<ComponentCamera>()->far_plane = 520.0f;
 	camera_hardcoded->GetComponent<ComponentCamera>()->frustum.farPlaneDistance = 520.0f;
 
 

@@ -3,6 +3,7 @@
 #include "Component.h"
 #include "MathGeoLib/include/MathGeoLib.h"
 #include "SDL/include/SDL.h"
+#include "imgui/imgui.h"
 #include "ModuleImporter.h"
 class ComponentImage : public Component {
 	friend class CompZ;
@@ -28,6 +29,7 @@ public:
 	void LoadComponent(JSONArraypack* to_load);
 
 	bool DrawInspector();
+	bool Fade();
 
 private:
 	void CheckIfDefaulTextureIsSettedAfterReturnZ(); 
@@ -47,6 +49,9 @@ public:
 	float3 margin;
 
 	ResourceTexture* texture = nullptr;
+
+	ImVec4 actual_color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
+
 private:
 	float2 position;
 	

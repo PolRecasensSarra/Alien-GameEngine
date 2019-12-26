@@ -58,6 +58,8 @@ public:
 	virtual void SaveComponent(JSONArraypack* to_save) {}
 	virtual void LoadComponent(JSONArraypack* to_load) {}
 
+	virtual bool Fade() { return false; }
+
 	void ResetIDs();
 
 	const ComponentType& GetType() const;

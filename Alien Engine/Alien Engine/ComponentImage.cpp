@@ -134,7 +134,7 @@ void ComponentImage::Draw()
 		glEnable(GL_ALPHA_TEST);
 		glAlphaFunc(GL_GREATER, 0.0f);
 
-	    glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+	    glColor4f(actual_color.x, actual_color.y, actual_color.z, actual_color.w);
 
 		glEnable(GL_TEXTURE_2D);
 
@@ -329,6 +329,20 @@ bool ComponentImage::DrawInspector()
 
 
 	return true;
+}
+
+bool ComponentImage::Fade()
+{
+	if (actual_color.w <= 0.01)
+	{
+		game_object_attached->enabled = false;
+		return true;
+	}
+	else
+	{
+		actual_color.w -= 0.01;
+		return false;
+	}
 }
 
 void ComponentImage::CheckIfDefaulTextureIsSettedAfterReturnZ()

@@ -6,6 +6,7 @@
 #include "PanelGame.h"
 #include "ReturnZ.h"
 #include "ResourceTexture.h"
+#include "ComponentCanvas.h"
 #include "FileNode.h"
 #include "imgui/imgui_internal.h"
 
@@ -42,14 +43,14 @@ ComponentButton::~ComponentButton()
 
 void ComponentButton::Update()
 {
-	if (Time::IsInGameState())
+	if (Time::IsInGameState() && !function)
 		UpdateStates();
 
 	if (function)
 	{
 		//call the fade function mega hardcoded
+		function = !FadeFunction();
 		
-		function = false;
 	}
 	
 }
@@ -461,6 +462,20 @@ void ComponentButton::BindTex()
 	}
 }
 
+bool ComponentButton::Fade()
+{
+	if (actual_color.w <= 0.01)
+	{
+		game_object_attached->enabled = false;
+		return true;
+	}
+	else
+	{
+		actual_color.w -= 0.01;
+		return false;
+	}
+}
+
 void ComponentButton::CheckIfDefaulTextureIsSettedAfterReturnZ()
 {
 	if (tex == nullptr && is_custom)
@@ -469,6 +484,20 @@ void ComponentButton::CheckIfDefaulTextureIsSettedAfterReturnZ()
 		CreatButtonPlane();
 	}
 }
+
+bool ComponentButton::FadeFunction()
+{
+	bool ret = false;
+
+	if (App->objects->image != nullptr)
+	{
+		ret = App->objects->canvas->GetComponent<ComponentCanvas>()->FadeAllUIElements(App->objects->canvas);
+	}
+
+	return ret;
+}
+
+
 
 
 

@@ -34,6 +34,7 @@ public:
 	void UpdateCheckboxPlane();
 
 	void BindTex();
+	bool Fade();
 
 private:
 	void UpdateCheckPos();

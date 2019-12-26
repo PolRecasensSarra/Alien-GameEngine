@@ -444,6 +444,20 @@ void ComponentInputText::BindTex()
 	}
 }
 
+bool ComponentInputText::Fade()
+{
+	if (actual_color.w <= 0.01)
+	{
+		game_object_attached->enabled = false;
+		return true;
+	}
+	else
+	{
+		actual_color.w -= 0.01;
+		return false;
+	}
+}
+
 void ComponentInputText::CheckIfDefaulTextureIsSettedAfterReturnZ()
 {
 	if (tex == nullptr && is_custom)

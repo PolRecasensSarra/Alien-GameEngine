@@ -514,6 +514,20 @@ void ComponentCheckbox::BindTex()
 	}
 }
 
+bool ComponentCheckbox::Fade()
+{
+	if (actual_color.w <= 0.01)
+	{
+		game_object_attached->enabled = false;
+		return true;
+	}
+	else
+	{
+		actual_color.w -= 0.01;
+		return false;
+	}
+}
+
 void ComponentCheckbox::UpdateCheckPos()
 {
 	float2 size_image = { (size.y * 0.5f), (size.y * 0.5f) };

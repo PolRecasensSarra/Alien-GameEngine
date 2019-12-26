@@ -32,6 +32,8 @@ public:
 	void UpdateInputTextPlane();
 
 	void BindTex();
+	bool Fade();
+
 private:
 	void CheckIfDefaulTextureIsSettedAfterReturnZ();
 
