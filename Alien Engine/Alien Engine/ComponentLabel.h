@@ -15,6 +15,7 @@ struct LabelLetter {
 	//ComponentTransform* rect = nullptr;
 	//SDL_Rect rect;
 	ComponentTransform* rect = nullptr;
+	
 	//float2* rect;
 };
 class ComponentLabel :public Component 
@@ -60,8 +61,15 @@ private:
 
 	std::string finalText ="EditText";
 
+
+	ResourceTexture* tex = nullptr;
+
+	void InitRender();
+
+
+	void RenderText(std::string text, GLfloat x, GLfloat y, GLfloat scale, float3 color);
 public:
 	bool is_custom = false;
 
-
+	float3 pos;
 };

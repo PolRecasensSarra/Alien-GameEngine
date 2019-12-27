@@ -368,8 +368,8 @@ void ModuleUI::Draw() {
 	UpdatePanels();
 
 	ImGui::Render();
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-}
+	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData()); //PETA AQUI nose pq
+} 
 
 void ModuleUI::MainMenuBar()
 {

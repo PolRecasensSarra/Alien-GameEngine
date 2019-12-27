@@ -126,7 +126,7 @@ bool ResourceFont::ImportFont(const char* path, uint ttff_size)
 		FT_Set_Pixel_Sizes(face, 0, ttff_size);
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // Disable byte-alignment restriction
 
-		for (uint c = 32; c < 128; c++)
+		for (uint c = 32; c < 128; c++) //ascii dsde 32 fins 128
 		{
 			// Load character glyph 
 			if (FT_Load_Char(face, c, FT_LOAD_RENDER))
@@ -135,7 +135,7 @@ bool ResourceFont::ImportFont(const char* path, uint ttff_size)
 				continue;
 			}
 
-			GLuint texture = LoadTextureCharacter(face->glyph->bitmap.width, face->glyph->bitmap.rows, face->glyph->bitmap.buffer);
+			GLuint texture = ResourceFont::LoadTextureCharacter(face->glyph->bitmap.width, face->glyph->bitmap.rows, face->glyph->bitmap.buffer);
 
 			// Now store character for later use
 			Character character = {
@@ -151,7 +151,7 @@ bool ResourceFont::ImportFont(const char* path, uint ttff_size)
 
 		
 		}
-		glBindTexture(GL_TEXTURE_2D, 0);
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 		FT_Done_Face(face);
 
 	
@@ -171,11 +171,10 @@ uint ResourceFont::LoadTextureCharacter(uint width, uint height, uchar* buffer)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, width, height, 0, GL_RED, GL_UNSIGNED_BYTE, buffer);
 
 	// Set texture options
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
 
 	return texture;
 }

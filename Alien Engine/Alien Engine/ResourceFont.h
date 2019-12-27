@@ -13,7 +13,7 @@
 struct Character
 {
 	uint textureID;
-	math::float2 size;
+	math::float2 size; //w,h
 	math::float2 bearing;
 	uint advance;
 };
