@@ -429,13 +429,14 @@ void ComponentInputText::CreateInputTextPlane()
 
 void ComponentInputText::UpdateInputTextPlane()
 {
+	float size_canvas_mult = App->ui->panel_game->height / max_height;
 	float3 pos = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalPosition();
 	float3 size_mult = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalScale();
 
 	vertex[0] = float3(pos.x, pos.y, pos.z);
-	vertex[1] = float3(pos.x + (size.x * size_mult.x), pos.y, pos.z);
-	vertex[2] = float3(pos.x + (size.x * size_mult.x), pos.y + (size.y * size_mult.y), pos.z);
-	vertex[3] = float3(pos.x, pos.y + (size.y * size_mult.y), pos.z);
+	vertex[1] = float3(pos.x + (size.x * size_mult.x * size_canvas_mult), pos.y, pos.z);
+	vertex[2] = float3(pos.x + (size.x * size_mult.x * size_canvas_mult), pos.y + (size.y * size_mult.y * size_canvas_mult), pos.z);
+	vertex[3] = float3(pos.x, pos.y + (size.y * size_mult.y * size_canvas_mult), pos.z);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertexId); //aixo potser no o si 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, vertex, GL_STATIC_DRAW);

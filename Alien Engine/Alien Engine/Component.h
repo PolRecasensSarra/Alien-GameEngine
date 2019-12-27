@@ -81,6 +81,7 @@ public:
 	ComponentType type = ComponentType::UNKNOWN;
 	bool enabled = true;
 	float2 size;
+	float max_height = 401.0f;
 	
 
 };

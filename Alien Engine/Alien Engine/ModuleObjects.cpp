@@ -65,7 +65,7 @@ bool ModuleObjects::Start()
 	image = new GameObject(canvas);
 	image->SetName("TEST IMAGE");
 	image->AddComponent(new  ComponentTransform(image, { 0.0f,0.0f,-0.3f }, { 0,0,0,0 }, { 1,1,1 })); 
-	image->AddComponent(new ComponentImage(image, { 700,400 }, { 0.0f,0.0f,0.0f }, true));
+	image->AddComponent(new ComponentImage(image, { 712,401 }, { 0.0f,0.0f,0.0f }, true));
 	image->GetComponent<ComponentImage>()->texture = App->resources->icons.image_canvas;
 	image->GetComponent<ComponentImage>()->CreatImgPlane();
 
