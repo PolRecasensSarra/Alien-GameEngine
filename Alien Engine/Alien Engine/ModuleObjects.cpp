@@ -57,7 +57,7 @@ bool ModuleObjects::Start()
 
 	button = new GameObject(canvas);
 	button->SetName("testButton");
-	button->AddComponent(new ComponentTransform(button, { 150.0f,200.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	button->AddComponent(new ComponentTransform(button, { 156.0f,200.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
 	button->AddComponent(new ComponentButton(button, { 400,40 }, true));
 	button->GetComponent<ComponentButton>()->tex = App->resources->icons.button2;
 	button->GetComponent<ComponentButton>()->CreatButtonPlane();
@@ -69,16 +69,23 @@ bool ModuleObjects::Start()
 	image->GetComponent<ComponentImage>()->texture = App->resources->icons.image_canvas;
 	image->GetComponent<ComponentImage>()->CreatImgPlane();
 
+	crosshair = new GameObject(canvas);
+	crosshair->SetName("CrossHair");
+	crosshair->AddComponent(new  ComponentTransform(crosshair, { 334.0f,175.0f,0.3f }, { 0,0,0,0 }, { 1,1,1 }));
+	crosshair->AddComponent(new ComponentImage(crosshair, { 50,50 }, { 0.0f,0.0f,0.0f }, true));
+	crosshair->GetComponent<ComponentImage>()->texture = App->resources->icons.crosshair;
+	crosshair->GetComponent<ComponentImage>()->CreatImgPlane();
+
 	checkbox = new GameObject(canvas);
 	checkbox->SetName("test Checkbox");
-	checkbox->AddComponent(new ComponentTransform(checkbox, { 280.0f,120.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	checkbox->AddComponent(new ComponentTransform(checkbox, { 270.0f,120.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
 	checkbox->AddComponent(new ComponentCheckbox(checkbox, { 178,39 }, true));
 	checkbox->GetComponent<ComponentCheckbox>()->tex = App->resources->icons.checkbox2;
 	checkbox->GetComponent<ComponentCheckbox>()->CreatCheckboxPlane();
 
 	inputText = new GameObject(canvas);
 	inputText->SetName("test Input Text");
-	inputText->AddComponent(new ComponentTransform(inputText, { 280.0f,50.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	inputText->AddComponent(new ComponentTransform(inputText, { 270.0f,50.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
 	inputText->AddComponent(new ComponentInputText(inputText, {178,39}, true));
 	inputText->GetComponent<ComponentInputText>()->tex = App->resources->icons.input_box;
 	inputText->GetComponent<ComponentInputText>()->CreateInputTextPlane();

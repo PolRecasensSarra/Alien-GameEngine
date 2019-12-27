@@ -54,7 +54,7 @@ bool ModuleResources::Start()
 	icons.checkbox = App->importer->LoadEngineTexture("Configuration/EngineTextures/checkbox.png");
 	icons.image_canvas = App->importer->LoadEngineTexture("Configuration/EngineTextures/image_canvas.jpg");
 	icons.input_box = App->importer->LoadEngineTexture("Configuration/EngineTextures/TexMinecraft.png");
-	
+	icons.crosshair = App->importer->LoadEngineTexture("Configuration/EngineTextures/cross_hit.png");
 
 	
 	camera_mesh = App->importer->LoadEngineModels("Configuration/Engine Models/camera.FBX");
