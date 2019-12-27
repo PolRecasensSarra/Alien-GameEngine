@@ -117,6 +117,7 @@ public:
 private:
 
 	void DeleteReturns();
+	void CreateHardcodedUI();
 
 public:
 	Scene current_scene;

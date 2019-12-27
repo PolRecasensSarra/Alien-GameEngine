@@ -229,7 +229,7 @@ void ComponentCheckbox::UpdateStates()
 void ComponentCheckbox::DoLogicClicked()
 {
 	function = true;
-	if (actual_check_color.x == normal_check_color.x && actual_check_color.y == normal_check_color.y && actual_check_color.z == normal_check_color.z && actual_check_color.w == normal_check_color.w)
+	if (!App->renderer3D->GetVSync())
 	{
 		actual_check_color = pressed_check_color;
 		game_object_attached->GetComponent<ComponentImage>()->texture = App->resources->icons.checkbox_selected;
@@ -242,6 +242,8 @@ void ComponentCheckbox::DoLogicClicked()
 		game_object_attached->GetComponent<ComponentImage>()->CreatImgPlane();
 		actual_check_color = normal_check_color;
 	}
+
+	App->objects->SetNewSelectedObject(game_object_attached);
 }
 
 void ComponentCheckbox::DoLogicHovered()
@@ -455,13 +457,14 @@ void ComponentCheckbox::CreatCheckboxPlane()
 
 void ComponentCheckbox::UpdateCheckboxPlane()
 {
+	float size_canvas_mult = App->ui->panel_game->height / max_height;
 	float3 pos = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalPosition();
 	float3 size_mult = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalScale();
 
 	vertex[0] = float3(pos.x, pos.y, pos.z);
-	vertex[1] = float3(pos.x + (size.x * size_mult.x), pos.y, pos.z);
-	vertex[2] = float3(pos.x + (size.x * size_mult.x), pos.y + (size.y * size_mult.y), pos.z);
-	vertex[3] = float3(pos.x, pos.y + (size.y * size_mult.y), pos.z);
+	vertex[1] = float3(pos.x + (size.x * size_mult.x * size_canvas_mult), pos.y, pos.z);
+	vertex[2] = float3(pos.x + (size.x * size_mult.x * size_canvas_mult), pos.y + (size.y * size_mult.y * size_canvas_mult), pos.z);
+	vertex[3] = float3(pos.x, pos.y + (size.y * size_mult.y * size_canvas_mult), pos.z);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertexId); //aixo potser no o si 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, vertex, GL_STATIC_DRAW);
