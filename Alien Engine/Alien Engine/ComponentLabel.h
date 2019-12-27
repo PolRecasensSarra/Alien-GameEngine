@@ -5,14 +5,17 @@
 
 #include "ModuleImporter.h"
 #include <map>
-
+#include<string>
 struct Character;
+class ComponentTransform;
 
 struct LabelLetter {
 	char letter = NULL;
 	uint texture_id = 0;
 	//ComponentTransform* rect = nullptr;
-
+	//SDL_Rect rect;
+	ComponentTransform* rect = nullptr;
+	//float2* rect;
 };
 class ComponentLabel :public Component 
 {
@@ -36,6 +39,7 @@ public:
 	const ResourceFont* GetText()const;
 	void UpdateTextPlane();
 
+	void UpdateLabel();
 
 private:
 	uint indexId = 0;
@@ -50,7 +54,14 @@ private:
 	ResourceFont* text_img = nullptr;
 
 	bool CreateText = false;
+	bool new_word = false;
+
+	std::vector<LabelLetter*> labelWord;
+
+	std::string finalText ="EditText";
 
 public:
 	bool is_custom = false;
+
+
 };

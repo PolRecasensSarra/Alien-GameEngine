@@ -36,6 +36,11 @@ ComponentLabel::~ComponentLabel()
 
 void ComponentLabel::PostUpdate()
 {
+
+	if (text_img != nullptr)
+		UpdateLabel();
+
+
 	Draw();
 }
 
@@ -156,7 +161,20 @@ bool ComponentLabel::DrawInspector()
 	if (ImGui::CollapsingHeader("Label", &not_destroy, ImGuiTreeNodeFlags_DefaultOpen))
 	{
 
+		//ImGui::InputText("Test", &finalText)
+		static char namm[50];
+		memcpy(namm, finalText.c_str(), 50);
 
+		if (ImGui::InputText("##Set Text", namm,50))
+		{
+			finalText = namm;
+
+		}
+	
+		if (ImGui::Button("Done"))
+		{
+			new_word = true;
+		}
 		ImGui::Text("Size");
 
 		if (ImGui::DragFloat("X", &size.x, 0.5F, 0, 0, "%.3f", 1, game_object_attached->is_static))
@@ -246,4 +264,104 @@ void ComponentLabel::UpdateTextPlane()
 	glBindBuffer(GL_ARRAY_BUFFER, vertexId); 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, vertex, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void ComponentLabel::UpdateLabel()
+{
+	if (new_word)
+	{
+		if (!labelWord.empty())
+		{
+			for (LabelLetter* letter : labelWord)
+			{
+
+				if (letter->rect != nullptr)
+				{
+					RELEASE(letter->rect);
+				}
+
+				RELEASE(letter);
+			}
+
+			labelWord.clear();
+
+		}
+
+		if (text_img && !text_img->fontData.charactersMap.empty())
+		{
+			int cursor_x = size_text.x;
+
+			float size_norm = size.x  / (float)text_img->fontData.fontSize;
+
+			uint row_counter = 0;
+			for (std::string::const_iterator c = finalText.begin(); c != finalText.end(); ++c)
+			{
+
+				if ((int)(*c) >= 32 && (int)(*c) < 128)//ASCII TABLE
+				{
+					LabelLetter* l = new LabelLetter();
+
+					Character character;
+					character = text_img->fontData.charactersMap.find(*c)->second;
+
+
+					memcpy(&l->letter, c._Ptr, sizeof(char));
+					l->texture_id = character.textureID;
+
+					int x = cursor_x + character.bearing.x * size_norm;
+
+					//						Normalize pos with all heights	 //	Check Y-ofset for letters that write below origin "p" //	 Control lines enters
+					int y = size_text.y + ((text_img->fontData.maxCharHeight - character.size.y) + ((character.size.y) - character.bearing.y)) * size_norm + row_counter * text_img->fontData.maxCharHeight * size_norm;
+
+
+					if (x + character.size.x * size_norm > size.x)
+					{
+						y += text_img->fontData.maxCharHeight * size_norm;
+						x = size.x + character.bearing.x * size_norm;
+						cursor_x = x;
+						row_counter++;
+					}
+
+					l->rect = new ComponentTransform(game_object_attached);
+					l->rect->SetLocalPosition(x, y, game_object_attached->GetComponent<ComponentTransform>()->local_position.z);
+					l->rect->Update();
+
+					if (y + character.size.y * size_norm < y+ size.y)
+					{
+						if (labelWord.size() < 50) //max letters 
+							labelWord.push_back(l);
+						else
+						{
+							LOG("Label can't draw more than 50 letters.");
+							RELEASE(l->rect);
+							RELEASE(l);
+							break;
+						}
+					}
+					else
+					{
+						RELEASE(l->rect);
+						RELEASE(l);
+						break;
+					}
+
+
+					cursor_x += character.advance * size_norm;
+
+				}
+
+				else if ((int)(*c) == 10)//"\n"
+				{
+					row_counter++;
+					cursor_x = size.x;
+				}
+			}
+
+
+		}
+
+		new_word = false;
+	}
+	/*text_img->fontData;
+	text_img->charactersBitmap;*/
 }
