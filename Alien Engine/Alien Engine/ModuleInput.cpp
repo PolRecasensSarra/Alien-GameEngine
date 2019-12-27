@@ -24,7 +24,7 @@ ModuleInput::~ModuleInput()
 // Called before render is available
 bool ModuleInput::Init()
 {
-	SDL_StopTextInput();
+	/*SDL_StopTextInput();*/
 	LOG("Init SDL input event system");
 	bool ret = true;
 	SDL_Init(0);

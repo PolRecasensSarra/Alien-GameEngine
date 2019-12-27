@@ -69,6 +69,13 @@ bool ModuleObjects::Start()
 	image->GetComponent<ComponentImage>()->texture = App->resources->icons.image_canvas;
 	image->GetComponent<ComponentImage>()->CreatImgPlane();
 
+	crosshair = new GameObject(canvas);
+	crosshair->SetName("CrossHair");
+	crosshair->AddComponent(new  ComponentTransform(crosshair, { 334.0f,175.0f,0.3f }, { 0,0,0,0 }, { 1,1,1 }));
+	crosshair->AddComponent(new ComponentImage(crosshair, { 50,50 }, { 0.0f,0.0f,0.0f }, true));
+	crosshair->GetComponent<ComponentImage>()->texture = App->resources->icons.crosshair;
+	crosshair->GetComponent<ComponentImage>()->CreatImgPlane();
+
 	checkbox = new GameObject(canvas);
 	checkbox->SetName("test Checkbox");
 	checkbox->AddComponent(new ComponentTransform(checkbox, { 270.0f,120.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));

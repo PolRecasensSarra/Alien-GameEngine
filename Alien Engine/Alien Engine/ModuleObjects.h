@@ -214,6 +214,7 @@ public:
 	GameObject* canvas = nullptr;
 	GameObject* button = nullptr;
 	GameObject* image = nullptr;
+	GameObject* crosshair = nullptr;
 	GameObject* checkbox = nullptr;
 	GameObject* inputText = nullptr;
 	GameObject* label = nullptr;

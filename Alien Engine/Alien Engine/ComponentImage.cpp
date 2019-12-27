@@ -223,9 +223,15 @@ void ComponentImage::LoadComponent(JSONArraypack* to_load)
 
 	if (to_load->GetBoolean("HasTexture")) {
 		u64 ID = std::stoull(to_load->GetString("TextureID"));
-		if (ID == 0 && is_custom)
+		std::string tempo = game_object_attached->GetName();
+		if (ID == 0 && is_custom && tempo == "TEST IMAGE")
 		{
 			texture = App->resources->icons.image_canvas;
+			CreatImgPlane();
+		}
+		else if (ID == 0 && is_custom && tempo == "CrossHair")
+		{
+			texture = App->resources->icons.crosshair;
 			CreatImgPlane();
 		}
 		else
@@ -347,9 +353,16 @@ bool ComponentImage::Fade()
 
 void ComponentImage::CheckIfDefaulTextureIsSettedAfterReturnZ()
 {
-	if (texture == nullptr && is_custom)
+	std::string tempo = game_object_attached->GetName();
+
+	if (texture == nullptr && is_custom && tempo == "TEST IMAGE")
 	{
 		texture = App->resources->icons.image_canvas;
+		CreatImgPlane();
+	}
+	else if (texture == nullptr && is_custom && tempo == "CrossHair")
+	{
+		texture = App->resources->icons.crosshair;
 		CreatImgPlane();
 	}
 }

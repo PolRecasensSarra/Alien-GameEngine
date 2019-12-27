@@ -47,6 +47,7 @@ struct Icons {
 	ResourceTexture* test_image = nullptr;
 	ResourceTexture* ttf_file = nullptr;
 	ResourceTexture* input_box = nullptr;
+	ResourceTexture* crosshair = nullptr;
 
 };
 
