@@ -930,7 +930,9 @@ void ModuleObjects::CreateBasePrimitive(PrimitiveType type)
 
 void ModuleObjects::CreateBaseUI(ComponentType type)
 {
-	if (canvas == nullptr)
+	GameObject* go_tempo = nullptr;
+	go_tempo = base_game_object->Find("Canvas");
+	if (go_tempo == nullptr)
 	{
 		canvas = new GameObject(base_game_object);
 		canvas->SetName("Canvas");
