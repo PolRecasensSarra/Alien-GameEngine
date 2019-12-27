@@ -229,7 +229,7 @@ void ComponentCheckbox::UpdateStates()
 void ComponentCheckbox::DoLogicClicked()
 {
 	function = true;
-	if (actual_check_color.x == normal_check_color.x && actual_check_color.y == normal_check_color.y && actual_check_color.z == normal_check_color.z && actual_check_color.w == normal_check_color.w)
+	if (!App->renderer3D->GetVSync())
 	{
 		actual_check_color = pressed_check_color;
 		game_object_attached->GetComponent<ComponentImage>()->texture = App->resources->icons.checkbox_selected;
@@ -242,6 +242,8 @@ void ComponentCheckbox::DoLogicClicked()
 		game_object_attached->GetComponent<ComponentImage>()->CreatImgPlane();
 		actual_check_color = normal_check_color;
 	}
+
+	App->objects->SetNewSelectedObject(game_object_attached);
 }
 
 void ComponentCheckbox::DoLogicHovered()

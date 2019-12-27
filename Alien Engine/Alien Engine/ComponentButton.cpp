@@ -182,6 +182,7 @@ void ComponentButton::UpdateStates()
 void ComponentButton::DoLogicClicked()
 {
 	function = true;
+	App->objects->SetNewSelectedObject(game_object_attached);
 }
 
 void ComponentButton::DoLogicHovered()

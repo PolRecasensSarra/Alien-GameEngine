@@ -65,7 +65,7 @@ void ComponentInputText::Update()
 		if (App->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN)
 		{
 			function = false;
-			SDL_StopTextInput();
+			/*SDL_StopTextInput();*/
 			//STOP GETTING INPUT
 		}
 	}
@@ -197,6 +197,7 @@ void ComponentInputText::UpdateStates()
 void ComponentInputText::DoLogicClicked()
 {
 	function = true;
+	App->objects->SetNewSelectedObject(game_object_attached);
 }
 
 void ComponentInputText::DoLogicHovered()
@@ -381,7 +382,7 @@ bool ComponentInputText::DrawInspector()
 			if(ImGui::Button("Done"))
 			{
 				function = false;
-				SDL_StopTextInput();
+				//SDL_StopTextInput();
 			}
 		}
 	}
