@@ -72,6 +72,7 @@ private:
 	bool function			= false;
 	bool is_function_active = false;
 	bool is_custom			= false;
+	bool fading				= false;
 
 	ImVec4 actual_color		= ImVec4(0.8f, 0.8f, 0.8f, 1.0f);
 	ImVec4 normal_color		= ImVec4(0.8f, 0.8f, 0.8f, 1.0f);

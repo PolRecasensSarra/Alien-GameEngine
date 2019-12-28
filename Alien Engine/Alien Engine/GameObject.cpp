@@ -15,6 +15,8 @@
 #include "ComponentLabel.h"
 #include "ComponentCheckbox.h"
 #include "ComponentInputText.h"
+#include "ModuleUI.h"
+#include "PanelGame.h"
 #include "ReturnZ.h"
 
 GameObject::GameObject(GameObject* parent)
@@ -151,6 +153,14 @@ void GameObject::PostUpdateUIGame()
 		std::vector<Component*>::iterator item = components.begin();
 		for (; item != components.end(); ++item) {
 			if (*item != nullptr && (*item)->IsEnabled() && ((*item)->GetType() == ComponentType::BUTTON || (*item)->GetType() == ComponentType::CHECKBOX || (*item)->GetType() == ComponentType::INPUTBOX || (*item)->GetType() == ComponentType::IMAGE)|| (*item)->GetType() == ComponentType::LABEL) {
+				//Initialize Projection Matrix
+				glMatrixMode(GL_PROJECTION);
+				glLoadIdentity();
+				glOrtho(0.0, App->ui->panel_game->width, App->ui->panel_game->height, 0.0, 1.0, -1.0);
+
+				//Initialize Modelview Matrix
+				glMatrixMode(GL_MODELVIEW);
+				glLoadIdentity();
 				(*item)->PostUpdate();
 			}
 		}

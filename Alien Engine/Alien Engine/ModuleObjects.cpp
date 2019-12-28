@@ -99,8 +99,17 @@ update_status ModuleObjects::Update(float dt)
 
 update_status ModuleObjects::PostUpdate(float dt)
 {
-	base_game_object->PostUpdate();
+		base_game_object->PostUpdate();
 	if (App->renderer3D->SetCameraToDraw(App->camera->fake_camera)) {
+		//Reset Projection
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glLoadMatrixf(App->camera->fake_camera->GetProjectionMatrix());
+
+		//Reset ModelView
+		glMatrixMode(GL_MODELVIEW);
+		glLoadMatrixf(App->camera->fake_camera->GetViewMatrix());
+
 		printing_scene = true;
 		// Scene Drawing
 		if (App->renderer3D->render_zbuffer) {
@@ -121,8 +130,6 @@ update_status ModuleObjects::PostUpdate(float dt)
 
 		if (render_octree)
 			octree.Draw();
-
-		OnDrawUI();
 
 		if (base_game_object->HasChildren()) {
 			std::map<float, GameObject*> to_draw;
@@ -160,11 +167,22 @@ update_status ModuleObjects::PostUpdate(float dt)
 			}
 		}
 
+		OnDrawUI();
 
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 	}
 
 	if (App->renderer3D->SetCameraToDraw(App->renderer3D->actual_game_camera)) {
+
+		//Reset Projection
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glLoadMatrixf(App->renderer3D->actual_game_camera->GetProjectionMatrix());
+
+		//Reset ModelView
+		glMatrixMode(GL_MODELVIEW);
+		glLoadMatrixf(App->renderer3D->actual_game_camera->GetViewMatrix());
+
 		printing_scene = false;
 		if (App->renderer3D->render_zbuffer) {
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, App->renderer3D->z_framebuffer);
@@ -209,6 +227,16 @@ update_status ModuleObjects::PostUpdate(float dt)
 
 	if (App->renderer3D->selected_game_camera != nullptr && (App->objects->GetSelectedObject() != nullptr && App->renderer3D->actual_game_camera != App->objects->GetSelectedObject()->GetComponent(ComponentType::CAMERA) && App->renderer3D->SetCameraToDraw(App->renderer3D->selected_game_camera)))
 	{
+
+		//Reset Projection
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		glLoadMatrixf(App->renderer3D->selected_game_camera->GetProjectionMatrix());
+
+		//Reset ModelView
+		glMatrixMode(GL_MODELVIEW);
+		glLoadMatrixf(App->renderer3D->selected_game_camera->GetViewMatrix());
+
 		printing_scene = false;
 		if (App->renderer3D->render_zbuffer) {
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, App->renderer3D->z_framebuffer);
@@ -743,6 +771,14 @@ void ModuleObjects::CreateHardcodedUI()
 	canvas->AddComponent(new ComponentCanvas(canvas));
 	canvas->is_static = true;
 
+	crosshair = new GameObject(canvas);
+	crosshair->SetName("CrossHair");
+	crosshair->AddComponent(new  ComponentTransform(crosshair, { 334.0f,175.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	crosshair->AddComponent(new ComponentImage(crosshair, { 50,50 }, { 0.0f,0.0f,0.0f }, true));
+	crosshair->GetComponent<ComponentImage>()->texture = App->resources->icons.crosshair;
+	crosshair->GetComponent<ComponentImage>()->CreatImgPlane();
+	crosshair->is_static = true;
+
 	button = new GameObject(canvas);
 	button->SetName("testButton");
 	button->AddComponent(new ComponentTransform(button, { 156.0f,200.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
@@ -751,25 +787,9 @@ void ModuleObjects::CreateHardcodedUI()
 	button->GetComponent<ComponentButton>()->CreatButtonPlane();
 	button->is_static = true;
 
-	image = new GameObject(canvas);
-	image->SetName("TEST IMAGE");
-	image->AddComponent(new  ComponentTransform(image, { 0.0f,0.0f,-0.3f }, { 0,0,0,0 }, { 1,1,1 }));
-	image->AddComponent(new ComponentImage(image, { 712,401 }, { 0.0f,0.0f,0.0f }, true));
-	image->GetComponent<ComponentImage>()->texture = App->resources->icons.image_canvas;
-	image->GetComponent<ComponentImage>()->CreatImgPlane();
-	image->is_static = true;
-
-	crosshair = new GameObject(canvas);
-	crosshair->SetName("CrossHair");
-	crosshair->AddComponent(new  ComponentTransform(crosshair, { 334.0f,175.0f,0.3f }, { 0,0,0,0 }, { 1,1,1 }));
-	crosshair->AddComponent(new ComponentImage(crosshair, { 50,50 }, { 0.0f,0.0f,0.0f }, true));
-	crosshair->GetComponent<ComponentImage>()->texture = App->resources->icons.crosshair;
-	crosshair->GetComponent<ComponentImage>()->CreatImgPlane();
-	crosshair->is_static = true;
-
 	checkbox = new GameObject(canvas);
 	checkbox->SetName("test Checkbox");
-	checkbox->AddComponent(new ComponentTransform(checkbox, { 270.0f,120.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	checkbox->AddComponent(new ComponentTransform(checkbox, { 270.0f,330.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
 	checkbox->AddComponent(new ComponentCheckbox(checkbox, { 178,39 }, true));
 	checkbox->GetComponent<ComponentCheckbox>()->tex = App->resources->icons.checkbox2;
 	checkbox->GetComponent<ComponentCheckbox>()->CreatCheckboxPlane();
@@ -777,15 +797,22 @@ void ModuleObjects::CreateHardcodedUI()
 
 	inputText = new GameObject(canvas);
 	inputText->SetName("test Input Text");
-	inputText->AddComponent(new ComponentTransform(inputText, { 270.0f,50.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	inputText->AddComponent(new ComponentTransform(inputText, { 270.0f,260.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
 	inputText->AddComponent(new ComponentInputText(inputText, { 178,39 }, true));
 	inputText->GetComponent<ComponentInputText>()->tex = App->resources->icons.input_box;
 	inputText->GetComponent<ComponentInputText>()->CreateInputTextPlane();
 	inputText->is_static = true;
 
+	/*image = new GameObject(canvas);
+	image->SetName("TEST IMAGE");
+	image->AddComponent(new  ComponentTransform(image, { 0.0f,0.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	image->AddComponent(new ComponentImage(image, { 712,401 }, { 0.0f,0.0f,0.0f }, true));
+	image->GetComponent<ComponentImage>()->texture = App->resources->icons.image_canvas;
+	image->GetComponent<ComponentImage>()->CreatImgPlane();
+	image->is_static = true;*/
+
+	
 	App->fonts->default_font = App->fonts->LoadFont("Assets/Fonts/OpenSans-Regular.ttf", 72);
-
-
 	label = new GameObject(canvas);
 	label->SetName("test label");
 	label->AddComponent(new ComponentTransform(inputText, { 35.0f,80.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
