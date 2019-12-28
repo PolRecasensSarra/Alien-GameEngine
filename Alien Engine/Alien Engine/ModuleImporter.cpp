@@ -554,9 +554,9 @@ void ModuleImporter::ApplyFontToSelectedObj(ResourceFont* font)
 
 	if (selected && selected->HasComponent(ComponentType::LABEL)) //TODO INPUTTEXT
 	{
-		ComponentLabel* label = (ComponentLabel*)selected->GetComponent(ComponentType::LABEL);
+		//ComponentLabel* label = (ComponentLabel*)selected->GetComponent(ComponentType::LABEL);
 
-		label->SetResourceFont(font);
+		//label->SetResourceFont(font);
 
 		//TODO RETURNZ
 	}

@@ -138,13 +138,13 @@ bool ResourceFont::ImportFont(const char* path, uint ttff_size)
 			GLuint texture = ResourceFont::LoadTextureCharacter(face->glyph->bitmap.width, face->glyph->bitmap.rows, face->glyph->bitmap.buffer);
 
 			// Now store character for later use
-			Character character = {
+			Character2 character = {
 				texture,
 				math::float2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
 				math::float2(face->glyph->bitmap_left, face->glyph->bitmap_top),
 				face->glyph->advance.x / 64
 			};
-			charactersBitmap.insert(std::pair<char, Character>(c, character));
+			charactersBitmap.insert(std::pair<char, Character2>(c, character));
 			if (face->glyph->bitmap.rows > maxHeight)
 				maxHeight = face->glyph->bitmap.rows;
 

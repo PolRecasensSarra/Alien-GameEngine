@@ -10,7 +10,7 @@
 #include <map>
 #include FT_FREETYPE_H
 
-struct Character
+struct Character2
 {
 	uint textureID;
 	math::float2 size; //w,h
@@ -21,7 +21,7 @@ struct ResourceFontData
 {
 	uint fontSize;
 	uint maxCharHeight;
-	std::map<char, Character> charactersMap;
+	std::map<char, Character2> charactersMap;
 	std::vector<uint8_t*> fontBuffer;
 };
 class ResourceFont : public Resource {
@@ -48,7 +48,7 @@ public:
 
 public:
 
-	std::map<char, Character> charactersBitmap;
+	std::map<char, Character2> charactersBitmap;
 	uint maxHeight = 0;
 
 	ResourceFontData fontData;

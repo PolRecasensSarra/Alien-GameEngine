@@ -783,11 +783,13 @@ void ModuleObjects::CreateHardcodedUI()
 	inputText->GetComponent<ComponentInputText>()->CreateInputTextPlane();
 	inputText->is_static = true;
 
+	App->fonts->default_font = App->fonts->LoadFont("Assets/Fonts/OpenSans-Regular.ttf", 72);
+
 
 	label = new GameObject(canvas);
 	label->SetName("test label");
 	label->AddComponent(new ComponentTransform(inputText, { 35.0f,80.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
-	label->AddComponent(new ComponentLabel(label, { 300,100 }, true));
+	label->AddComponent(new ComponentLabel(label, { 30,30 }, true));
 	//label->GetComponent<ComponentLabel>()-> = App->resources->icons.test_image;
 	label->GetComponent<ComponentLabel>()->CreateTextPlane();
 	label->is_static = true;

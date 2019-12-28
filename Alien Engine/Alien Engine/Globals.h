@@ -38,6 +38,16 @@ void log(const char file[], int line, const char* format, ...);
 		 }\
 	 }
 
+#define RELEASE_ARRAY_LIST(x)									\
+{																\
+	for (auto it_list = x.begin(); it_list != x.end();)			\
+	{															\
+		RELEASE(*it_list);										\
+		it_list = x.erase(it_list);								\
+	}															\
+	x.clear();													\
+}	
+
 typedef unsigned int uint;
 typedef unsigned char uchar;
 

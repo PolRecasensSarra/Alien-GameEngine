@@ -1,80 +1,100 @@
-#include "Application.h"
 #include "ModuleFonts.h"
+#include "FreeType/include/ft2build.h"
+#include "FreeType/include/freetype/freetype.h"
+#include "FreeType/include/freetype/ftglyph.h"
+#include "glew/include/glew.h"
 
-#include "SDL/include/SDL.h"
-#include "SDL2_ttf/include/SDL_ttf.h"
-#pragma comment( lib, "SDL2_ttf/libx86/SDL2_ttf.lib" )
+#pragma comment(lib, "FreeType/libx86/freetype.lib")
 
-ModuleFonts::ModuleFonts( bool start_enabled) : Module( start_enabled)
-{
-	name = "Fonts";
-}
-
-// Destructor
-ModuleFonts::~ModuleFonts()
-{}
-
-// Called before render is available
 bool ModuleFonts::Init()
 {
 	LOG("Init True Type Font library");
 	bool ret = true;
 
-	if (TTF_Init() == -1)
-	{
-		LOG("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
-		ret = false;
-	}
-	else
-	{
-		const char* path = DEFAULT_FONT;
-		int size = DEFAULT_FONT_SIZE;
-	//	default = Load(path, size);
-	}
-
 	return ret;
 }
 
-// Called before quitting
-bool ModuleFonts::CleanUp()
+bool ModuleFonts::Start()
 {
-	LOG("Freeing True Type library");
-	fonts.clear();
-	TTF_Quit();
 	return true;
 }
 
-// Load new texture from file path
-Font* const ModuleFonts::Load(const char* path, int size)
+bool ModuleFonts::CleanUp()
+{
+	LOG("Freeing True Type library");
+	RELEASE_ARRAY_LIST(fonts);
+	return true;
+}
+
+Font* const ModuleFonts::LoadFont(const char* path, int size)
 {
 	Font* font = new Font;
-	font->font = TTF_OpenFont(path, size);
+
 	font->size = size;
 
-	if (font == NULL)
+	FT_Library ft;
+	if (FT_Init_FreeType(&ft))
+		LOG("ERROR::FREETYPE: Could not init FreeType Library");
+
+	FT_Face face;
+	if (FT_New_Face(ft, path, 0, &face))
+		LOG("ERROR::FREETYPE: Failed to load font");
+
+	FT_Set_Pixel_Sizes(face, 0, size);
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // Disable byte-alignment restriction
+
+	for (int c = 0; c < 128; c++)
 	{
-		LOG("Could not load TTF font with path: %s. TTF_OpenFont: %s", path, TTF_GetError());
+		// Load character glyph 
+		if (FT_Load_Char(face, c, FT_LOAD_RENDER))
+		{
+			LOG("ERROR::FREETYTPE: Failed to load Glyph");
+			continue;
+		}
+		// Generate texture
+		GLuint texture = 0;
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexImage2D(
+			GL_TEXTURE_2D,
+			0,
+			GL_RED,
+			face->glyph->bitmap.width,
+			face->glyph->bitmap.rows,
+			0,
+			GL_RED,
+			GL_UNSIGNED_BYTE,
+			face->glyph->bitmap.buffer
+		);
+		// Set texture options
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		// Now store character for later use
+		Character character = {
+			texture,
+			float2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+			float2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+			face->glyph->advance.x,
+			face->glyph->bitmap.buffer
+		};
+		font->Characters.insert(std::pair<GLchar, Character>(c, character));
 	}
-	else
-	{
-		LOG("Successfully loaded font %s size %d", path, size);
-		fonts.push_back(font);
-	}
+
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+	FT_Done_Face(face);
+	FT_Done_FreeType(ft);
 
 	return font;
 }
 
-// calculate size of a text
-bool ModuleFonts::CalcSize(const char* text, int& width, int& height, _TTF_Font* font) const
+bool ModuleFonts::CalcSize(const char* text, int& width, int& height) const
 {
 	bool ret = false;
 
-	/*if (TTF_SizeText((font) ? font : font, text, &width, &height) != 0) {
-		LOG("Unable to calc size of text surface! SDL_ttf Error: %s\n", TTF_GetError());
-	}
-	else {
-		ret = true;
-	}*/
 
 	return ret;
 }
