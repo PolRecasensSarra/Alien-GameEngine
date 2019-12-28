@@ -19,6 +19,12 @@ struct LabelLetter {
 	float2 bearing;
 	uint advance;
 
+	uint indexId = 0;
+	uint vertexId = 0;
+	uint index[6]{
+	0,1,2,
+	2,3,0
+	};
 };
 
 class ComponentLabel :public Component
@@ -31,17 +37,21 @@ public:
 
 	void PostUpdate();
 	void Draw();
-	void BindText(uint texid);
+
+	void BindText(uint texid,LabelLetter l);
 	void SaveComponent(JSONArraypack* to_save);
 	void LoadComponent(JSONArraypack* to_load);
 	void CreateTextPlane();
 	bool DrawInspector();
-	void UpdateTextPlane(float sizeX);
+	void UpdateTextPlane(float sizeX, LabelLetter l);
 
-
+	void CreatePPlane(LabelLetter& l);
 
 
 private:
+
+
+
 	uint indexId = 0;
 	uint vertexId = 0;
 	uint index[6]{
@@ -49,6 +59,8 @@ private:
 	2,3,0
 	};
 
+
+	 
 	float3 vertex[4];
 	float2 uv[4];
 	float2 size_text;
@@ -56,8 +68,9 @@ private:
 	bool CreateText = false;
 	bool new_word = false;
 
-	std::string finalText = "AAAAAA";
+	std::string finalText = "ecbjhdcs";
 	
+
 public:
 	bool is_custom = false;
 	float3 pos;
@@ -67,4 +80,6 @@ public:
 	std::vector<uint> texturesIDS; 
 
 	std::vector<LabelLetter> word;
+
+	ResourceFont* r_font = nullptr;
 };
