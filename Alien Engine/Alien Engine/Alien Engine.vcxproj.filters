@@ -666,6 +666,9 @@
     <ClInclude Include="ComponentInputText.h">
       <Filter>Components\UI_Components</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleFonts.h">
+      <Filter>Modules</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ModuleCamera3D.cpp">
@@ -973,6 +976,9 @@
     </ClCompile>
     <ClCompile Include="ComponentInputText.cpp">
       <Filter>Components\UI_Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ModuleFonts.cpp">
+      <Filter>Modules</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

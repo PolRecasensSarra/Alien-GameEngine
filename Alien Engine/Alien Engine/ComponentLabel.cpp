@@ -7,14 +7,22 @@
 #include "imgui/imgui_internal.h"
 #include "FileNode.h"
 #include "ResourceTexture.h"
+#include "SDL2_ttf/include/SDL_ttf.h"
 
 
 
 ComponentLabel::ComponentLabel(GameObject* attach, float2 size, bool is_custom) :Component(attach)
 {
+	glGenTextures(1, &id_font);
+
 	type = ComponentType::LABEL;
 	this->size = size;
 	this->size_text = size;
+
+	
+	text = App->fonts->Load("Assets/Fonts/OpenSans-Regular.ttf");
+	text_str = "Label";
+
 	if (size.x == 0)
 	{
 		this->size.x = 20;
@@ -27,11 +35,15 @@ ComponentLabel::ComponentLabel(GameObject* attach, float2 size, bool is_custom) 
 		game_object_attached->AddComponent(new ComponentTransform(game_object_attached, { 0.0f,0.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
 	}
 
-	InitRender();
+	
+//	InitRender();
 }
 
 ComponentLabel::~ComponentLabel()
 {
+	TTF_CloseFont(text->font);
+	delete text;
+
 	if (text_img != nullptr)
 		text_img->DecreaseReferences();
 }
@@ -40,50 +52,16 @@ ComponentLabel::~ComponentLabel()
 
 void ComponentLabel::PostUpdate()
 {
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_ALPHA_TEST);
 
-	//	if(!new_word)
 	Draw();
-
-	if (text_img != nullptr)
-		UpdateLabel();
-
-	glBindVertexArray(vertexId);
-	glActiveTexture(GL_TEXTURE0);
-
-
-	glDisable(GL_ALPHA_TEST);
 }
 
 void ComponentLabel::Draw()
 {
-	UpdateTextPlane();
-
-	if (labelWord.empty())
-	{
-	/*	glBegin(GL_QUADS);
-		glLineWidth(8.0f);
-		glColor4f(1.0f, 0.0f, 1.0f, 1.0f);
-
-		float3 pos = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalPosition();
-		float3 size_mult = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalScale();
-
-		vertex[0] = float3(pos.x, pos.y, pos.z);
-		vertex[1] = float3(pos.x + (size.x * size_mult.x), pos.y, pos.z);
-		vertex[2] = float3(pos.x + (size.x * size_mult.x), pos.y + (size.y * size_mult.y), pos.z);
-		vertex[3] = float3(pos.x, pos.y + (size.y * size_mult.y), pos.z);
-
-		glVertex3f(vertex[0].x, vertex[0].y, vertex[0].z);
-		glVertex3f(vertex[1].x, vertex[1].y, vertex[1].z);
-		glVertex3f(vertex[2].x, vertex[2].y, vertex[2].z);
-		glVertex3f(vertex[3].x, vertex[3].y, vertex[3].z);
-
-
-		glEnd();
-		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);*/
-	}
+	GenerateText();
+	UpdateText();
+	BindTex();
+	
 }
 
 void ComponentLabel::SaveComponent(JSONArraypack* to_save)
@@ -126,16 +104,16 @@ void ComponentLabel::CreateTextPlane()
 	float3 size_mult = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalScale();
 
 	vertex[0] = float3(pos.x, pos.y, pos.z);
-	//uv[0] = float2(0, 1);
+	uv[0] = float2(0, 1);
 
 	vertex[1] = float3(pos.x + (size.x * size_mult.x), pos.y, pos.z);
-	//uv[1] = float2(1, 1);
+	uv[1] = float2(1, 1);
 
 	vertex[2] = float3(pos.x + (size.x * size_mult.x), pos.y + (size.y * size_mult.y), pos.z);
-	//uv[2] = float2(1, 0);
+	uv[2] = float2(1, 0);
 
 	vertex[3] = float3(pos.x, pos.y + (size.y * size_mult.y), pos.z);
-	//uv[3] = float2(0, 0);
+	uv[3] = float2(0, 0);
 
 	glGenBuffers(1, (GLuint*)& vertexId);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexId);
@@ -143,9 +121,12 @@ void ComponentLabel::CreateTextPlane()
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 
-	////	glGenBuffers(1, (GLuint*)& texture->id);
-	//glBindBuffer(GL_ARRAY_BUFFER, texture->id);
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 8, uv, GL_STATIC_DRAW);
+	//	glGenBuffers(1, (GLuint*)& texture->id);
+	//if (textureid != 0); //maybe no
+	glGenBuffers(1, (GLuint*)& textureid);
+		glBindBuffer(GL_ARRAY_BUFFER, textureid);
+
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 8, uv, GL_STATIC_DRAW);
 
 
 	glGenBuffers(1, (GLuint*)& indexId);
@@ -271,14 +252,14 @@ void ComponentLabel::UpdateTextPlane()
 	float3 size_mult = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalScale();
 
 
-	//vertex[0] = float3(pos.x, pos.y, pos.z);
-	//vertex[1] = float3(pos.x + (size.x * size_mult.x), pos.y, pos.z);
-	//vertex[2] = float3(pos.x + (size.x * size_mult.x), pos.y + (size.y * size_mult.y), pos.z);
-	//vertex[3] = float3(pos.x, pos.y + (size.y * size_mult.y), pos.z);
+	vertex[0] = float3(pos.x, pos.y, pos.z);
+	vertex[1] = float3(pos.x + (size.x * size_mult.x), pos.y, pos.z);
+	vertex[2] = float3(pos.x + (size.x * size_mult.x), pos.y + (size.y * size_mult.y), pos.z);
+	vertex[3] = float3(pos.x, pos.y + (size.y * size_mult.y), pos.z);
 
-	//glBindBuffer(GL_ARRAY_BUFFER, vertexId); 
-	//glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, vertex, GL_STATIC_DRAW);
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexId); 
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, vertex, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void ComponentLabel::UpdateLabel()
@@ -420,7 +401,7 @@ void ComponentLabel::UpdateLabel()
 
 	if (tex != nullptr)
 	{
-		/*glEnable(GL_BLEND);
+		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_ALPHA_TEST);
 		glAlphaFunc(GL_GREATER, 0.0f);
@@ -453,7 +434,7 @@ void ComponentLabel::UpdateLabel()
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glDisable(GL_ALPHA_TEST);
 
-		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);*/
+		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
 
 	}
 		
@@ -462,6 +443,92 @@ void ComponentLabel::UpdateLabel()
 	
 	/*text_img->fontData;*/
 	//text_img->charactersBitmap;
+}
+
+bool ComponentLabel::GenerateText()
+{
+	if (text_str.empty()) {
+		return false;
+	}
+
+	UpdateTextPlane();
+}
+
+void ComponentLabel::UpdateText()
+{
+	if (text == nullptr)
+		return;
+
+	if (!text->font || text_str.empty())
+		return;
+
+
+	update_text = true;
+
+	int w = size.x, h = size.y;
+
+	TTF_SizeText(text->font, text_str.c_str(), &w, &h);
+
+	if (!first_time)
+	{
+
+		
+	}
+
+	s_font = TTF_RenderText_Blended_Wrapped(text->font, text_str.c_str(), SDL_Color{
+		(Uint8)(255), (Uint8)(255),(Uint8)(255), (Uint8)(255) }, w);
+
+
+
+	glBindTexture(GL_TEXTURE_2D, id_font);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size.x, size.y, 0, GL_BGRA, GL_UNSIGNED_BYTE, s_font->pixels);
+	textureid = id_font;
+	glBindTexture(GL_TEXTURE_2D, 0);
+	SDL_FreeSurface(s_font);
+}
+
+void ComponentLabel::BindTex()
+{
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.0f);
+
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
+	glEnable(GL_TEXTURE_2D);
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+
+	glBindTexture(GL_TEXTURE_2D, textureid);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vertexId);
+	glVertexPointer(3, GL_FLOAT, 0, NULL);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+	glBindBuffer(GL_ARRAY_BUFFER, textureid);
+	glTexCoordPointer(2, GL_FLOAT, 0, NULL);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
+
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+	glDisableClientState(GL_VERTEX_ARRAY);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	glDisable(GL_ALPHA_TEST);
+
+	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+
 }
 
 void ComponentLabel::InitRender()

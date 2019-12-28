@@ -14,7 +14,7 @@ Application::Application()
 	objects = new ModuleObjects();
 	file_system = new ModuleFileSystem();
 	resources = new ModuleResources();
-
+	fonts = new ModuleFonts();
 	// The order of calls is very important!
 	// Modules will Init() Start() and Update in this order
 	// They will CleanUp() in reverse order
@@ -26,6 +26,7 @@ Application::Application()
 	AddModule(file_system);
 	AddModule(resources);
 	AddModule(importer);
+	AddModule(fonts);
 	// Scenes
 	AddModule(scene_intro);
 	AddModule(objects);

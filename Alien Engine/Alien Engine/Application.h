@@ -17,7 +17,7 @@
 #include "ModuleImporter.h"
 #include "ModuleFileSystem.h"
 #include "ModuleResources.h"
-
+#include "ModuleFonts.h"
 class Application
 {
 public:
@@ -32,6 +32,7 @@ public:
 	ModuleObjects* objects = nullptr;
 	ModuleFileSystem* file_system = nullptr;
 	ModuleResources* resources = nullptr;
+	ModuleFonts* fonts = nullptr;
 
 	bool fps_cap = true;
 	uint16_t framerate_cap;

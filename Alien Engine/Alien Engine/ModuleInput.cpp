@@ -109,7 +109,7 @@ update_status ModuleInput::PreUpdate(float dt)
 	first_key_pressed = SDL_SCANCODE_UNKNOWN;
 	bool quit = false;
 	SDL_Event e;
-	while(SDL_PollEvent(&e))
+	while(SDL_PollEvent(&e)) //peta al poll event
 	{
 		ImGui_ImplSDL2_ProcessEvent(&e);
 		switch(e.type)

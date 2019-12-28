@@ -6,6 +6,11 @@
 #include "ModuleImporter.h"
 #include <map>
 #include<string>
+
+struct SDL_Surface;
+struct Texture;
+struct Font;
+
 struct Character;
 class ComponentTransform;
 
@@ -42,6 +47,11 @@ public:
 
 	void UpdateLabel();
 
+	//
+	bool GenerateText();
+
+	void UpdateText(); //new this one
+	void BindTex();
 private:
 	uint indexId = 0;
 	uint vertexId = 0;
@@ -51,7 +61,30 @@ private:
 	};
 
 	float3 vertex[4];
+	float2 uv[4];
 	float2 size_text;
+
+	uint textureid=0;
+
+	bool update_tetx = false;
+	bool first_time = false;
+
+	SDL_Surface* s_font = nullptr;
+public:
+	Font* text = nullptr;
+
+	std::string text_str;
+	char* input_text = nullptr;
+	bool update_text = false;
+
+	int max_input = 20;
+	int text_size = 12;
+	uint id_font = 0;
+
+
+
+	//
+
 	ResourceFont* text_img = nullptr;
 
 	bool CreateText = false;
@@ -72,4 +105,7 @@ public:
 	bool is_custom = false;
 
 	float3 pos;
+
+
+
 };
