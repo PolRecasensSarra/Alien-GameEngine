@@ -787,7 +787,7 @@ void ModuleObjects::CreateHardcodedUI()
 	label = new GameObject(canvas);
 	label->SetName("test label");
 	label->AddComponent(new ComponentTransform(inputText, { 35.0f,80.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
-	label->AddComponent(new ComponentLabel(label, { 30,10 }, true));
+	label->AddComponent(new ComponentLabel(label, { 300,100 }, true));
 	//label->GetComponent<ComponentLabel>()-> = App->resources->icons.test_image;
 	label->GetComponent<ComponentLabel>()->CreateTextPlane();
 	label->is_static = true;
