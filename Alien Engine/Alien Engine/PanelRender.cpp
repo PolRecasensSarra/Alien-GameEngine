@@ -150,5 +150,20 @@ void PanelRender::PanelLogic()
 		ImGui::ColorEdit3("Ray Color", (float*)&App->objects->ray_color, ImGuiColorEditFlags_Float);
 		ImGui::SliderInt("Ray Line Width", (int*)&App->objects->ray_width, 1, 30);
 	}
+	if (ImGui::CollapsingHeader("Cull Face"))
+	{
+
+		if (ImGui::Checkbox("GL_CULL_FACE", &GL_Cull_face))
+		{
+			if (GL_Cull_face)
+			{
+				glEnable(GL_CULL_FACE), LOG("Enabled Cullface");
+			}
+			else
+			{
+				glDisable(GL_CULL_FACE), LOG("Disabled Cullface");
+			}
+		}
+	}
 	ImGui::End();
 }

@@ -33,4 +33,5 @@ public:
 protected:
 	std::string panel_name;
 	bool enabled = false;
+	bool GL_Cull_face = true;
 };

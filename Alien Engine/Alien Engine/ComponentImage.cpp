@@ -66,17 +66,34 @@ void ComponentImage::CreatImgPlane()
 	pos += margin;
 	float3 size_mult = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalScale();
 
-	vertex[0] = float3(pos.x, pos.y, pos.z);
-	uv[0] = float2(0, 1);
+	if (Time::IsInGameState())
+	{
+		vertex[0] = float3(pos.x, pos.y, pos.z);
+		uv[0] = float2(0, 0);
 
-	vertex[1] = float3(pos.x + (size.x * size_mult.x), pos.y, pos.z);
-	uv[1] = float2(1, 1);
+		vertex[1] = float3(pos.x, pos.y + (size.y * size_mult.y), pos.z);
+		uv[1] = float2(0, 1);
 
-	vertex[2] = float3(pos.x + (size.x * size_mult.x), pos.y + (size.y * size_mult.y), pos.z);
-	uv[2] = float2(1, 0);
+		vertex[2] = float3(pos.x + (size.x * size_mult.x), pos.y + (size.y * size_mult.y), pos.z);
+		uv[2] = float2(1, 1);
 
-	vertex[3] = float3(pos.x, pos.y + (size.y * size_mult.y), pos.z);
-	uv[3] = float2(0, 0);
+		vertex[3] = float3(pos.x + (size.x * size_mult.x), pos.y, pos.z);
+		uv[3] = float2(1, 0);
+	}
+	else
+	{
+		vertex[0] = float3(pos.x, pos.y, pos.z);
+		uv[0] = float2(0, 1);
+
+		vertex[1] = float3(pos.x + (size.x * size_mult.x), pos.y, pos.z);
+		uv[1] = float2(1, 1);
+
+		vertex[2] = float3(pos.x + (size.x * size_mult.x), pos.y + (size.y * size_mult.y), pos.z);
+		uv[2] = float2(1, 0);
+
+		vertex[3] = float3(pos.x, pos.y + (size.y * size_mult.y), pos.z);
+		uv[3] = float2(0, 0);
+	}
 
 	glGenBuffers(1, (GLuint*)& vertexId);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexId);
@@ -102,23 +119,41 @@ void ComponentImage::UpdateImgPlane()
 	float3 size_mult = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalScale();
 	pos += margin;
 
-	vertex[0] = float3(pos.x, pos.y, pos.z);
-	vertex[1] = float3(pos.x + (size.x * size_mult.x * size_canvas_mult), pos.y, pos.z);
-	vertex[2] = float3(pos.x + (size.x * size_mult.x * size_canvas_mult), pos.y + (size.y * size_mult.y * size_canvas_mult), pos.z);
-	vertex[3] = float3(pos.x, pos.y + (size.y * size_mult.y * size_canvas_mult), pos.z);
+	if (Time::IsInGameState())
+	{
+		vertex[0] = float3(pos.x, pos.y, pos.z);
+		vertex[1] = float3(pos.x, pos.y + (size.y * size_mult.y * size_canvas_mult), pos.z);
+		vertex[2] = float3(pos.x + (size.x * size_mult.x * size_canvas_mult), pos.y + (size.y * size_mult.y * size_canvas_mult), pos.z);
+		vertex[3] = float3(pos.x + (size.x * size_mult.x * size_canvas_mult), pos.y, pos.z);
+		uv[0] = float2(0, 0);
+		uv[1] = float2(0, 1);
+		uv[2] = float2(1, 1);;
+		uv[3] = float2(1, 0);
+	}
+	else
+	{
+		vertex[0] = float3(pos.x, pos.y, pos.z);
+		vertex[1] = float3(pos.x + (size.x * size_mult.x * size_canvas_mult), pos.y, pos.z);
+		vertex[2] = float3(pos.x + (size.x * size_mult.x * size_canvas_mult), pos.y + (size.y * size_mult.y * size_canvas_mult), pos.z);
+		vertex[3] = float3(pos.x, pos.y + (size.y * size_mult.y * size_canvas_mult), pos.z);
+		uv[0] = float2(0, 1);
+		uv[1] = float2(1, 1);
+		uv[2] = float2(1, 0);
+		uv[3] = float2(0, 0);
+	}
+
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertexId); //aixo potser no o si 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, vertex, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glBindBuffer(GL_ARRAY_BUFFER, texture->id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 8, uv, GL_STATIC_DRAW);
+
 }
 
 void ComponentImage::PostUpdate()
 {
-	/*std::string name = game_object_attached->GetName();
-	if (name == "TEST IMAGE")
-	{
-		size = {App->ui->panel_game->width, App->ui->panel_game->height};
-	}*/
 	Draw();
 }
 
@@ -183,15 +218,30 @@ void ComponentImage::Draw()
 		float3 size_mult = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalScale();
 		pos += margin;
 
-		float3 v1 = float3(pos.x, pos.y, pos.z);
-		float3 v2 = float3(pos.x + (size.x * size_mult.x), pos.y, pos.z);
-		float3 v3 = float3(pos.x + (size.x * size_mult.x), pos.y + (size.y * size_mult.y), pos.z);
-		float3 v4 = float3(pos.x, pos.y + (size.y * size_mult.y), pos.z);
+		if (Time::IsInGameState())
+		{
+			float3 v1 = float3(pos.x, pos.y, pos.z);
+			float3 v2 = float3(pos.x + (size.x * size_mult.x), pos.y, pos.z);
+			float3 v3 = float3(pos.x + (size.x * size_mult.x), pos.y + (size.y * size_mult.y), pos.z);
+			float3 v4 = float3(pos.x, pos.y + (size.y * size_mult.y), pos.z);
 
-		glVertex3f(v1.x, v1.y, v1.z);
-		glVertex3f(v2.x, v2.y, v2.z);
-		glVertex3f(v3.x, v3.y, v3.z);
-		glVertex3f(v4.x, v4.y, v4.z);
+			glVertex3f(v1.x, v1.y, v1.z);
+			glVertex3f(v4.x, v4.y, v4.z);
+			glVertex3f(v3.x, v3.y, v3.z);
+			glVertex3f(v2.x, v2.y, v2.z);
+		}
+		else
+		{
+			float3 v1 = float3(pos.x, pos.y, pos.z);
+			float3 v2 = float3(pos.x + (size.x * size_mult.x), pos.y, pos.z);
+			float3 v3 = float3(pos.x + (size.x * size_mult.x), pos.y + (size.y * size_mult.y), pos.z);
+			float3 v4 = float3(pos.x, pos.y + (size.y * size_mult.y), pos.z);
+
+			glVertex3f(v1.x, v1.y, v1.z);
+			glVertex3f(v2.x, v2.y, v2.z);
+			glVertex3f(v3.x, v3.y, v3.z);
+			glVertex3f(v4.x, v4.y, v4.z);
+		}
 
 
 		glEnd();
