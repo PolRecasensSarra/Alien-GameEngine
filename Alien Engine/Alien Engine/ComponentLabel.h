@@ -3,6 +3,7 @@
 #include "Component.h"
 #include "MathGeoLib/include/MathGeoLib.h"
 #include "ModuleImporter.h"
+#include "imgui/imgui.h"
 #include <map>
 #include<string>
 
@@ -46,11 +47,12 @@ public:
 	void UpdateTextPlane(float sizeX, LabelLetter l);
 
 	void CreatePPlane(LabelLetter& l);
+	bool Fade();
 
 
 private:
 
-
+	ImVec4 actual_color = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);
 
 	uint indexId = 0;
 	uint vertexId = 0;

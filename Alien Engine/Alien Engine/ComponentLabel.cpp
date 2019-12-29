@@ -114,7 +114,7 @@ void ComponentLabel::BindText(uint tex_id,LabelLetter l)
 		glEnable(GL_ALPHA_TEST);
 		glAlphaFunc(GL_GREATER, 0.0f);
 
-		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
+		glColor4f(actual_color.x, actual_color.y, actual_color.z, actual_color.w);
 
 		glEnable(GL_TEXTURE_2D);
 
@@ -308,6 +308,7 @@ void ComponentLabel::UpdateTextPlane(float sizeX,LabelLetter l)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, vertex, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+
 	glBindBuffer(GL_ARRAY_BUFFER, l.texture_id);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 8, uv, GL_STATIC_DRAW);
 }
@@ -362,5 +363,19 @@ void ComponentLabel::CreatePPlane(LabelLetter& l)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, l.indexId);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * 6, l.index, GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+bool ComponentLabel::Fade()
+{
+	if (actual_color.w <= 0.01)
+	{
+		game_object_attached->enabled = false;
+		return true;
+	}
+	else
+	{
+		actual_color.w -= 0.01;
+		return false;
+	}
 }
 

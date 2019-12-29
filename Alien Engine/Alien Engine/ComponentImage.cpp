@@ -147,8 +147,11 @@ void ComponentImage::UpdateImgPlane()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, vertex, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	glBindBuffer(GL_ARRAY_BUFFER, texture->id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 8, uv, GL_STATIC_DRAW);
+	if (texture != nullptr)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, texture->id);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 8, uv, GL_STATIC_DRAW);
+	}
 
 }
 
