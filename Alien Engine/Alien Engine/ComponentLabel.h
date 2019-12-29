@@ -32,7 +32,7 @@ class ComponentLabel :public Component
 	friend class CompZ;
 
 public:
-	ComponentLabel(GameObject* attach, float2 size = { 0.0f,0.0f }, bool is_custom = false);
+	ComponentLabel(GameObject* attach,std::string text = "example" ,float2 size = { 0.0f,0.0f }, bool is_custom = false);
 	~ComponentLabel();
 
 	void PostUpdate();
@@ -68,7 +68,7 @@ private:
 	bool CreateText = false;
 	bool new_word = false;
 
-	std::string finalText = "ecbjhdcs";
+	std::string finalText = "example";
 	
 
 public:

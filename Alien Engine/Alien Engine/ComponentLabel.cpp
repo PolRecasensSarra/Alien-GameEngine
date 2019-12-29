@@ -10,11 +10,12 @@
 
 
 
-ComponentLabel::ComponentLabel(GameObject* attach, float2 size, bool is_custom) :Component(attach)
+ComponentLabel::ComponentLabel(GameObject* attach, std::string text, float2 size, bool is_custom) :Component(attach)
 {
 	type = ComponentType::LABEL;
 	this->size = size;
 	this->size_text = size;
+	this->finalText = text;
 	if (size.x == 0)
 	{
 		this->size.x = 20;

@@ -779,6 +779,7 @@ void ModuleObjects::CreateHardcodedUI()
 	crosshair->GetComponent<ComponentImage>()->CreatImgPlane();
 	crosshair->is_static = true;
 
+
 	button = new GameObject(canvas);
 	button->SetName("testButton");
 	button->AddComponent(new ComponentTransform(button, { 156.0f,200.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
@@ -803,6 +804,14 @@ void ModuleObjects::CreateHardcodedUI()
 	inputText->GetComponent<ComponentInputText>()->CreateInputTextPlane();
 	inputText->is_static = true;
 
+	App->fonts->default_font = App->fonts->LoadFont("Assets/Fonts/OpenSans-Regular.ttf", 60);
+	label = new GameObject(canvas);
+	label->SetName("test label");
+	label->AddComponent(new ComponentTransform(label, { 280.0f,80.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	label->AddComponent(new ComponentLabel(label, "vsync a", { 30,30 }, true));
+	//label->GetComponent<ComponentLabel>()-> = App->resources->icons.test_image;
+	label->is_static = true;
+
 	image = new GameObject(canvas);
 	image->SetName("TEST IMAGE");
 	image->AddComponent(new  ComponentTransform(image, { 0.0f,0.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
@@ -812,14 +821,6 @@ void ModuleObjects::CreateHardcodedUI()
 	image->is_static = true;
 
 	
-	App->fonts->default_font = App->fonts->LoadFont("Assets/Fonts/OpenSans-Regular.ttf", 72);
-	label = new GameObject(canvas);
-	label->SetName("test label");
-	label->AddComponent(new ComponentTransform(label, { 35.0f,80.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
-	label->AddComponent(new ComponentLabel(label, { 30,30 }, true));
-	//label->GetComponent<ComponentLabel>()-> = App->resources->icons.test_image;
-	label->GetComponent<ComponentLabel>()->CreateTextPlane();
-	label->is_static = true;
 
 
 	GameObject* camera_hardcoded = new GameObject(base_game_object);
@@ -998,6 +999,7 @@ void ModuleObjects::CreateBaseUI(ComponentType type)
 		break; }
 	case ComponentType::LABEL: {
 		object->SetName("Label");
+		object->AddComponent(new ComponentLabel(object, {30,30}));
 		break; }
 	case ComponentType::CHECKBOX: {
 		object->SetName("CheckBox");
