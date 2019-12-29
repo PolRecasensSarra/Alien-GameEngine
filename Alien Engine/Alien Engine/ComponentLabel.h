@@ -68,10 +68,11 @@ private:
 	bool CreateText = false;
 	bool new_word = false;
 
-	std::string finalText = "example";
+	
 	
 
 public:
+	std::string finalText = "example";
 	bool is_custom = false;
 	float3 pos;
 	Font* text_font = nullptr;

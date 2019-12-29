@@ -6,6 +6,7 @@
 #include "ModuleUI.h"
 #include "PanelGame.h"
 #include "ResourceTexture.h"
+#include "ComponentLabel.h"
 #include "FileNode.h"
 #include "imgui/imgui_internal.h"
 
@@ -28,6 +29,8 @@ ComponentInputText::ComponentInputText(GameObject* attach, float2 size, bool is_
 		game_object_attached->AddComponent(new ComponentTransform(game_object_attached, { 0.0f,0.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
 	}
 
+	game_object_attached->AddComponent(new ComponentLabel(game_object_attached, name_input, { 30,30 }));
+	label = game_object_attached->GetComponent<ComponentLabel>();
 	//TODO::// CREATE A COMPONENT LABEL FOR THIS INPUT TEXT
 }
 
@@ -67,6 +70,25 @@ void ComponentInputText::Update()
 			function = false;
 			/*SDL_StopTextInput();*/
 			//STOP GETTING INPUT
+			label->finalText = name_input;
+			label->word.clear();
+			for (std::string::iterator it = label->finalText.begin(); it != label->finalText.end(); ++it)
+			{
+				//LabelLetter[it]. = text_font->Characters.at(finalText.at(0)).TextureID;
+
+				LabelLetter l;
+
+				l.texture_id = label->text_font->Characters.at(*it).TextureID;
+				l.size = label->text_font->Characters.at(*it).Size;
+				l.bearing = label->text_font->Characters.at(*it).Bearing;
+				l.advance = label->text_font->Characters.at(*it).Advance;
+				label->CreatePPlane(l);
+
+				label->word.push_back(l);
+
+
+
+			}
 		}
 	}
 }
@@ -394,10 +416,30 @@ bool ComponentInputText::DrawInspector()
 			if (ImGui::InputText("##EnterName", name, 30, ImGuiInputTextFlags_AutoSelectAll)) {
 				name_input = std::string(name);
 			}
-			if(ImGui::Button("Done"))
+			if(ImGui::Button("OK"))
 			{
 				function = false;
 				//SDL_StopTextInput();
+
+				label->finalText = name_input;
+				label->word.clear();
+				for (std::string::iterator it = label->finalText.begin(); it != label->finalText.end(); ++it)
+				{
+					//LabelLetter[it]. = text_font->Characters.at(finalText.at(0)).TextureID;
+
+					LabelLetter l;
+
+					l.texture_id = label->text_font->Characters.at(*it).TextureID;
+					l.size = label->text_font->Characters.at(*it).Size;
+					l.bearing = label->text_font->Characters.at(*it).Bearing;
+					l.advance = label->text_font->Characters.at(*it).Advance;
+					label->CreatePPlane(l);
+
+					label->word.push_back(l);
+
+
+
+				}
 			}
 		}
 	}

@@ -765,6 +765,8 @@ void ModuleObjects::DeleteReturns()
 
 void ModuleObjects::CreateHardcodedUI()
 {
+	App->fonts->default_font = App->fonts->LoadFont("Assets/Fonts/OpenSans-Regular.ttf", 60);
+
 	canvas = new GameObject(base_game_object);
 	canvas->SetName("Canvas");
 	canvas->AddComponent(new ComponentTransform(canvas, { 0.0f,2.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
@@ -804,7 +806,7 @@ void ModuleObjects::CreateHardcodedUI()
 	inputText->GetComponent<ComponentInputText>()->CreateInputTextPlane();
 	inputText->is_static = true;
 
-	App->fonts->default_font = App->fonts->LoadFont("Assets/Fonts/OpenSans-Regular.ttf", 60);
+	
 	label = new GameObject(canvas);
 	label->SetName("test label");
 	label->AddComponent(new ComponentTransform(label, { 280.0f,80.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));

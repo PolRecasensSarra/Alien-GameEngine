@@ -7,6 +7,7 @@
 
 
 enum class InteractiveStates;
+class ComponentLabel;
 
 class ComponentInputText : public Component {
 	friend class CompZ;
@@ -64,9 +65,10 @@ private:
 
 	InteractiveStates state = InteractiveStates::NO_STATE;
 
-	std::string name_input;
+	std::string name_input = "ex";
 
 public:
+	ComponentLabel* label = nullptr;
 	ResourceTexture* tex = nullptr;
 	//ComponentLabel* label = nullptr;
 };
