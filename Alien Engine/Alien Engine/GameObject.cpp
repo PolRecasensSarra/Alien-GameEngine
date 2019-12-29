@@ -156,7 +156,7 @@ void GameObject::PostUpdateUIGame()
 				//Initialize Projection Matrix
 				glMatrixMode(GL_PROJECTION);
 				glLoadIdentity();
-				glOrtho(0.0, App->ui->panel_game->width, App->ui->panel_game->height, 0.0, 1.0, -1.0);
+				glOrtho(App->ui->panel_game->width, 0.0,  0.0, App->ui->panel_game->height, 1.0, -1.0);
 
 				//Initialize Modelview Matrix
 				glMatrixMode(GL_MODELVIEW);

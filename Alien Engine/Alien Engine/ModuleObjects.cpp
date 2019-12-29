@@ -789,7 +789,7 @@ void ModuleObjects::CreateHardcodedUI()
 
 	checkbox = new GameObject(canvas);
 	checkbox->SetName("test Checkbox");
-	checkbox->AddComponent(new ComponentTransform(checkbox, { 270.0f,330.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	checkbox->AddComponent(new ComponentTransform(checkbox, { 270.0f,80.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
 	checkbox->AddComponent(new ComponentCheckbox(checkbox, { 178,39 }, true));
 	checkbox->GetComponent<ComponentCheckbox>()->tex = App->resources->icons.checkbox2;
 	checkbox->GetComponent<ComponentCheckbox>()->CreatCheckboxPlane();
@@ -797,7 +797,7 @@ void ModuleObjects::CreateHardcodedUI()
 
 	inputText = new GameObject(canvas);
 	inputText->SetName("test Input Text");
-	inputText->AddComponent(new ComponentTransform(inputText, { 270.0f,260.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
+	inputText->AddComponent(new ComponentTransform(inputText, { 270.0f,130.0f,0.0f }, { 0,0,0,0 }, { 1,1,1 }));
 	inputText->AddComponent(new ComponentInputText(inputText, { 178,39 }, true));
 	inputText->GetComponent<ComponentInputText>()->tex = App->resources->icons.input_box;
 	inputText->GetComponent<ComponentInputText>()->CreateInputTextPlane();

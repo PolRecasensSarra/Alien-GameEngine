@@ -131,7 +131,7 @@ void ComponentInputText::UpdateStates()
 {
 	float3 pos = float3::zero;
 
-	float2 origin = float2((App->input->GetMousePosition().x - App->ui->panel_game->posX), ((App->input->GetMousePosition().y - (App->ui->panel_game->posY))));
+	float2 origin = float2((App->input->GetMousePosition().x - App->ui->panel_game->posX), -((App->input->GetMousePosition().y - (App->ui->panel_game->posY + App->ui->panel_game->height))));
 
 	ComponentTransform* transform = (ComponentTransform*)game_object_attached->GetComponent(ComponentType::TRANSFORM);
 	if (transform != nullptr)
@@ -417,16 +417,16 @@ void ComponentInputText::CreateInputTextPlane()
 	if (Time::IsInGameState())
 	{
 		vertex[0] = float3(pos.x, pos.y, pos.z);
-		uv[0] = float2(0, 0);
+		uv[0] = float2(1, 1);
 
 		vertex[1] = float3(pos.x, pos.y + (size.y * size_mult.y), pos.z);
-		uv[1] = float2(0, 1);
+		uv[1] = float2(1, 0);
 
 		vertex[2] = float3(pos.x + (size.x * size_mult.x), pos.y + (size.y * size_mult.y), pos.z);
-		uv[2] = float2(1, 1);
+		uv[2] = float2(0, 0);
 
 		vertex[3] = float3(pos.x + (size.x * size_mult.x), pos.y, pos.z);
-		uv[3] = float2(1, 0);
+		uv[3] = float2(0, 1);
 	}
 	else
 	{
@@ -471,10 +471,10 @@ void ComponentInputText::UpdateInputTextPlane()
 		vertex[1] = float3(pos.x, pos.y + (size.y * size_mult.y * size_canvas_mult), pos.z);
 		vertex[2] = float3(pos.x + (size.x * size_mult.x * size_canvas_mult), pos.y + (size.y * size_mult.y * size_canvas_mult), pos.z);
 		vertex[3] = float3(pos.x + (size.x * size_mult.x * size_canvas_mult), pos.y, pos.z);
-		uv[0] = float2(0, 0);
-		uv[1] = float2(0, 1);
-		uv[2] = float2(1, 1);;
-		uv[3] = float2(1, 0);
+		uv[0] = float2(1, 1);
+		uv[1] = float2(1, 0);
+		uv[2] = float2(0, 0);
+		uv[3] = float2(0, 1);
 	}
 	else
 	{
