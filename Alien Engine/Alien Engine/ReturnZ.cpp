@@ -10,7 +10,9 @@
 #include "ComponentCanvas.h"
 #include "ComponentCheckbox.h"
 #include "ComponentInputText.h"
+#include "ComponentLabel.h"
 #include "ResourceTexture.h"
+#include "ResourceFont.h"
 #include "Octree.h"
 
 bool ReturnZ::eraseY = false;
@@ -221,6 +223,10 @@ void ReturnZ::DoAction(ReturnZ* action, bool is_fordward)
 			ComponentInputText* inputText = (ComponentInputText*)App->objects->GetGameObjectByID(comp->comp->objectID)->GetComponentWithID(comp->comp->compID);
 			CompZ::SetComponent(inputText, comp->comp);
 			break; }
+		case ComponentType::LABEL: {
+			ComponentLabel* label = (ComponentLabel*)App->objects->GetGameObjectByID(comp->comp->objectID)->GetComponentWithID(comp->comp->compID);
+			CompZ::SetComponent(label, comp->comp);
+			break; }
 		}
 		break; }
 	case ReturnActions::DELETE_COMPONENT: {
@@ -357,6 +363,11 @@ void ReturnZ::SetDeleteObject(GameObject* obj, ActionDeleteObject* to_fill)
 					CompZ::SetCompZ((*item), (CompZ**)&inputTextZ);
 					comp = inputTextZ;
 					break; }
+				case ComponentType::LABEL: {
+					CompLabelZ* labelText = nullptr;
+					CompZ::SetCompZ((*item), (CompZ **)& labelText);
+					comp = labelText;
+					break; }
 				default:
 					LOG("A component hasn't been saved");
 					break;
@@ -472,7 +483,12 @@ void ReturnZ::CreateObject(ActionDeleteObject* obj)
 					CompZ::SetComponent(inputText, inputTextZ);
 					new_obj->AddComponent(inputText);
 					break; }
-
+				case ComponentType::LABEL: {
+					ComponentLabel* label = new ComponentLabel(new_obj);
+					CompLabelZ* labelZ = (CompLabelZ*)(*item);
+					CompZ::SetComponent(label, labelZ);
+					new_obj->AddComponent(label);
+					break; }
 				default:
 					break;
 				}
@@ -632,6 +648,21 @@ void CompZ::SetCompZ(Component* component, CompZ** compZ)
 		inputTextZ->objectID = inputText->game_object_attached->ID;
 		inputTextZ->size = inputText->size;
 		break; }
+
+	case ComponentType::LABEL: {
+		ComponentLabel* label = (ComponentLabel*)component;
+		CompLabelZ* labelZ = new CompLabelZ();
+		*compZ = labelZ;
+		if (label->r_font != nullptr) { // must go with resourcefont
+			labelZ->resourceID = label->r_font->GetID();
+		}
+		else {
+			labelZ->resourceID = 0;
+		}
+		labelZ->text = label->finalText;
+		labelZ->objectID = label->game_object_attached->ID;
+		labelZ->size = label->size;
+		break; }
 	}
 
 
@@ -790,6 +821,22 @@ void CompZ::SetComponent(Component* component, CompZ* compZ)
 		}
 		inputText->size = inputTextZ->size;
 		break; }
+
+	case ComponentType::LABEL: {
+		
+		ComponentLabel* label = (ComponentLabel*)component;
+		CompLabelZ* labelZ = (CompLabelZ*)compZ;
+		if (labelZ->resourceID == 0) {
+			label->r_font = nullptr;
+		}
+		else {
+			label->r_font = ((ResourceFont*)App->resources->GetResourceWithID(labelZ->resourceID)); //This may change to remember the text
+			label->r_font->IncreaseReferences();
+			label->CreateTextPlane();
+		}
+		label->finalText = labelZ->text;
+		label->size = labelZ->size;
+		break; }
 	}
 	component->SetEnable(compZ->enabled);
 	component->ID = compZ->compID;
@@ -849,6 +896,11 @@ void CompZ::AttachCompZToGameObject(CompZ* compZ)
 		ComponentInputText* inputText = new ComponentInputText(obj);
 		CompZ::SetComponent(inputText, compZ);
 		obj->AddComponent(inputText);
+		break; }
+	case ComponentType::LABEL: {
+		ComponentLabel* label = new ComponentLabel(obj);
+		CompZ::SetComponent(label, compZ);
+		obj->AddComponent(label);
 		break; }
 	}
 }

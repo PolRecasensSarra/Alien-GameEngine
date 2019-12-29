@@ -200,3 +200,11 @@ public:
 	u64 resourceID = 0;
 	float2 size = { 30.0f,10.0f };
 };
+
+class CompLabelZ :public CompZ {
+public:
+	u64 resourceID = 0;
+	float2 size = { 30.0f,10.0f };
+
+	std::string text;
+};

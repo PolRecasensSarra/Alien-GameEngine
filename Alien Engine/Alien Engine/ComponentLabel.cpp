@@ -29,7 +29,6 @@ ComponentLabel::ComponentLabel(GameObject* attach, float2 size, bool is_custom) 
 	text_font = App->fonts->default_font;
 
 	textureID = text_font->Characters.at(finalText.at(0)).TextureID;
-	int counter = 0;
 	for (std::string::iterator it = finalText.begin(); it != finalText.end(); ++it)
 	{
 		//LabelLetter[it]. = text_font->Characters.at(finalText.at(0)).TextureID;
@@ -40,11 +39,12 @@ ComponentLabel::ComponentLabel(GameObject* attach, float2 size, bool is_custom) 
 		l.size = text_font->Characters.at(*it).Size;
 		l.bearing = text_font->Characters.at(*it).Bearing;
 		l.advance = text_font->Characters.at(*it).Advance;			
+		CreatePPlane(l);
 
 		word.push_back(l);
 
 
-		++counter;
+		
 	}
 
 }
@@ -68,14 +68,14 @@ void ComponentLabel::Draw()
 	float2 size_counter = { 0,0 };
 	while (it < word.end())
 	{
-		UpdateTextPlane(size_counter.x+ (*it).bearing.x);
+		UpdateTextPlane(size_counter.x+ (*it).bearing.x,(*it));
 		size_counter.x += (*it).size.x;
 
 
-		BindText(word[0].texture_id);
+		BindText((*it).texture_id,(*it));
 		
 
-		if (word[0].texture_id ==0)
+		if ((*it).texture_id ==0)
 		{
 			glBegin(GL_QUADS);
 			glLineWidth(8.0f);
@@ -100,14 +100,14 @@ void ComponentLabel::Draw()
 	
 }
 
-void ComponentLabel::BindText(uint tex_id)
+void ComponentLabel::BindText(uint tex_id,LabelLetter l)
 {
 	
 	//std::vector<LabelLetter>::iterator it = word.begin();
 
 	//while (it != word.end())
 	//{
-
+	
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_DST_ALPHA);
 		glEnable(GL_ALPHA_TEST);
@@ -123,7 +123,7 @@ void ComponentLabel::BindText(uint tex_id)
 
 		glBindTexture(GL_TEXTURE_2D, tex_id);
 
-		glBindBuffer(GL_ARRAY_BUFFER, vertexId);
+		glBindBuffer(GL_ARRAY_BUFFER, l.vertexId);
 		glVertexPointer(3, GL_FLOAT, 0, NULL);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -131,7 +131,7 @@ void ComponentLabel::BindText(uint tex_id)
 		glBindBuffer(GL_ARRAY_BUFFER, tex_id);
 		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
 
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, l.indexId);
 
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
 
@@ -145,49 +145,7 @@ void ComponentLabel::BindText(uint tex_id)
 		glDisable(GL_ALPHA_TEST);
 
 		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	/*	++it;
-	}*/
 
-	/*if (textureID != 0)
-	{
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glEnable(GL_ALPHA_TEST);
-		glAlphaFunc(GL_GREATER, 0.0f);
-
-		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-
-		glEnable(GL_TEXTURE_2D);
-
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-		glEnableClientState(GL_VERTEX_ARRAY);
-
-		glBindTexture(GL_TEXTURE_2D, textureID);
-
-		glBindBuffer(GL_ARRAY_BUFFER, vertexId);
-		glVertexPointer(3, GL_FLOAT, 0, NULL);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-		glBindBuffer(GL_ARRAY_BUFFER, textureID);
-		glTexCoordPointer(2, GL_FLOAT, 0, NULL);
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexId);
-
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
-		glDisableClientState(GL_VERTEX_ARRAY);
-
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glDisable(GL_ALPHA_TEST);
-
-		glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	}*/
 }
 
 void ComponentLabel::SaveComponent(JSONArraypack* to_save)
@@ -272,6 +230,26 @@ bool ComponentLabel::DrawInspector()
 		if (ImGui::Button("Done"))
 		{
 			new_word = true;
+
+			word.clear();
+			for (std::string::iterator it = finalText.begin(); it != finalText.end(); ++it)
+			{
+				//LabelLetter[it]. = text_font->Characters.at(finalText.at(0)).TextureID;
+
+				LabelLetter l;
+
+				l.texture_id = text_font->Characters.at(*it).TextureID;
+				l.size = text_font->Characters.at(*it).Size;
+				l.bearing = text_font->Characters.at(*it).Bearing;
+				l.advance = text_font->Characters.at(*it).Advance;
+				CreatePPlane(l);
+
+				word.push_back(l);
+
+
+
+			}
+
 		}
 		ImGui::Text("Size");
 
@@ -295,7 +273,7 @@ bool ComponentLabel::DrawInspector()
 }
 
 
-void ComponentLabel::UpdateTextPlane(float sizeX)
+void ComponentLabel::UpdateTextPlane(float sizeX,LabelLetter l)
 {
 	pos = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalPosition();
 	float3 size_mult = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalScale();
@@ -306,8 +284,43 @@ void ComponentLabel::UpdateTextPlane(float sizeX)
 	vertex[2] = float3(pos.x+sizeX + (size.x * size_mult.x), pos.y + (size.y * size_mult.y), pos.z);
 	vertex[3] = float3(pos.x+sizeX, pos.y + (size.y * size_mult.y), pos.z);
 
-	glBindBuffer(GL_ARRAY_BUFFER, vertexId); 
+	glBindBuffer(GL_ARRAY_BUFFER, l.vertexId); 
 	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, vertex, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void ComponentLabel::CreatePPlane(LabelLetter& l)
+{
+	float3 pos = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalPosition();
+	//pos += margin;
+	float3 size_mult = game_object_attached->GetComponent<ComponentTransform>()->GetGlobalScale();
+
+	vertex[0] = float3(pos.x + l.size.x, pos.y, pos.z);
+	uv[0] = float2(0, 1);
+
+	vertex[1] = float3(pos.x + l.size.x + (size.x * size_mult.x), pos.y, pos.z);
+	uv[1] = float2(1, 1);
+
+	vertex[2] = float3(pos.x + l.size.x + (size.x * size_mult.x), pos.y + (size.y * size_mult.y), pos.z);
+	uv[2] = float2(1, 0);
+
+	vertex[3] = float3(pos.x + l.size.x, pos.y + (size.y * size_mult.y), pos.z);
+	uv[3] = float2(0, 0);
+
+	glGenBuffers(1, (GLuint*)& l.vertexId);
+	glBindBuffer(GL_ARRAY_BUFFER, l.vertexId);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, vertex, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+
+
+	glBindBuffer(GL_ARRAY_BUFFER, l.texture_id);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 8, uv, GL_STATIC_DRAW);
+
+
+	glGenBuffers(1, (GLuint*)& l.indexId);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, l.indexId);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint) * 6, l.index, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
