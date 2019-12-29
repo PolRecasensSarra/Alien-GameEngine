@@ -29,7 +29,6 @@ ComponentLabel::ComponentLabel(GameObject* attach, float2 size, bool is_custom) 
 	text_font = App->fonts->default_font;
 
 	textureID = text_font->Characters.at(finalText.at(0)).TextureID;
-	int counter = 0;
 	for (std::string::iterator it = finalText.begin(); it != finalText.end(); ++it)
 	{
 		//LabelLetter[it]. = text_font->Characters.at(finalText.at(0)).TextureID;
@@ -45,7 +44,7 @@ ComponentLabel::ComponentLabel(GameObject* attach, float2 size, bool is_custom) 
 		word.push_back(l);
 
 
-		++counter;
+		
 	}
 
 }
@@ -59,7 +58,6 @@ ComponentLabel::~ComponentLabel()
 
 void ComponentLabel::PostUpdate()
 {
-	LOG("Final Text %s", finalText.c_str());
 	Draw();
 }
 
@@ -232,6 +230,26 @@ bool ComponentLabel::DrawInspector()
 		if (ImGui::Button("Done"))
 		{
 			new_word = true;
+
+			word.clear();
+			for (std::string::iterator it = finalText.begin(); it != finalText.end(); ++it)
+			{
+				//LabelLetter[it]. = text_font->Characters.at(finalText.at(0)).TextureID;
+
+				LabelLetter l;
+
+				l.texture_id = text_font->Characters.at(*it).TextureID;
+				l.size = text_font->Characters.at(*it).Size;
+				l.bearing = text_font->Characters.at(*it).Bearing;
+				l.advance = text_font->Characters.at(*it).Advance;
+				CreatePPlane(l);
+
+				word.push_back(l);
+
+
+
+			}
+
 		}
 		ImGui::Text("Size");
 
