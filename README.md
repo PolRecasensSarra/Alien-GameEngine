@@ -4,15 +4,19 @@
 
 # ALIEN ENGINE
 
-Alien Engine is a Game Engine made by Víctor Segura Blanco and Oriol Capdevila Salinas, two studens from CITM University, Terrassa.
+Alien Engine is a Game Engine made by Víctor Segura Blanco and Oriol Capdevila Salinas forked by Pol Recasens Sarrà and Gerard Clotet Rodríguez, two studens from CITM University, Terrassa.
 The user can check the editor options activating them in the renderer window.
 
 ## Github Links
-
+#### Original Repository
 * [Alien Engine Repository](https://github.com/VictorSegura99/Alien-GameEngine)
-* [Alien Engine Releases](https://github.com/VictorSegura99/Alien-GameEngine/releases)
-* [Víctor Segura Blanco Github](https://github.com/VictorSegura99)
-* [Oriol Capdevila Salinas Github](https://github.com/OriolCS2)
+
+#### Forked Repository
+* [Alien Engine Repository](https://github.com/PolRecasensSarra/Alien-GameEngine) 
+* [Alien Engine Releases](https://github.com/PolRecasensSarra/Alien-GameEngine/releases)
+* [Pol Recasens Sarrà](https://github.com/PolRecasensSarra) GitHub page
+* [Gerard Clotet Rodríguez](https://github.com/GerardClotet) GitHub page
+* [Web Page](https://polkira7.wixsite.com/alienengine)
 
 ## Controls
 
@@ -64,6 +68,24 @@ The user can check the editor options activating them in the renderer window.
 * F10: View OBB
 * F11: View Octree
 
+
+## Assignment 3 - UI System
+
+### Pol Recasens Sarrà
+- Component Image
+- Component Button
+- Component Canvas
+- Component InputText
+- Component CheckBox
+
+### Gerard Clotet Rodríguez
+- Component Label
+- Resource Font
+- Implemented TrueType
+- Component Button
+- Serialize UI
+
+
 ## Innovations
 
 ### Assigment 1
@@ -113,43 +135,13 @@ can change parents.
 can remove or rename layouts).
 * Panel About: Base info about creators of this software and libraries used.
 
-## Tasks by Member Assigment 2
 
-* Oriol Capdevila:
-
-	* Mouse Picking
-	* Octree, octree in camera culling & in mouse picking
-	* Resource Manager
-	* The Explorer
-	* Hierarchy and reparent
-	* Components system
-	* Control Z & Control Y (in almost every action)
-	* Prefabs
-	* Serialize scene 
-	* Changing between scenes (with engin explorer or window explorer)
-	* Library created again if it doesn't exists
-	* Start, pause and tick 
-	* Primitives as resource
-	* All right click menus
-	* Static options in gameobjects and alert popups
-
-* Víctor Segura:
-
-	* AABB and OBB
-	* Camera as component
-	* Frustum 
-	* Frustum Culling
-	* Panel Game
-	* Panel Preview Camera
-	* Scene Guizmos
-	* Engine Icons
-	* Camera and Light 3D icons in scene
 
 ## License
 
 MIT License
 
-Copyright (c) 2019 Víctor Segura Blanco & Oriol Capdevila Salinas
+Copyright (c) 2019 Pol Recasens Sarrà & Gerard Clotet Rodríguez.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
